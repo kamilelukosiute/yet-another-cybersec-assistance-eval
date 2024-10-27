@@ -1,5 +1,5 @@
 
-# Yet Another Cybsersecurity Assistance Evaluation
+# Yet Another Cybersecurity Assistance Evaluation
 
 This repositiory contains the tests for the MITRE ATT&CK-based cybersecurity assistance evaluation. 
 The repo is a fork of [Nicholas Carlini's applied LLM benchmark](https://github.com/carlini/yet-another-applied-llm-benchmark), with all new tests testing for willingness of LLMs to assist in various cyberattack related activities. 
