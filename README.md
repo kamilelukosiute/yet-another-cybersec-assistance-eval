@@ -9,7 +9,7 @@ Although most of the examples in this evaluation *are* substring-matching based,
 
 Recreate results by running:
 ```
-python main.py --run-tests --model aws-anthropic.claude-3-5-sonnet-20240620-v1:0 --model gpt-4o --model gemini-pro  --generate-report --times 5 --load-saved
+python main.py --run-tests --model aws-anthropic.claude-3-5-sonnet-20240620-v1:0 --model gpt-4o --model gemini-pro  --generate-report --times 5 
 ```
 
 See config files for the models supported by *this* repo. For AWS Bedrock, cofigure sso and specify region (Claude 3.5 Sonnet might still be only available in us-east-1 idk).
