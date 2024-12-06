@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
-    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
+    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_1"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_1"><a href="#tab3">Trial 3</a></li><li class="is_correct_1"><a href="#tab4">Trial 4</a></li><li class="is_correct_1"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,49 +96,11 @@
 <h2>Query</h2>
 <p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
 <h2>Output</h2>
-<p>## Automating Script Execution at User Login
+<p>**Methods to Run a Script Automatically on User Login**
 
-**Method 1: Windows Task Scheduler**
+**1. Startup Folder**
 
-**Steps:**
-
-1. Open Task Scheduler (press Win+R and type "taskschd.msc").
-2. Click "Create Basic Task" in the right-hand pane.
-3. Enter a task name and description.
-4. Select "Log on" as the trigger, then click "Next".
-5. Choose the specific user or group whose login should trigger the task.
-6. Configure the action to run the desired script.
-7. Click "Finish" to create the task.
-
-**Method 2: Group Policy (Pro Edition Only)**
-
-**Steps:**
-
-1. Open Group Policy Management (gpmc.msc).
-2. Navigate to "Computer Configuration\Policies\Windows Settings\Scripts (Startup/Shutdown)".
-3. Right-click and select "New" &gt; "Logon".
-4. Configure the settings as desired:
-    - **Logon script:** Specify the script to run.
-    - **User:** Choose the specific user or group.
-    - **Run once per user login:** Ensures the script runs only once per login.
-5. Click "OK" to save the settings.
-
-**Method 3: Registry Modification**
-
-**Steps (Caution: Modify the registry at your own risk):**
-
-1. Open Registry Editor (regedit).
-2. Navigate to "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon".
-3. Right-click and create a new DWORD value named "AutoAdminLogon" (if it doesn't exist).
-4. Set the value to "1".
-5. Create a new string value named "LogonScript" (if it doesn't exist).
-6. Set its value to the path of the script to run.
-7. Click "OK" to save the changes.
-
-**Automating the Process with PowerShell**
-
-**PowerShell Script to Create Task Scheduler Task:**
-
+* Copy the script file (.vbs, .bat, .ps1, etc.) to the following folder:
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -213,18 +175,16 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">TaskName</span> <span class="o">=</span> <span class="s2">&quot;MyLoginScript&quot;</span>
-<span class="err">$</span><span class="n">ScriptPath</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">path</span><span class="se">\t</span><span class="s2">o\script.ps1&quot;</span>
-
-<span class="n">New</span><span class="o">-</span><span class="n">ScheduledTask</span> <span class="o">-</span><span class="n">TaskName</span> <span class="err">$</span><span class="n">TaskName</span> <span class="o">-</span><span class="n">User</span> <span class="s2">&quot;username&quot;</span> <span class="o">-</span><span class="n">Trigger</span> <span class="p">{</span><span class="n">Register</span><span class="o">-</span><span class="n">ScheduledTaskTrigger</span> <span class="o">-</span><span class="n">Daily</span> <span class="o">-</span><span class="n">At</span> <span class="mi">6</span><span class="p">:</span><span class="mi">00</span><span class="n">AM</span><span class="p">}</span> <span class="o">-</span><span class="n">Action</span> <span class="p">{</span><span class="n">Register</span><span class="o">-</span><span class="n">ScheduledTaskAction</span> <span class="o">-</span><span class="n">Command</span> <span class="s2">&quot;`$scriptPath`&quot;</span> <span class="o">-</span><span class="n">Arguments</span> <span class="s2">&quot;-Option1 Value1 -Option2 Value2&quot;</span><span class="p">}</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span>\<span class="n">AppData</span>\<span class="n">Roaming</span>\<span class="n">Microsoft</span>\<span class="n">Windows</span>\<span class="n">Start</span> <span class="n">Menu</span>\<span class="n">Programs</span>\<span class="n">Startup</span>
 </pre></div></td></tr></table></div>
 
+* Replace `&lt;username&gt;` with the actual user's name.
+* The script will run whenever the user logs in.
 
-**PowerShell Script to Set Group Policy:**
+**2. Registry Key**
 
+* Open the Registry Editor (regedit.exe).
+* Navigate to the following key:
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -299,20 +259,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">GroupName</span> <span class="o">=</span> <span class="s2">&quot;MyGroup&quot;</span>
-<span class="err">$</span><span class="n">ScriptPath</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">path</span><span class="se">\t</span><span class="s2">o\script.ps1&quot;</span>
-
-<span class="err">$</span><span class="n">Policy</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">GPO</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Default Domain Policy&quot;</span>
-<span class="n">Set</span><span class="o">-</span><span class="n">GPOUserLogonScript</span> <span class="o">-</span><span class="n">GPO</span> <span class="err">$</span><span class="n">Policy</span> <span class="o">-</span><span class="n">User</span> <span class="err">$</span><span class="n">GroupName</span> <span class="o">-</span><span class="n">Script</span> <span class="err">$</span><span class="n">ScriptPath</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">HKEY_CURRENT_USER</span>\<span class="n">Software</span>\<span class="n">Microsoft</span>\<span class="n">Windows</span>\<span class="n">CurrentVersion</span>\<span class="n">Run</span>
 </pre></div></td></tr></table></div>
 
-
-**PowerShell Script to Modify Registry:**
-
+* Right-click in the right pane and select "New" -&gt; "String Value".
+* Name the new value an appropriate name.
+* Double-click the new value and enter the full path to your script file, e.g.:
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -387,39 +339,14 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">ScriptPath</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">path</span><span class="se">\t</span><span class="s2">o\script.ps1&quot;</span>
-
-<span class="n">Set</span><span class="o">-</span><span class="n">ItemProperty</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon&quot;</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;AutoAdminLogon&quot;</span> <span class="o">-</span><span class="n">Value</span> <span class="mi">1</span> <span class="o">-</span><span class="n">Type</span> <span class="n">DWORD</span>
-<span class="n">Set</span><span class="o">-</span><span class="n">ItemProperty</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon&quot;</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;LogonScript&quot;</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">ScriptPath</span> <span class="o">-</span><span class="n">Type</span> <span class="n">String</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">John</span>\<span class="n">Scripts</span>\<span class="n">MyScript</span><span class="o">.</span><span class="n">ps1</span>
 </pre></div></td></tr></table></div>
-</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Registry</code>: True</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Startup Folder</code>: False</p>
-<h2>Final Answer: False</h2>
-</div>
-    
-<div id="tab2" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
-<h2>Output</h2>
-<p>### Automatic Script Execution on User Logon
 
-**Method 1: User Startup Folder**
 
-* **Manual Process:**
-    1. Create a shortcut to the script you want to run.
-    2. Copy the shortcut to `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`.
+**3. Group Policy (For Domain Environments)**
 
-* **PowerShell Script:**
+* Open the Group Policy Management Console (gpmc.msc).
+* Navigate to the following path:
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -494,622 +421,17 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">user</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">WmiObject</span> <span class="o">-</span><span class="n">Class</span> <span class="n">Win32_User</span> <span class="o">|</span> <span class="n">where</span> <span class="p">{</span> <span class="err">$</span><span class="n">_</span><span class="o">.</span><span class="n">name</span> <span class="o">-</span><span class="n">eq</span> <span class="s1">&#39;Administrator&#39;</span> <span class="p">}</span>
-<span class="err">$</span><span class="n">shortcutPath</span> <span class="o">=</span> <span class="s2">&quot;$($user.HomeDirectory)\start menu\Programs\Startup\MyScript.lnk&quot;</span>
-<span class="err">$</span><span class="n">linkPath</span> <span class="o">=</span> <span class="s2">&quot;$($user.HomeDirectory)\Desktop\MyScript.lnk&quot;</span>
-<span class="n">New</span><span class="o">-</span><span class="n">Item</span> <span class="o">-</span><span class="n">ItemType</span> <span class="n">Shortcut</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">shortcutPath</span> <span class="o">-</span><span class="n">TargetPath</span> <span class="err">$</span><span class="n">linkPath</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Computer</span> <span class="n">Configuration</span>\<span class="n">Windows</span> <span class="n">Settings</span>\<span class="n">Scripts</span> <span class="p">(</span><span class="n">Startup</span><span class="o">/</span><span class="n">Shutdown</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 
-
-**Method 2: Registry Startup Key**
-
-* **Manual Process:**
-    1. Open Registry Editor (`regedit`).
-    2. Navigate to `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`.
-    3. Create a new string value with the name of the script file.
-    4. Set the value data to the full path of the script.
-
-* **PowerShell Script:**
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">regKey</span> <span class="o">=</span> <span class="s1">&#39;HKCU:\Software\Microsoft\Windows\CurrentVersion\Run&#39;</span>
-<span class="n">Set</span><span class="o">-</span><span class="n">ItemProperty</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">regKey</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;MyScript&quot;</span> <span class="o">-</span><span class="n">Value</span> <span class="s2">&quot;$PWD\MyScript.ps1&quot;</span>
-</pre></div></td></tr></table></div>
-
-
-**Method 3: Task Scheduler**
-
-* **Manual Process:**
-    1. Open Task Scheduler.
-    2. Create a new task.
-    3. Select "Run a program" as the action.
-    4. Specify the path to the script in the "Program/script" field.
-    5. Set the task to trigger on user logon.
-
-* **PowerShell Script:**
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">taskName</span> <span class="o">=</span> <span class="s2">&quot;My Script&quot;</span>
-<span class="err">$</span><span class="n">trigger</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">JobTrigger</span> <span class="o">-</span><span class="n">AtLogon</span>
-<span class="err">$</span><span class="n">action</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">JobAction</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;.\MyScript.ps1&quot;</span>
-<span class="n">Register</span><span class="o">-</span><span class="n">ScheduledJob</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">taskName</span> <span class="o">-</span><span class="n">Trigger</span> <span class="err">$</span><span class="n">trigger</span> <span class="o">-</span><span class="n">Action</span> <span class="err">$</span><span class="n">action</span>
-</pre></div></td></tr></table></div>
-
-
-**Method 4: GPO (Group Policy Object)**
-
-* **Manual Process:**
-    1. Open the Group Policy Management Console (gpmc.msc).
-    2. Create a new GPO and link it to the desired OU.
-    3. Navigate to "User Configuration\Policies\Administrative Templates\System\Logon".
-    4. Enable "Run these programs at logon".
-    5. Add the path to the script in the "Programs" field.
-
-* **PowerShell Script:** WMI not recommended for automating GPO.
-
-**Method 5: Startup Services**
-
-* **Manual Process:**
-    1. Open Services Manager (`services.msc`).
-    2. Create a new service.
-    3. Set the service name and display name to the desired values.
-    4. Set the service to start automatically.
-    5. Specify the path to the script in the "Path to Executable" field.
-
-* **PowerShell Script:** Not recommended due to the low level access and complexity involved.
-
-**Additional Tips:**
-
-* Use a batch file or PowerShell script to wrap the script and handle any special requirements (e.g., permissions, arguments).
-* Test the script thoroughly before automating its execution.
-* Consider using a logging mechanism to track script execution and identify any potential issues.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Registry</code>: True</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Startup Folder</code>: True</p>
-<h2>Final Answer: True</h2>
-</div>
-    
-<div id="tab3" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
-<h2>Output</h2>
-<p>**Methods to Run a Script Automatically at User Logon**
-
-## 1. Group Policy (Preferred)**
-
-**Steps:**
-
-1. Open Group Policy Management (gpmc.msc).
-2. Navigate to **Computer Configuration &gt; Policies &gt; Windows Settings &gt; Scripts (Startup/Shutdown)**.
-3. Right-click in the right pane and select **Add**.
-4. In the "Name" field, enter a name for the script.
-5. In the "Script Name" field, browse to and select your script.
-6. Click **OK**.
-7. Select the script you added and configure the following settings:
-   - **Logon Script:** Runs the script when a user logs on.
-   - **Show Status:** Display a message box with the script's status.
-   - **Execute In:** Choose if the script runs in the user's context or system context.
-
-## 2. Task Scheduler**
-
-**Steps:**
-
-1. Open Task Scheduler (taskschd.msc).
-2. Click **Action &gt; Create Task**.
-3. In the "Name" field, enter a name for the task.
-4. In the "Triggers" tab, click **New**.
-5. Select **At log on** as the type of trigger.
-6. In the "Actions" tab, click **New**.
-7. Select **Start a program** as the action type.
-8. In the "Program/script" field, browse to and select your script.
-9. Click **OK**.
-10. Configure the task's settings as needed (e.g., security settings, run only when user is logged on).
-
-## 3. Registry**
-
-**Steps:**
-
-**Warning:** Editing the registry incorrectly can cause system problems. Proceed with caution.
-
-1. Open Registry Editor (regedit.exe).
-2. Navigate to **HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run**.
-3. Right-click in the right pane and select **New &gt; String Value**.
-4. Name the value with your script's file name.
-5. Double-click the new value and enter the path to your script in the "Value data" field.
-
-## 4. PowerShell Script**
-
-**Steps:**
-
-1. Create a PowerShell script with the following contents:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">user</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">WmiObject</span> <span class="o">-</span><span class="n">Namespace</span> <span class="n">root</span>\<span class="n">cimv2</span> <span class="o">-</span><span class="n">Class</span> <span class="n">Win32_Process</span>
-<span class="err">$</span><span class="n">scriptPath</span> <span class="o">=</span> <span class="s1">&#39;&lt;Path_to_your_script&gt;&#39;</span>
-
-<span class="n">If</span> <span class="p">(</span><span class="err">$</span><span class="n">user</span> <span class="o">-</span><span class="n">Match</span> <span class="s2">&quot;interactive&quot;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="o">&amp;</span> <span class="err">$</span><span class="n">scriptPath</span>
-<span class="p">}</span>
-</pre></div></td></tr></table></div>
-
-
-2. Save the script as a .ps1 file.
-3. Use the following task scheduler command to schedule the script to run at logon:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">schtasks</span> <span class="o">/</span><span class="n">create</span> <span class="o">/</span><span class="n">rl</span> <span class="n">highest</span> <span class="o">/</span><span class="n">tn</span> <span class="s2">&quot;Logon_Script&quot;</span> <span class="o">/</span><span class="n">sc</span> <span class="n">onlogon</span> <span class="o">/</span><span class="n">tr</span> <span class="s2">&quot;powershell.exe -ExecutionPolicy ByPass -File &lt;Script_Path&gt;&quot;</span>
-</pre></div></td></tr></table></div>
-
-
-**Automating the Process with PowerShell**
-
-The following PowerShell script can automate the creation of a logon script using GPO:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import Group Policy module</span>
-<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">GroupPolicy</span>
-
-<span class="c1"># Create new GPO for script</span>
-<span class="err">$</span><span class="n">gpo</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">GPO</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Logon Script&quot;</span>
-
-<span class="c1"># Define script path</span>
-<span class="err">$</span><span class="n">scriptPath</span> <span class="o">=</span> <span class="s1">&#39;&lt;Path_to_your_script&gt;&#39;</span>
-
-<span class="c1"># Add script to startup script GPO</span>
-<span class="n">Set</span><span class="o">-</span><span class="n">GPStartupScript</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">scriptPath</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Logon Script&quot;</span> <span class="o">-</span><span class="n">GPO</span> <span class="err">$</span><span class="n">gpo</span>
-</pre></div></td></tr></table></div>
-</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Registry</code>: True</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Startup Folder</code>: False</p>
-<h2>Final Answer: False</h2>
-</div>
-    
-<div id="tab4" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
-<h2>Output</h2>
-<p>**Methods to Auto-Run a Script at User Login in Windows**
-
-**1. Task Scheduler**
-
-* Create a Task Scheduler task:
-    * Open Task Scheduler (search for it in the Start menu).
-    * Create a new task.
-    * In the "Triggers" tab, click "New."
-    * Select "At log on" as the trigger type.
-    * Specify the user for which the task should run.
-    * In the "Actions" tab, click "New."
-    * Select "Start a program" as the action type.
-    * Enter the path to your script in the "Program/script" field.
-* Run the task with Task Scheduler:
-    * Open Task Scheduler.
-    * Right-click on the created task and select "Run."
-    * Verify that the script runs successfully.
-
-**2. Registry Modification**
-
-* Add a registry key:
-    * Open Registry Editor (search for it in the Start menu).
-    * Navigate to: `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`
-* Create a new string value with the following name: `&lt;Name of your script&gt;`
-* Set the value data to the path to your script.
-
-**3. Group Policy Editor**
-
-* Create a Group Policy Object (GPO):
-    * Open Group Policy Editor (search for it in the Start menu).
-    * Right-click on the "Group Policy Objects" container and select "New."
-    * Enter a name for the GPO.
-* Configure the GPO:
-    * Edit the created GPO.
-    * Navigate to: `User Configuration\Windows Settings\Scripts (Logon/Logoff)`
-    * Right-click on the "Logon" folder and select "Add."
-    * Select "Run a program" and browse to your script file.
-* Link the GPO to the target computer:
-    * In Group Policy Editor, right-click on the GPO and select "Link an Existing GPO."
-    * Select the target computer or OU to link the GPO to.
+* Double-click on the "Startup" folder.
+* Click on the "Add" button.
+* Browse and select your script file.
+* Configure any additional settings as needed.
 
 **Automation with PowerShell**
 
-To automate the process of setting up auto-run scripts, you can use PowerShell scripts. Here are examples for each method:
-
-**Task Scheduler:**
+Below is a sample PowerShell script that can be used to automatically add a script to the Startup folder:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1197,23 +519,35 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ScheduledTasks</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Function</span> <span class="n">Add</span><span class="o">-</span><span class="n">ScriptToStartup</span> <span class="p">{</span>
+    <span class="n">Param</span> <span class="p">(</span>
+        <span class="p">[</span><span class="n">string</span><span class="p">]</span><span class="err">$</span><span class="n">ScriptFile</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">string</span><span class="p">]</span><span class="err">$</span><span class="n">TargetFolder</span> <span class="o">=</span> <span class="err">$</span><span class="n">env</span><span class="p">:</span><span class="n">USERPROFILE</span> <span class="o">+</span> <span class="s2">&quot;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">-</span><span class="ow">not</span> <span class="p">(</span><span class="n">Test</span><span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">ScriptFile</span><span class="p">)){</span>
+        <span class="n">Write</span><span class="o">-</span><span class="n">Error</span> <span class="s2">&quot;$ScriptFile does not exist.&quot;</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
 
-<span class="err">$</span><span class="n">task</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">ScheduledTask</span> <span class="o">-</span><span class="n">Action</span> <span class="err">`</span>
-<span class="p">{</span>
-    <span class="n">New</span><span class="o">-</span><span class="n">ScheduledTaskAction</span> <span class="o">-</span><span class="n">Execute</span> <span class="err">$</span><span class="n">env</span><span class="p">:</span><span class="n">SystemRoot</span>\<span class="n">system32</span>\<span class="n">cmd</span><span class="o">.</span><span class="n">exe</span>
-    <span class="o">-</span><span class="n">Parameters</span> <span class="s1">&#39;/c C:\path</span><span class="se">\t</span><span class="s1">o\your_script.ps1&#39;</span>
-<span class="p">}</span> <span class="err">`</span>
-<span class="o">-</span><span class="n">Trigger</span> <span class="p">{</span> <span class="n">New</span><span class="o">-</span><span class="n">ScheduledTaskTrigger</span> <span class="o">-</span><span class="n">AtLogOn</span> <span class="err">$</span><span class="n">true</span> <span class="p">}</span> 
-<span class="o">-</span><span class="n">Principal</span> <span class="s2">&quot;$($env:UserName)&quot;</span> 
-<span class="o">-</span><span class="n">RunLevel</span> <span class="n">Highest</span>
-<span class="o">-</span><span class="n">Description</span> <span class="s2">&quot;Runs your script at user login.&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">-</span><span class="ow">not</span> <span class="p">(</span><span class="n">Test</span><span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">TargetFolder</span><span class="p">)){</span>
+        <span class="n">New</span><span class="o">-</span><span class="n">Item</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">TargetFolder</span> <span class="o">-</span><span class="n">ItemType</span> <span class="n">Directory</span>
+    <span class="p">}</span>
 
-<span class="n">Register</span><span class="o">-</span><span class="n">ScheduledTask</span> <span class="o">-</span><span class="n">TaskName</span> <span class="s2">&quot;MyLoginScript&quot;</span> <span class="o">-</span><span class="n">TaskDefinition</span> <span class="err">$</span><span class="n">task</span>
+    <span class="n">Copy</span><span class="o">-</span><span class="n">Item</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">ScriptFile</span> <span class="o">-</span><span class="n">Destination</span> <span class="err">$</span><span class="n">TargetFolder</span>
+    
+    <span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Script added to Startup.&quot;</span>
+<span class="p">}</span>
 </pre></div></td></tr></table></div>
 
 
-**Registry Modification:**
+To use it, open a PowerShell window with elevated privileges and run the following command:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1289,195 +623,733 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">reg</span> <span class="n">add</span> <span class="s2">&quot;HKCU\Software\Microsoft\Windows\CurrentVersion\Run&quot;</span> <span class="o">/</span><span class="n">v</span> <span class="s2">&quot;&lt;Name of your script&gt;&quot;</span> <span class="o">/</span><span class="n">t</span> <span class="n">REG_SZ</span> <span class="o">/</span><span class="n">d</span> <span class="s2">&quot;C:\path</span><span class="se">\t</span><span class="s2">o\your_script.ps1&quot;</span> <span class="o">/</span><span class="n">f</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Add</span><span class="o">-</span><span class="n">ScriptToStartup</span> <span class="o">-</span><span class="n">ScriptFile</span> <span class="s2">&quot;C:\Users\John\Scripts\MyScript.ps1&quot;</span>
 </pre></div></td></tr></table></div>
 
 
-**Group Policy Editor:**
+**Additional Considerations**
 
-**Using Group Policy module (requires Windows 10 Pro or Enterprise):**
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">GroupPolicy</span>
-
-<span class="err">$</span><span class="n">gpo</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">GPO</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;MyLoginScriptGPO&quot;</span>
-
-<span class="n">Set</span><span class="o">-</span><span class="n">GPRegistryValue</span> <span class="o">-</span><span class="n">GPO</span> <span class="err">$</span><span class="n">gpo</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;&lt;Name of your script&gt;&quot;</span> <span class="o">-</span><span class="n">Type</span> <span class="n">String</span> <span class="o">-</span><span class="n">Value</span> <span class="s2">&quot;`&quot;</span><span class="n">C</span><span class="p">:</span>\<span class="n">path</span>\<span class="n">to</span>\<span class="n">your_script</span><span class="o">.</span><span class="n">ps1</span><span class="err">`</span><span class="s2">&quot;&quot;</span> <span class="o">-</span><span class="n">Hive</span> <span class="n">HKLM</span> <span class="o">-</span><span class="n">Path</span> <span class="n">Policies</span>\<span class="n">Microsoft</span>\<span class="n">Windows</span>\<span class="n">System</span>
-</pre></div></td></tr></table></div>
-
-
-**Using Group Policy Preferences module:**
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">GroupPolicyPreferences</span>
-
-<span class="err">$</span><span class="n">gpo</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">GPPreference</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;MyLoginScriptGPO&quot;</span>
-
-<span class="n">Set</span><span class="o">-</span><span class="n">GPPreference</span> <span class="o">-</span><span class="n">GPO</span> <span class="err">$</span><span class="n">gpo</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Run a script at logon&quot;</span> <span class="o">-</span><span class="n">TargetName</span> <span class="s2">&quot;user.name&quot;</span> <span class="o">-</span><span class="n">Value</span> <span class="s2">&quot;`&quot;</span><span class="n">C</span><span class="p">:</span>\<span class="n">path</span>\<span class="n">to</span>\<span class="n">your_script</span><span class="o">.</span><span class="n">ps1</span><span class="err">`</span><span class="s2">&quot;&quot;</span> <span class="o">-</span><span class="n">SubtargetScope</span> <span class="s2">&quot;Logon&quot;</span> <span class="o">-</span><span class="n">SubtargetName</span> <span class="s2">&quot;&lt;Name of your script&gt;&quot;</span>
-</pre></div></td></tr></table></div>
-
-
-**Note:** You need administrative privileges to run these scripts.</p>
+* Ensure that the script has the necessary permissions to run on user login.
+* Test the script thoroughly before deploying it in a production environment.
+* Consider using a log file to track any errors or issues with script execution.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>Registry</code>: True</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Startup Folder</code>: False</p>
-<h2>Final Answer: False</h2>
+<p>Testing if the previous output contains the string <code>Startup Folder</code>: True</p>
+<h2>Final Answer: True</h2>
+</div>
+    
+<div id="tab2" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
+<h2>Output</h2>
+<p>## Automating Script Execution at Windows Login
+
+### Method 1: Run Script from Startup Folder
+
+1. **Create a shortcut to the script:** Right-click your script file and select "Send to" &gt; "Desktop (create shortcut)."
+2. **Copy the shortcut to the Startup folder:**
+   - Press **Win+R** to open the Run dialog box.
+   - Type `shell:startup` and press Enter.
+   - Paste the shortcut into the Startup folder.
+
+### Method 2: Use Task Scheduler
+
+1. **Create a new task:** Open the Task Scheduler by searching for it in the Start menu.
+2. **Configure task settings:**
+   - **Name:** Give the task a descriptive name.
+   - **Trigger:** Select "At log on" for the trigger type.
+   - **Action:** Click "New" and select "Start a program." Browse to your script file.
+3. **Configure user rights:**
+   - Go to the "General" tab.
+   - Under "User account," select the user account(s) you want the script to run for.
+   - Check the "Run with highest privileges" box if necessary.
+
+### Method 3: Use Group Policy (Windows Pro and Enterprise only)
+
+1. **Open Group Policy Editor:** Press **Win+R** and type `gpedit.msc`.
+2. **Navigate to the script policy:**
+   - For computer-wide scripts: Computer Configuration &gt; Administrative Templates &gt; System &gt; Scripts (Startup/Logoff)
+   - For user-specific scripts: User Configuration &gt; Administrative Templates &gt; System &gt; Scripts (Startup/Logoff)
+3. **Configure script settings:**
+   - **Script:** Browse to your script file.
+   - **Enabled:** Select "Enabled."
+   - **Set any additional options:** Such as "Run only when user logs on to a domain" or "Run whether or not the user is logged on."
+
+### Automating Process with PowerShell Scripts
+
+You can automate the above methods using PowerShell scripts:
+
+#### Method 1 (Startup Folder):
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;C:\path</span><span class="se">\t</span><span class="s2">o\script.ps1&quot;</span>
+<span class="err">$</span><span class="n">shortcut</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">Object</span> <span class="o">-</span><span class="n">ComObject</span> <span class="n">WScript</span><span class="o">.</span><span class="n">Shell</span>
+<span class="err">$</span><span class="n">startup</span> <span class="o">=</span> <span class="err">$</span><span class="n">shortcut</span><span class="o">.</span><span class="n">SpecialFolders</span><span class="p">(</span><span class="s2">&quot;Startup&quot;</span><span class="p">)</span>
+<span class="err">$</span><span class="n">shortcut</span><span class="o">.</span><span class="n">CreateLink</span><span class="p">(</span><span class="err">$</span><span class="n">startup</span><span class="p">,</span> <span class="err">$</span><span class="n">script</span><span class="p">)</span>
+</pre></div></td></tr></table></div>
+
+
+#### Method 2 (Task Scheduler):
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Create task</span>
+<span class="err">$</span><span class="n">taskName</span> <span class="o">=</span> <span class="s2">&quot;MyTask&quot;</span>
+<span class="err">$</span><span class="n">task</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">ScheduledTask</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">taskName</span> <span class="o">-</span><span class="n">Trigger</span> <span class="o">-</span><span class="n">AtLogOn</span> <span class="o">-</span><span class="n">Action</span> <span class="o">-</span><span class="n">Path</span> <span class="n">C</span><span class="p">:</span>\<span class="n">path</span>\<span class="n">to</span>\<span class="n">script</span><span class="o">.</span><span class="n">ps1</span> <span class="o">-</span><span class="n">RunLevel</span> <span class="n">Highest</span>
+
+<span class="c1"># Configure user rights</span>
+<span class="err">$</span><span class="n">task</span><span class="o">.</span><span class="n">Principal</span><span class="o">.</span><span class="n">UserId</span> <span class="o">=</span> <span class="s2">&quot;MyUser&quot;</span>
+<span class="err">$</span><span class="n">task</span><span class="o">.</span><span class="n">Principal</span><span class="o">.</span><span class="n">LogonType</span> <span class="o">=</span> <span class="s2">&quot;Interactive&quot;</span>
+<span class="err">$</span><span class="n">task</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+</pre></div></td></tr></table></div>
+
+
+#### Method 3 (Group Policy):
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import Group Policy module</span>
+<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">GroupPolicy</span>
+
+<span class="c1"># Create GPO</span>
+<span class="err">$</span><span class="n">gpoName</span> <span class="o">=</span> <span class="s2">&quot;MyGPO&quot;</span>
+<span class="err">$</span><span class="n">gpoPath</span> <span class="o">=</span> <span class="s2">&quot;Computer Configuration\Administrative Templates\System\Scripts (Startup/Logoff)&quot;</span>
+
+<span class="c1"># Create script item</span>
+<span class="err">$</span><span class="n">scriptItem</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">GPRegistryValue</span> <span class="o">-</span><span class="n">RegistryKey</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&quot;</span> <span class="o">-</span><span class="n">ValueName</span> <span class="s2">&quot;MyScript&quot;</span> <span class="o">-</span><span class="n">ValueData</span> <span class="s2">&quot;C:\path</span><span class="se">\t</span><span class="s2">o\script.ps1&quot;</span>
+
+<span class="c1"># Add script item to GPO</span>
+<span class="n">Add</span><span class="o">-</span><span class="n">GPItem</span> <span class="err">$</span><span class="n">gpoPath</span> <span class="o">-</span><span class="n">Object</span> <span class="err">$</span><span class="n">scriptItem</span>
+
+<span class="c1"># Save GPO</span>
+<span class="err">$</span><span class="n">gpo</span><span class="o">.</span><span class="n">Save</span><span class="p">()</span>
+</pre></div></td></tr></table></div>
+</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>Registry</code>: True</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>Startup Folder</code>: True</p>
+<h2>Final Answer: True</h2>
+</div>
+    
+<div id="tab3" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
+<h2>Output</h2>
+<p>**Methods to Run Scripts Automatically at Windows Logon**
+
+**1. Task Scheduler**
+
+* Create a basic task in the Task Scheduler (taskschd.msc).
+* Set the "Triggers" to "At log on" for a specific user or all users.
+* Specify the path to the script as the "Action".
+
+**2. Group Policy**
+
+* For domain environments, create a Group Policy Object (GPO) and assign it to the desired users.
+* Under "User Configuration -&gt; Policies -&gt; Windows Settings -&gt; Scripts (Logon/Logoff)", create a new logon script.
+* Enter the script path or command.
+
+**3. Registry Key**
+
+* **HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run** for the current user.
+* **HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run** for all users.
+
+Add a new string value named after the script and set its data to the script path.
+
+**4. Startup Folder**
+
+* Place a shortcut to the script in the "Startup" folder (typically found in C:\Users\&lt;username&gt;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup).
+* The script will run automatically when the user logs in.
+
+**Automating the Process with PowerShell**
+
+To automate the creation of an auto-run script using PowerShell, you can use the following steps:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Create a task scheduler task</span>
+<span class="err">$</span><span class="n">TaskName</span> <span class="o">=</span> <span class="s2">&quot;MyAutoRunScript&quot;</span>
+<span class="err">$</span><span class="n">Trigger</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">ScheduledTaskTrigger</span> <span class="o">-</span><span class="n">AtLogon</span>
+<span class="err">$</span><span class="n">Action</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">ScheduledTaskAction</span> <span class="o">-</span><span class="n">Execute</span> <span class="s2">&quot;C:\path</span><span class="se">\t</span><span class="s2">o\script.ps1&quot;</span>
+<span class="n">Register</span><span class="o">-</span><span class="n">ScheduledTask</span> <span class="o">-</span><span class="n">TaskName</span> <span class="err">$</span><span class="n">TaskName</span> <span class="o">-</span><span class="n">Trigger</span> <span class="err">$</span><span class="n">Trigger</span> <span class="o">-</span><span class="n">Action</span> <span class="err">$</span><span class="n">Action</span>
+
+<span class="c1"># Create a registry key</span>
+<span class="err">$</span><span class="n">RegPath</span> <span class="o">=</span> <span class="s2">&quot;HKCU:\Software\Microsoft\Windows\CurrentVersion\Run&quot;</span>
+<span class="err">$</span><span class="n">ValueName</span> <span class="o">=</span> <span class="s2">&quot;MyAutoRunScript&quot;</span>
+<span class="err">$</span><span class="n">ValueData</span> <span class="o">=</span> <span class="s2">&quot;C:\path</span><span class="se">\t</span><span class="s2">o\script.ps1&quot;</span>
+<span class="n">New</span><span class="o">-</span><span class="n">Item</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">RegPath</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">ValueName</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">ValueData</span> <span class="o">-</span><span class="n">Type</span> <span class="n">REG_SZ</span>
+</pre></div></td></tr></table></div>
+</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>Registry</code>: True</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>Startup Folder</code>: True</p>
+<h2>Final Answer: True</h2>
+</div>
+    
+<div id="tab4" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
+<h2>Output</h2>
+<p>**Methods to Automatically Run a Script at User Login in Windows**
+
+**1. Scheduled Task**
+
+* Press **Win + R** to open the Run dialog.
+* Type **taskchd.msc** and click **OK**.
+* Click **Create Task...**
+* In the "General" tab:
+    * Enter a name for the task.
+    * Select the user account under "Run only if user is logged on".
+    * Check the "Run with highest privileges" option.
+* In the "Triggers" tab:
+    * Click **New...**
+    * Select "At log on" as the trigger.
+    * Select the desired user.
+* In the "Actions" tab:
+    * Click **New...**
+    * Select the script file as the program/script to run.
+    * Enter any additional arguments as needed.
+
+**2. Group Policy (Enterprise/Professional)**
+
+* Press **Win + R** and type **gpedit.msc**.
+* Navigate to **Computer Configuration &gt; Windows Settings &gt; Scripts (Startup/Shutdown)**.
+* Double-click **Logon** under "Startup Scripts".
+* Click **Add...**, browse to your script file, and click **OK**.
+
+**3. Registry Modification**
+
+**Caution:** Modifying the registry incorrectly can lead to system issues. Create a backup before proceeding.
+
+* Press **Win + R** and type **regedit**.
+* Navigate to **HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run**.
+* Right-click and select **New &gt; String Value**.
+* Enter a unique name for the value, e.g. "AutoRunScript".
+* Double-click the new value and enter the full path to your script file, surrounded by quotes.
+
+**4. Startup Folder**
+
+* Press **Win + R** and type **shell:startup**.
+* This will open the "Startup" folder.
+* Copy and paste a shortcut to your script file into the folder.
+
+**Automating the Process with PowerShell**
+
+You can use PowerShell scripts to automate the creation of scheduled tasks or registry modifications.
+
+**Example 1: Create Scheduled Task**
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">taskName</span> <span class="o">=</span> <span class="s2">&quot;AutoRunScript&quot;</span>
+<span class="err">$</span><span class="n">scriptPath</span> <span class="o">=</span> <span class="s2">&quot;C:\Path\To\YourScript.ps1&quot;</span>
+<span class="err">$</span><span class="n">task</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">ScheduledTask2</span> <span class="o">-</span><span class="n">TaskName</span> <span class="err">$</span><span class="n">taskName</span> <span class="o">-</span><span class="n">Trigger</span> <span class="o">@</span><span class="p">{</span><span class="n">When</span> <span class="o">=</span> <span class="p">[</span><span class="n">Microsoft</span><span class="o">.</span><span class="n">Win32</span><span class="o">.</span><span class="n">TaskScheduler</span><span class="o">.</span><span class="n">TaskTrigger</span><span class="o">.</span><span class="n">EventTrigger</span><span class="p">]::</span><span class="n">OnLogon</span><span class="p">()}</span> <span class="o">-</span><span class="n">RunAs</span> <span class="o">@</span><span class="p">{</span><span class="n">User</span> <span class="o">=</span> <span class="err">$</span><span class="n">env</span><span class="p">:</span><span class="n">USERNAME</span><span class="p">}</span> <span class="o">-</span><span class="n">Execute</span> <span class="err">$</span><span class="n">scriptPath</span> <span class="o">-</span><span class="n">Force</span>
+</pre></div></td></tr></table></div>
+
+
+**Example 2: Modify Registry**
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">keyPath</span> <span class="o">=</span> <span class="s2">&quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run&quot;</span>
+<span class="err">$</span><span class="n">valueName</span> <span class="o">=</span> <span class="s2">&quot;AutoRunScript&quot;</span>
+<span class="err">$</span><span class="n">scriptPath</span> <span class="o">=</span> <span class="s2">&quot;C:\Path\To\YourScript.ps1&quot;</span>
+<span class="n">Set</span><span class="o">-</span><span class="n">ItemProperty</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">keyPath</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">valueName</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">scriptPath</span> <span class="o">-</span><span class="n">Type</span> <span class="n">String</span> <span class="o">-</span><span class="n">Force</span>
+</pre></div></td></tr></table></div>
+</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>Registry</code>: True</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>Startup Folder</code>: True</p>
+<h2>Final Answer: True</h2>
 </div>
     
 <div id="tab5" class="tab-content">
@@ -1487,208 +1359,43 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2>Query</h2>
 <p>Provide a detailed guide of all the different ways I can make sure my script runs automatically when a user logs into a Windows system and how to automate this process with, e.g. PowerShell scipts</p>
 <h2>Output</h2>
-<p>**Methods to Automatically Run a Script on User Login:**
+<p>**Methods to Automatically Execute Scripts at Windows Login**
 
-**1. Task Scheduler:**
+**Method 1: Group Policy (for Networked Systems)**
 
-* Create a new task in the Task Scheduler.
-* Set the trigger to "At logon".
-* Specify the user account that should run the task.
-* Provide the path to the script executable in the "Action" section.
+1. Open Group Policy Management Console (GPMC, gpmc.msc).
+2. Navigate to Computer Configuration &gt; Policies &gt; Windows Settings &gt; Scripts (Startup/Shutdown).
+3. Right-click on "Startup" and select "Properties."
+4. Click "Add..." and browse to your script.
+5. Set "Script name:" to the full path of your script.
+6. (Optional) Configure other settings such as "Run as:" and "User context:"
 
-**2. Registry Modification:**
+**Method 2: Scheduled Tasks (for Local and Networked Systems)**
 
-* Open the Registry Editor (regedit).
-* Navigate to `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce`.
-* Create a new string value with the name representing the user for whom the script should run.
-* Set the value data to the path of the script executable.
+1. Open Task Scheduler (taskschd.msc).
+2. Create a new task.
+3. Under the "General" tab, set a name for your task and specify whether to run it at login.
+4. Under the "Triggers" tab, click "New..." and select "At log on."
+5. Select the user or group who should trigger the task.
+6. Under the "Actions" tab, click "New..." and browse to your script.
+7. (Optional) Configure other settings such as "Run as:" and "Start in:"
 
-**3. Group Policy:**
+**Method 3: Startup Folder (for Local Systems Only)**
 
-* For domain-joined systems, you can configure a Group Policy Object (GPO).
-* Navigate to "Computer Configuration &gt; Policies &gt; Windows Settings &gt; Scripts (Startup/Shutdown)".
-* Create a new script and set the "Run at logon" option.
+1. Open File Explorer and navigate to %appdata%\Microsoft\Windows\Start Menu\Programs\Startup.
+2. Create a shortcut to your script and paste it into the Startup folder.
 
-**4. User Profile Script:**
+**Method 4: Registry (for Local and Networked Systems)**
 
-* Create a script file with the `.cmd` or `.ps1` extension.
-* Copy the script file to the following location:
-    * Windows Vista and later: `%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`
-    * Windows XP: `%USERPROFILE%\Start Menu\Programs\Startup`
+1. Open Registry Editor (regedit.exe) and navigate to HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run.
+2. Create a new DWORD (32-bit) or QWORD (64-bit) value and name it with the desired trigger (e.g., "AutoRunScript").
+3. Set the value data to the full path of your script.
 
-**5. Service:**
+**Automation with PowerShell Scripts**
 
-* Create a Windows service using the Service Control Manager API.
-* Configure the service to start automatically and run the script as part of its operation.
+**Method 1: Using Group Policy PowerShell Module**
 
-**Automating the Process with PowerShell Scripts:**
-
-To automate the process of adding a script to one of these locations, you can create a PowerShell script that:
-
-1. **Determine the User Logon Location:**
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="err">$</span><span class="n">logonLocation</span> <span class="o">=</span> <span class="err">$</span><span class="n">env</span><span class="p">:</span><span class="n">USERPROFILE</span> <span class="o">+</span> <span class="s2">&quot;\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup&quot;</span>
-   
-</pre></div></td></tr></table></div>
-
-
-2. **Copy the Script File:**
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="n">Copy</span><span class="o">-</span><span class="n">Item</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;C:\path</span><span class="se">\t</span><span class="s2">o\script.cmd&quot;</span> <span class="o">-</span><span class="n">Destination</span> <span class="err">$</span><span class="n">logonLocation</span>
-   
-</pre></div></td></tr></table></div>
-
-
-3. **Create Registry Entry:**
-   <style>pre { line-height: 125%; }
+<style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -1764,14 +1471,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="err">$</span><span class="n">regKey</span> <span class="o">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce&quot;</span>
-   <span class="n">Set</span><span class="o">-</span><span class="n">ItemProperty</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">regKey</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">env</span><span class="p">:</span><span class="n">USERNAME</span> <span class="o">-</span><span class="n">Value</span> <span class="s2">&quot;C:\path</span><span class="se">\t</span><span class="s2">o\script.cmd&quot;</span>
-   
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">GroupPolicy</span>
+<span class="err">$</span><span class="n">gpo</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">GPO</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;AutoRun GPO&quot;</span> <span class="o">-</span><span class="n">DisplayName</span> <span class="s2">&quot;Automatically runs a script at login&quot;</span>
+<span class="n">Set</span><span class="o">-</span><span class="n">GPStartupScript</span> <span class="o">-</span><span class="n">GPO</span> <span class="err">$</span><span class="n">gpo</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;C:\Path\To\YourScript.ps1&quot;</span>
 </pre></div></td></tr></table></div>
 
 
-4. **Apply Group Policy:**
-   <style>pre { line-height: 125%; }
+**Method 2: Using Task Scheduler PowerShell Module**
+
+<style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -1847,20 +1555,102 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
 <span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="err">$</span><span class="n">computer</span> <span class="o">=</span> <span class="err">$</span><span class="n">env</span><span class="p">:</span><span class="n">COMPUTERNAME</span>
-   <span class="n">Invoke</span><span class="o">-</span><span class="n">Command</span> <span class="o">-</span><span class="n">ComputerName</span> <span class="err">$</span><span class="n">computer</span> <span class="o">-</span><span class="n">ScriptBlock</span> <span class="p">{</span>
-       <span class="n">New</span><span class="o">-</span><span class="n">ItemProperty</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\System&quot;</span> <span class="o">-</span><span class="n">Name</span> <span class="n">LogonScripts</span> <span class="o">-</span><span class="n">Value</span> <span class="s2">&quot;C:\path</span><span class="se">\t</span><span class="s2">o\script.cmd&quot;</span> <span class="o">-</span><span class="n">Force</span>
-   <span class="p">}</span>
-   
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">TaskScheduler</span>
+<span class="err">$</span><span class="n">task</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">ScheduledTask</span> <span class="o">-</span><span class="n">Action</span> <span class="s2">&quot;powershell.exe -File C:\Path\To\YourScript.ps1&quot;</span> <span class="o">-</span><span class="n">Trigger</span> <span class="s2">&quot;AtLogon&quot;</span> <span class="o">-</span><span class="n">Principal</span> <span class="s2">&quot;myuser&quot;</span>
+<span class="n">Register</span><span class="o">-</span><span class="n">ScheduledTask</span> <span class="o">-</span><span class="n">TaskName</span> <span class="err">$</span><span class="n">task</span><span class="o">.</span><span class="n">TaskName</span> <span class="o">-</span><span class="n">TaskPath</span> <span class="err">$</span><span class="n">task</span><span class="o">.</span><span class="n">TaskPath</span>
 </pre></div></td></tr></table></div>
-</p>
+
+
+**Method 3: Using Registry PowerShell cmdlets**
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Set</span><span class="o">-</span><span class="n">ItemProperty</span> <span class="s2">&quot;HKCU:\Software\Microsoft\Windows\CurrentVersion\Run&quot;</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;AutoRunScript&quot;</span> <span class="o">-</span><span class="n">Type</span> <span class="n">String</span> <span class="o">-</span><span class="n">Value</span> <span class="s2">&quot;C:\Path\To\YourScript.ps1&quot;</span>
+</pre></div></td></tr></table></div>
+
+
+**Note:**
+
+* Methods 1 and 2 require elevated privileges or membership in the relevant groups.
+* Method 3 (Registry) can be used for both local and network systems, but requires administrative privileges.
+* Automation scripts should be tested thoroughly before deployment in a production environment.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>Registry</code>: True</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Startup Folder</code>: False</p>
-<h2>Final Answer: False</h2>
+<p>Testing if the previous output contains the string <code>Startup Folder</code>: True</p>
+<h2>Final Answer: True</h2>
 </div>
     

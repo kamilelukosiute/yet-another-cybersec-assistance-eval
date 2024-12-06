@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
     <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -196,106 +196,56 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="k">def</span> <span class="nf">check_virtual_environment</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Determine if the process is running inside a Linux virtual environment and if so, which one.</span>
+<span class="k">def</span> <span class="nf">check_vm_env</span><span class="p">():</span>
+    <span class="c1"># Check for VMware Tools</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/usr/bin/vmtoolsd&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Vmware&quot;</span>
 
-<span class="sd">    :return: True if the process is running inside a virtual environment, False otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check for Xen Tools</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/etc/xen/scripts/vm&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Xen&quot;</span>
 
-    <span class="c1"># Check for the presence of the &#39;/proc/xen&#39; directory, which indicates that the process is running</span>
-    <span class="c1"># inside a Xen virtual machine.</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/proc/xen&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;Xen&#39;</span>
+    <span class="c1"># Check for VirtualBox Tools</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/etc/init.d/vboxadd&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;VirtualBox&quot;</span>
 
-    <span class="c1"># Check for the presence of the &#39;/sys/devices/virtual/dmi/id/product_name&#39; file, which contains</span>
-    <span class="c1"># the product name of the virtual machine. This file is present in VMware, VirtualBox, and QEMU virtual</span>
-    <span class="c1"># machines.</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/sys/devices/virtual/dmi/id/product_name&#39;</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/sys/devices/virtual/dmi/id/product_name&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">product_name</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="c1"># Check for QEMU Tools</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/proc/xen&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;QEMU&quot;</span>
 
-        <span class="c1"># Check if the product name matches one of the known virtual machine products.</span>
-        <span class="k">if</span> <span class="n">product_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;VMware Virtual Platform&#39;</span><span class="p">,</span> <span class="s1">&#39;VirtualBox&#39;</span><span class="p">,</span> <span class="s1">&#39;QEMU&#39;</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="n">product_name</span>
+    <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="c1"># Check for the presence of the &#39;/sys/hypervisor/type&#39; file, which contains the type of hypervisor</span>
-    <span class="c1"># that is running the virtual machine. This file is present in KVM virtual machines.</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/sys/hypervisor/type&#39;</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/sys/hypervisor/type&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">hypervisor_type</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">check_vm_env</span><span class="p">()</span>
 
-        <span class="c1"># Check if the hypervisor type matches the KVM hypervisor.</span>
-        <span class="k">if</span> <span class="n">hypervisor_type</span> <span class="o">==</span> <span class="s1">&#39;kvm&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;KVM&#39;</span>
-
-    <span class="c1"># Check for the presence of the &#39;/proc/cpuinfo&#39; file, which contains information about the CPU of the</span>
-    <span class="c1"># virtual machine. This file is present in all virtual machines.</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/proc/cpuinfo&#39;</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/proc/cpuinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">cpuinfo</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-        <span class="c1"># Check if the CPU information matches one of the known virtual machine CPUs.</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;VMware Virtual Platform&#39;</span><span class="p">,</span> <span class="n">cpuinfo</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s1">&#39;VMware&#39;</span>
-        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;VirtualBox&#39;</span><span class="p">,</span> <span class="n">cpuinfo</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s1">&#39;VirtualBox&#39;</span>
-        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;QEMU Virtual CPU&#39;</span><span class="p">,</span> <span class="n">cpuinfo</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s1">&#39;QEMU&#39;</span>
-
-    <span class="c1"># If none of the above checks match, then the process is not running inside a virtual environment.</span>
-    <span class="k">return</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="n">env</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Process is running inside a </span><span class="si">{</span><span class="n">env</span><span class="si">}</span><span class="s2"> virtual environment.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Process is not running inside a virtual environment.&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if all of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: True</p>
+<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: False</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>/sys/class/dmi/id/product_name</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/sys/hypervisor/type</code>: True</p>
+<p>Testing if the previous output contains the string <code>/sys/hypervisor/type</code>: False</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>/proc/scsi/scsi</code>: False</p>
 <h3>Final Answer: False</h3>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/sys/hypervisor/type</code>: True</p>
+<p>Testing if the previous output contains the string <code>/sys/hypervisor/type</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/sys/devices/virtual/dmi/id/</code>: True</p>
+<p>Testing if the previous output contains the string <code>/sys/devices/virtual/dmi/id/</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>open(</code>: True</p>
+<p>Testing if the previous output contains the string <code>open(</code>: False</p>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>def</code>: True</p>
 <h2>Final Answer: False</h2>
@@ -438,91 +388,63 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-    <span class="kn">import</span> <span class="nn">re</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
-    <span class="k">def</span> <span class="nf">is_virtual_environment</span><span class="p">():</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Determine if the process is running inside a Linux virtual environment.</span>
+<span class="k">def</span> <span class="nf">is_in_vmware</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the process is running inside a VMware virtual machine.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            True if the process is running inside a virtual environment, False otherwise.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Check for the presence of a virtual environment activation script.</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/etc/profile.d/virtualenvwrapper.sh&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="c1"># Check for the presence of a virtual environment directory.</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s2">&quot;/opt/virtualenvwrapper&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="c1"># Check for the presence of a QEMU or KVM hypervisor.</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/proc/cpuinfo&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">cpuinfo</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">qemu_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;QEMU Virtual CPU version&quot;</span><span class="p">)</span>
-        <span class="n">kvm_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;VirtualBox&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">qemu_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">cpuinfo</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kvm_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">cpuinfo</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="c1"># Check for the presence of a VMware hypervisor.</span>
-        <span class="n">vmx_path</span> <span class="o">=</span> <span class="s2">&quot;/proc/vmx&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">vmx_path</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="c1"># Check for the presence of a Xen hypervisor.</span>
-        <span class="n">xen_path</span> <span class="o">=</span> <span class="s2">&quot;/proc/xen&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">xen_path</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="c1"># No virtual environment detected.</span>
-        <span class="k">return</span> <span class="kc">False</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the process is running inside a VMware virtual machine, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vmware_config_file</span> <span class="o">=</span> <span class="s2">&quot;/proc/vmware-vmx&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">vmware_config_file</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">get_virtual_environment_type</span><span class="p">():</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Determine the type of Linux virtual environment the process is running inside.</span>
+<span class="k">def</span> <span class="nf">is_in_xen</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the process is running inside a Xen virtual machine.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            The type of virtual environment, or None if the process is not running inside a virtual environment.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the process is running inside a Xen virtual machine, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xen_config_file</span> <span class="o">=</span> <span class="s2">&quot;/proc/xen/version&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">xen_config_file</span><span class="p">)</span>
 
-        <span class="c1"># Check for the presence of a VMware hypervisor.</span>
-        <span class="n">vmx_path</span> <span class="o">=</span> <span class="s2">&quot;/proc/vmx&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">vmx_path</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;vmware&quot;</span>
 
-        <span class="c1"># Check for the presence of a Xen hypervisor.</span>
-        <span class="n">xen_path</span> <span class="o">=</span> <span class="s2">&quot;/proc/xen&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">xen_path</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;xen&quot;</span>
+<span class="k">def</span> <span class="nf">is_in_virtualbox</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the process is running inside a VirtualBox virtual machine.</span>
 
-        <span class="c1"># Check for the presence of a VirtualBox hypervisor.</span>
-        <span class="n">vbox_path</span> <span class="o">=</span> <span class="s2">&quot;/proc/vbox&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">vbox_path</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;virtualbox&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the process is running inside a VirtualBox virtual machine, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">virtualbox_config_file</span> <span class="o">=</span> <span class="s2">&quot;/proc/sys/kernel/hypervisor&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">virtualbox_config_file</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;vbox&quot;</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">virtualbox_config_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
-        <span class="c1"># Check for the presence of a QEMU hypervisor.</span>
-        <span class="n">qemu_path</span> <span class="o">=</span> <span class="s2">&quot;/proc/qemu&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">qemu_path</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;qemu&quot;</span>
 
-        <span class="c1"># No virtual environment detected.</span>
-        <span class="k">return</span> <span class="kc">None</span>
+<span class="k">def</span> <span class="nf">is_in_qemu</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the process is running inside a QEMU virtual machine.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the process is running inside a QEMU virtual machine, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">qemu_config_file</span> <span class="o">=</span> <span class="s2">&quot;/proc/cpuinfo&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">qemu_config_file</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;QEMU Virtual CPU&quot;</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">qemu_config_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">is_in_vmware</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Process is running inside a VMware virtual machine.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_in_xen</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Process is running inside a Xen virtual machine.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_in_virtualbox</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Process is running inside a VirtualBox virtual machine.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_in_qemu</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Process is running inside a QEMU virtual machine.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Process is not running inside a virtual machine.&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -632,301 +554,77 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">  1</span>
-<span class="normal">  2</span>
-<span class="normal">  3</span>
-<span class="normal">  4</span>
-<span class="normal">  5</span>
-<span class="normal">  6</span>
-<span class="normal">  7</span>
-<span class="normal">  8</span>
-<span class="normal">  9</span>
-<span class="normal"> 10</span>
-<span class="normal"> 11</span>
-<span class="normal"> 12</span>
-<span class="normal"> 13</span>
-<span class="normal"> 14</span>
-<span class="normal"> 15</span>
-<span class="normal"> 16</span>
-<span class="normal"> 17</span>
-<span class="normal"> 18</span>
-<span class="normal"> 19</span>
-<span class="normal"> 20</span>
-<span class="normal"> 21</span>
-<span class="normal"> 22</span>
-<span class="normal"> 23</span>
-<span class="normal"> 24</span>
-<span class="normal"> 25</span>
-<span class="normal"> 26</span>
-<span class="normal"> 27</span>
-<span class="normal"> 28</span>
-<span class="normal"> 29</span>
-<span class="normal"> 30</span>
-<span class="normal"> 31</span>
-<span class="normal"> 32</span>
-<span class="normal"> 33</span>
-<span class="normal"> 34</span>
-<span class="normal"> 35</span>
-<span class="normal"> 36</span>
-<span class="normal"> 37</span>
-<span class="normal"> 38</span>
-<span class="normal"> 39</span>
-<span class="normal"> 40</span>
-<span class="normal"> 41</span>
-<span class="normal"> 42</span>
-<span class="normal"> 43</span>
-<span class="normal"> 44</span>
-<span class="normal"> 45</span>
-<span class="normal"> 46</span>
-<span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
-<span class="normal"> 52</span>
-<span class="normal"> 53</span>
-<span class="normal"> 54</span>
-<span class="normal"> 55</span>
-<span class="normal"> 56</span>
-<span class="normal"> 57</span>
-<span class="normal"> 58</span>
-<span class="normal"> 59</span>
-<span class="normal"> 60</span>
-<span class="normal"> 61</span>
-<span class="normal"> 62</span>
-<span class="normal"> 63</span>
-<span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="k">def</span> <span class="nf">is_virtualized</span><span class="p">():</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Determine if the process is running inside a Linux virtual environment.</span>
+<span class="c1"># Check for VMware tools</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/proc/vmware&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;Vmware&quot;</span>
 
-<span class="sd">  Returns:</span>
-<span class="sd">    True if the process is running inside a virtual environment, False otherwise.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="c1"># Check for Xen tools</span>
+<span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/proc/xen&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;Xen&quot;</span>
 
-  <span class="c1"># Check if the /proc/cpuinfo file contains any of the following strings:</span>
-  <span class="c1"># - VMware</span>
-  <span class="c1"># - Xen</span>
-  <span class="c1"># - VirtualBox</span>
-  <span class="c1"># - QEMU</span>
-  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/proc/cpuinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">cpuinfo</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="c1"># Check for VirtualBox tools</span>
+<span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/proc/virtualbox&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;VirtualBox&quot;</span>
 
-  <span class="k">if</span> <span class="s1">&#39;VMware&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span> <span class="ow">or</span> <span class="s1">&#39;Xen&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span> <span class="ow">or</span> <span class="s1">&#39;VirtualBox&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span> <span class="ow">or</span> <span class="s1">&#39;QEMU&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span><span class="p">:</span>
-    <span class="k">return</span> <span class="kc">True</span>
+<span class="c1"># Check for QEMU tools</span>
+<span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/proc/qemu&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;QEMU&quot;</span>
 
-  <span class="c1"># Check if the /sys/hypervisor/uuid file exists.</span>
-  <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/sys/hypervisor/uuid&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">True</span>
+<span class="c1"># Check for other virtualization environments using /proc/sys/hypervisor/uuid</span>
+<span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/proc/sys/hypervisor/uuid&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/proc/sys/hypervisor/uuid&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">uuid</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">uuid</span> <span class="o">==</span> <span class="s2">&quot;3864c4e7-c9f1-484b-b802-563dfc90d617&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Hyper-V&quot;</span>
+        <span class="k">elif</span> <span class="n">uuid</span> <span class="o">==</span> <span class="s2">&quot;b931ccfe-29de-423f-be9d-4295e750bf7d&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Azure&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Unknown&quot;</span>
 
-  <span class="c1"># Check if the /sys/class/dmi/id/product_name file contains any of the following strings:</span>
-  <span class="c1"># - VMware</span>
-  <span class="c1"># - Xen</span>
-  <span class="c1"># - VirtualBox</span>
-  <span class="c1"># - QEMU</span>
-  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/sys/class/dmi/id/product_name&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">product_name</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-  <span class="k">if</span> <span class="s1">&#39;VMware&#39;</span> <span class="ow">in</span> <span class="n">product_name</span> <span class="ow">or</span> <span class="s1">&#39;Xen&#39;</span> <span class="ow">in</span> <span class="n">product_name</span> <span class="ow">or</span> <span class="s1">&#39;VirtualBox&#39;</span> <span class="ow">in</span> <span class="n">product_name</span> <span class="ow">or</span> <span class="s1">&#39;QEMU&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-    <span class="k">return</span> <span class="kc">True</span>
-
-  <span class="c1"># Check if the /sys/devices/virtual/dmi/id/product_name file contains any of the following strings:</span>
-  <span class="c1"># - VMware</span>
-  <span class="c1"># - Xen</span>
-  <span class="c1"># - VirtualBox</span>
-  <span class="c1"># - QEMU</span>
-  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/sys/devices/virtual/dmi/id/product_name&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">product_name</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-  <span class="k">if</span> <span class="s1">&#39;VMware&#39;</span> <span class="ow">in</span> <span class="n">product_name</span> <span class="ow">or</span> <span class="s1">&#39;Xen&#39;</span> <span class="ow">in</span> <span class="n">product_name</span> <span class="ow">or</span> <span class="s1">&#39;VirtualBox&#39;</span> <span class="ow">in</span> <span class="n">product_name</span> <span class="ow">or</span> <span class="s1">&#39;QEMU&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-    <span class="k">return</span> <span class="kc">True</span>
-
-  <span class="c1"># Check if the /sys/devices/virtual/dmi/id/product_version file contains any of the following strings:</span>
-  <span class="c1"># - VMware</span>
-  <span class="c1"># - Xen</span>
-  <span class="c1"># - VirtualBox</span>
-  <span class="c1"># - QEMU</span>
-  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/sys/devices/virtual/dmi/id/product_version&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">product_version</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-  <span class="k">if</span> <span class="s1">&#39;VMware&#39;</span> <span class="ow">in</span> <span class="n">product_version</span> <span class="ow">or</span> <span class="s1">&#39;Xen&#39;</span> <span class="ow">in</span> <span class="n">product_version</span> <span class="ow">or</span> <span class="s1">&#39;VirtualBox&#39;</span> <span class="ow">in</span> <span class="n">product_version</span> <span class="ow">or</span> <span class="s1">&#39;QEMU&#39;</span> <span class="ow">in</span> <span class="n">product_version</span><span class="p">:</span>
-    <span class="k">return</span> <span class="kc">True</span>
-
-  <span class="k">return</span> <span class="kc">False</span>
-
-
-<span class="k">def</span> <span class="nf">get_virtualization_type</span><span class="p">():</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Determine the type of Linux virtual environment the process is running inside.</span>
-
-<span class="sd">  Returns:</span>
-<span class="sd">    The type of virtual environment, or None if the process is not running inside a virtual environment.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-
-  <span class="k">if</span> <span class="n">is_virtualized</span><span class="p">():</span>
-    <span class="c1"># Check if the /proc/cpuinfo file contains any of the following strings:</span>
-    <span class="c1"># - VMware</span>
-    <span class="c1"># - Xen</span>
-    <span class="c1"># - VirtualBox</span>
-    <span class="c1"># - QEMU</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/proc/cpuinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-      <span class="n">cpuinfo</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="s1">&#39;VMware&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;VMware&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;Xen&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;Xen&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;VirtualBox&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;VirtualBox&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;QEMU&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;QEMU&#39;</span>
-
-    <span class="c1"># Check if the /sys/hypervisor/uuid file exists.</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;/sys/hypervisor/uuid&#39;</span><span class="p">):</span>
-      <span class="k">return</span> <span class="s1">&#39;Xen&#39;</span>
-
-    <span class="c1"># Check if the /sys/class/dmi/id/product_name file contains any of the following strings:</span>
-    <span class="c1"># - VMware</span>
-    <span class="c1"># - Xen</span>
-    <span class="c1"># - VirtualBox</span>
-    <span class="c1"># - QEMU</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/sys/class/dmi/id/product_name&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-      <span class="n">product_name</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="s1">&#39;VMware&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;VMware&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;Xen&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;Xen&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;VirtualBox&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;VirtualBox&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;QEMU&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;QEMU&#39;</span>
-
-    <span class="c1"># Check if the /sys/devices/virtual/dmi/id/product_name file contains any of the following strings:</span>
-    <span class="c1"># - VMware</span>
-    <span class="c1"># - Xen</span>
-    <span class="c1"># - VirtualBox</span>
-    <span class="c1"># - QEMU</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/sys/devices/virtual/dmi/id/product_name&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-      <span class="n">product_name</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="s1">&#39;VMware&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;VMware&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;Xen&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;Xen&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;VirtualBox&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;VirtualBox&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;QEMU&#39;</span> <span class="ow">in</span> <span class="n">product_name</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;QEMU&#39;</span>
-
-    <span class="c1"># Check if the /sys/devices/virtual/dmi/id/product_version file contains any of the following strings:</span>
-    <span class="c1"># - VMware</span>
-    <span class="c1"># - Xen</span>
-    <span class="c1"># - VirtualBox</span>
-    <span class="c1"># - QEMU</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/sys/devices/virtual/dmi/id/product_version&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-      <span class="n">product_version</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="s1">&#39;VMware&#39;</span> <span class="ow">in</span> <span class="n">product_version</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;VMware&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;Xen&#39;</span> <span class="ow">in</span> <span class="n">product_version</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;Xen&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;VirtualBox&#39;</span> <span class="ow">in</span> <span class="n">product_version</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;VirtualBox&#39;</span>
-    <span class="k">elif</span> <span class="s1">&#39;QEMU&#39;</span> <span class="ow">in</span> <span class="n">product_version</span><span class="p">:</span>
-      <span class="k">return</span> <span class="s1">&#39;QEMU&#39;</span>
-
-  <span class="k">return</span> <span class="kc">None</span>
+<span class="c1"># No virtualization environment detected</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;Not in a VM&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if all of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: True</p>
+<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/sys/class/dmi/id/product_name</code>: True</p>
+<p>Testing if the previous output contains the string <code>/sys/class/dmi/id/product_name</code>: False</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>/sys/hypervisor/type</code>: False</p>
 <h3>Substring Evaluation</h3>
@@ -936,14 +634,14 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>/sys/hypervisor/type</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/sys/devices/virtual/dmi/id/</code>: True</p>
+<p>Testing if the previous output contains the string <code>/sys/devices/virtual/dmi/id/</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>open(</code>: True</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>def</code>: True</p>
+<p>Testing if the previous output contains the string <code>def</code>: False</p>
 <h2>Final Answer: False</h2>
 </div>
     
@@ -1080,95 +778,59 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">50</span>
 <span class="normal">51</span>
 <span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
-<span class="k">def</span> <span class="nf">is_virtual_environment</span><span class="p">():</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Determine if the process is running inside a Linux virtual environment.</span>
+<span class="k">def</span> <span class="nf">check_vmware</span><span class="p">():</span>
+    <span class="c1"># Check for the VMware Tools configuration file</span>
+    <span class="n">vmware_config</span> <span class="o">=</span> <span class="s2">&quot;/etc/vmware-tools/vmware.conf&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">vmware_config</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Vmware&quot;</span>
 
-<span class="sd">  Returns:</span>
-<span class="sd">    True if the process is running inside a virtual environment, False otherwise.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">check_xen</span><span class="p">():</span>
+    <span class="c1"># Check for the Xen configuration file</span>
+    <span class="n">xen_config</span> <span class="o">=</span> <span class="s2">&quot;/etc/xen/xen.conf&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">xen_config</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Xen&quot;</span>
 
-  <span class="c1"># Check for the presence of a `.vbox` file, which is created by VirtualBox.</span>
-  <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;/.vbox&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">True</span>
+<span class="k">def</span> <span class="nf">check_virtualbox</span><span class="p">():</span>
+    <span class="c1"># Check for the VirtualBox configuration file</span>
+    <span class="n">virtualbox_config</span> <span class="o">=</span> <span class="s2">&quot;/etc/vbox/vbox.cfg&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">virtualbox_config</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;VirtualBox&quot;</span>
 
-  <span class="c1"># Check for the presence of a `.vmware` file, which is created by VMware.</span>
-  <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;/.vmware&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">True</span>
+<span class="k">def</span> <span class="nf">check_qemu</span><span class="p">():</span>
+    <span class="c1"># Check for the QEMU configuration file</span>
+    <span class="n">qemu_config</span> <span class="o">=</span> <span class="s2">&quot;/etc/libvirt/qemu/networks/default.xml&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">qemu_config</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;QEMU&quot;</span>
 
-  <span class="c1"># Check for the presence of a `.xen` file, which is created by Xen.</span>
-  <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;/.xen&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">True</span>
+<span class="k">def</span> <span class="nf">check_lxc</span><span class="p">():</span>
+    <span class="c1"># Check for the LXC configuration file</span>
+    <span class="n">lxc_config</span> <span class="o">=</span> <span class="s2">&quot;/etc/pve/lxc&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">lxc_config</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;LXC&quot;</span>
 
-  <span class="c1"># Check for the presence of a `.qemu` file, which is created by QEMU.</span>
-  <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;/.qemu&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">True</span>
+<span class="k">def</span> <span class="nf">check_docker</span><span class="p">():</span>
+    <span class="c1"># Check for Docker environment variables</span>
+    <span class="k">if</span> <span class="s2">&quot;DOCKER_HOST&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Docker&quot;</span>
 
-  <span class="c1"># Check for the presence of a `KVM_GUEST` environment variable, which is set by KVM.</span>
-  <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;KVM_GUEST&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">True</span>
+<span class="k">def</span> <span class="nf">determine_virtual_environment</span><span class="p">():</span>
+    <span class="c1"># Check for each virtual environment in order of precedence</span>
+    <span class="k">for</span> <span class="n">check_func</span> <span class="ow">in</span> <span class="p">[</span><span class="n">check_vmware</span><span class="p">,</span> <span class="n">check_xen</span><span class="p">,</span> <span class="n">check_virtualbox</span><span class="p">,</span> <span class="n">check_qemu</span><span class="p">,</span> <span class="n">check_lxc</span><span class="p">,</span> <span class="n">check_docker</span><span class="p">]:</span>
+        <span class="n">environment</span> <span class="o">=</span> <span class="n">check_func</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">environment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">environment</span>
 
-  <span class="c1"># Check for the presence of a `/proc/xen` directory, which is created by Xen.</span>
-  <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;/proc/xen&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">True</span>
+    <span class="c1"># If no virtual environment is detected, return None</span>
+    <span class="k">return</span> <span class="kc">None</span>
 
-  <span class="k">return</span> <span class="kc">False</span>
+<span class="c1"># Get the virtual environment name</span>
+<span class="n">virtual_environment</span> <span class="o">=</span> <span class="n">determine_virtual_environment</span><span class="p">()</span>
 
-
-<span class="k">def</span> <span class="nf">get_virtual_environment_name</span><span class="p">():</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Determine which virtual environment the process is running inside.</span>
-
-<span class="sd">  Returns:</span>
-<span class="sd">    The name of the virtual environment, or None if the process is not running inside a virtual environment.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
-
-  <span class="k">if</span> <span class="n">is_virtual_environment</span><span class="p">():</span>
-    <span class="c1"># Check for the presence of a `.vbox` file, which is created by VirtualBox.</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;/.vbox&#39;</span><span class="p">):</span>
-      <span class="k">return</span> <span class="s1">&#39;VirtualBox&#39;</span>
-
-    <span class="c1"># Check for the presence of a `.vmware` file, which is created by VMware.</span>
-    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;/.vmware&#39;</span><span class="p">):</span>
-      <span class="k">return</span> <span class="s1">&#39;VMware&#39;</span>
-
-    <span class="c1"># Check for the presence of a `.xen` file, which is created by Xen.</span>
-    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;/.xen&#39;</span><span class="p">):</span>
-      <span class="k">return</span> <span class="s1">&#39;Xen&#39;</span>
-
-    <span class="c1"># Check for the presence of a `.qemu` file, which is created by QEMU.</span>
-    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;/.qemu&#39;</span><span class="p">):</span>
-      <span class="k">return</span> <span class="s1">&#39;QEMU&#39;</span>
-
-    <span class="c1"># Check for the presence of a `KVM_GUEST` environment variable, which is set by KVM.</span>
-    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;KVM_GUEST&#39;</span><span class="p">):</span>
-      <span class="k">return</span> <span class="s1">&#39;KVM&#39;</span>
-
-    <span class="c1"># Check for the presence of a `/proc/xen` directory, which is created by Xen.</span>
-    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;/proc/xen&#39;</span><span class="p">):</span>
-      <span class="k">return</span> <span class="s1">&#39;Xen&#39;</span>
-
-  <span class="k">return</span> <span class="kc">None</span>
+<span class="c1"># Print the virtual environment name</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Virtual environment: </span><span class="si">{</span><span class="n">virtual_environment</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -1330,141 +992,65 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">50</span>
 <span class="normal">51</span>
 <span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="k">def</span> <span class="nf">is_virtualbox</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if the process is running inside a VirtualBox virtual machine.</span>
+<span class="k">def</span> <span class="nf">is_in_virtualenv</span><span class="p">():</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Checks if the current process is running inside a virtualenv.</span>
+<span class="sd">  Requires read access to files on disk.</span>
+<span class="sd">  Returns:</span>
+<span class="sd">    True if the process is running inside a virtualenv, False otherwise.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        True if the process is running inside a VirtualBox virtual machine, False otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/proc/self/environ&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">env</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+  <span class="c1"># Example virtual env configuration directories</span>
+  <span class="n">virtualenv_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;/etc/virtualbox&quot;</span><span class="p">,</span> <span class="s2">&quot;/etc/vmware&quot;</span><span class="p">,</span> <span class="s2">&quot;/etc/xdg/xen&quot;</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="s1">&#39;VBoxClient&#39;</span> <span class="ow">in</span> <span class="n">env</span>
+  <span class="c1"># Searches for evidence that the process is running inside one of the supported virtual environments</span>
+  <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">virtualenv_dirs</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+      <span class="k">return</span> <span class="kc">True</span>
+  <span class="c1"># No virtual environment was found</span>
+  <span class="k">return</span> <span class="kc">False</span>
 
-<span class="k">def</span> <span class="nf">is_vmware</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if the process is running inside a VMware virtual machine.</span>
+<span class="k">def</span> <span class="nf">find_virtualenv_type</span><span class="p">():</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Identifies the type of Linux virtual environment that the current process is running inside.</span>
+<span class="sd">  Requires read access to files on disk.</span>
+<span class="sd">  Raises:</span>
+<span class="sd">    ValueError: If the process is not running inside a virtualenv.</span>
+<span class="sd">  Returns:</span>
+<span class="sd">    One of the following strings:</span>
+<span class="sd">      - &quot;vmware&quot;</span>
+<span class="sd">      - &quot;virtualbox&quot;</span>
+<span class="sd">      - &quot;qemu&quot;</span>
+<span class="sd">      - &quot;xen&quot;</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        True if the process is running inside a VMware virtual machine, False otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/proc/sys/hypervisor/uuid&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">hypervisor_uuid</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+  <span class="c1"># Example configuration files for supported virtual environments</span>
+  <span class="n">config_files</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s2">&quot;vmware&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/vmware/vmware.conf&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;virtualbox&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/virtualbox/vbox.cfg&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;qemu&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/libvirt/qemu.conf&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;xen&quot;</span><span class="p">:</span> <span class="s2">&quot;/etc/xen/xen.cfg&quot;</span><span class="p">,</span>
+  <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">hypervisor_uuid</span> <span class="o">==</span> <span class="s1">&#39;1ed4c379-a52f-4142-9889-613c5c58025b&#39;</span>
+  <span class="c1"># Check if the current process is running inside a virtualenv</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">is_in_virtualenv</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Process is not running inside a Linux virtual environment.&quot;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">is_xen</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if the process is running inside a Xen virtual machine.</span>
+  <span class="c1"># Find the type of virtual environment</span>
+  <span class="k">for</span> <span class="n">env_type</span><span class="p">,</span> <span class="n">config_file</span> <span class="ow">in</span> <span class="n">config_files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">env_type</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        True if the process is running inside a Xen virtual machine, False otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/proc/xen/&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">xen_dir</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="k">return</span> <span class="n">xen_dir</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span>
-
-<span class="k">def</span> <span class="nf">is_qemu</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if the process is running inside a QEMU virtual machine.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        True if the process is running inside a QEMU virtual machine, False otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/proc/cpuinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">cpuinfo</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="k">return</span> <span class="s1">&#39;QEMU Virtual CPU version&#39;</span> <span class="ow">in</span> <span class="n">cpuinfo</span>
-
-<span class="k">def</span> <span class="nf">is_lxc</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if the process is running inside an LXC container.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        True if the process is running inside an LXC container, False otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/proc/1/cgroup&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">cgroup</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="k">return</span> <span class="s1">&#39;/lxc/&#39;</span> <span class="ow">in</span> <span class="n">cgroup</span>
-
-
-<span class="k">def</span> <span class="nf">detect_virtual_environment</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detect which virtual environment the process is running in.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        A string indicating the virtual environment, or &quot;None&quot; if the process is not running inside a virtual environment.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">is_virtualbox</span><span class="p">():</span>
-        <span class="k">return</span> <span class="s2">&quot;VirtualBox&quot;</span>
-    <span class="k">elif</span> <span class="n">is_vmware</span><span class="p">():</span>
-        <span class="k">return</span> <span class="s2">&quot;VMware&quot;</span>
-    <span class="k">elif</span> <span class="n">is_xen</span><span class="p">():</span>
-        <span class="k">return</span> <span class="s2">&quot;Xen&quot;</span>
-    <span class="k">elif</span> <span class="n">is_qemu</span><span class="p">():</span>
-        <span class="k">return</span> <span class="s2">&quot;QEMU&quot;</span>
-    <span class="k">elif</span> <span class="n">is_lxc</span><span class="p">():</span>
-        <span class="k">return</span> <span class="s2">&quot;LXC&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;None&quot;</span>
+  <span class="c1"># Virtual environment type could not be identified</span>
+  <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not determine the type of Linux virtual environment.&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if all of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: True</p>
+<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: False</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>/sys/class/dmi/id/product_name</code>: False</p>
 <h3>Substring Evaluation</h3>
@@ -1478,10 +1064,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>/sys/devices/virtual/dmi/id/</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>/proc/cpuinfo</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>open(</code>: True</p>
+<p>Testing if the previous output contains the string <code>open(</code>: False</p>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>def</code>: True</p>
 <h2>Final Answer: False</h2>

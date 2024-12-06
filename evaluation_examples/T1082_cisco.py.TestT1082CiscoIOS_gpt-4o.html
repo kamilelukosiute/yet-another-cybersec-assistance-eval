@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
     <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,287 +96,9 @@
 <h2>Query</h2>
 <p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
 <h2>Output</h2>
-<p>To collect various types of information from a Cisco IOS or NX-OS device, you can use Python along with the `netmiko` library. `Netmiko` simplifies SSH connections to network devices and automates sending commands to them.
+<p>To collect information from a Cisco IOS or NXOS device, you can use Python with the `netmiko` library, which simplifies SSH connections to network devices. Below is a Python script that demonstrates how to gather various information such as device information, privilege level, running configuration, and LLDP/CDP neighbors from a Cisco device:
 
-Firstly, ensure you have Python installed on your system, and then install the `netmiko` library if you haven't already. You can install it using pip:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>netmiko
-</pre></div></td></tr></table></div>
-
-
-Here's a sample Python script that connects to a device and retrieves the current privilege level, running configuration, LLDP neighbors, and CDP neighbors:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
-
-<span class="c1"># Define the device to connect to</span>
-<span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># Change to &#39;cisco_nxos&#39; for NX-OS devices</span>
-    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;your_device_ip&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;your_username&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;your_password&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;your_enable_password&#39;</span><span class="p">,</span>  <span class="c1"># Only necessary if you have a separate enable password</span>
-    <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>  <span class="c1"># Default SSH port</span>
-<span class="p">}</span>
-
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="c1"># Establish an SSH connection to the device</span>
-    <span class="k">with</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span> <span class="k">as</span> <span class="n">net_connect</span><span class="p">:</span>
-        <span class="c1"># Enter enable mode</span>
-        <span class="n">net_connect</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
-
-        <span class="c1"># Get the current privilege level</span>
-        <span class="n">privilege_level</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">find_prompt</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current Privilege Level: </span><span class="si">{</span><span class="n">privilege_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Get the running configuration</span>
-        <span class="n">running_config</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show running-config&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running Configuration:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">running_config</span><span class="p">)</span>
-
-        <span class="c1"># Get LLDP neighbors</span>
-        <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show lldp neighbors&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LLDP Neighbors:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">)</span>
-
-        <span class="c1"># Get CDP neighbors</span>
-        <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show cdp neighbors&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CDP Neighbors:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
-</pre></div></td></tr></table></div>
-
-
-**Notes:**
-
-1. **Device Type**: The `device_type` in the `device` dictionary can be either `'cisco_ios'` or `'cisco_nxos'`, depending on the type of device you're connecting to.
-
-2. **Login Credentials**: Replace `'your_device_ip'`, `'your_username'`, `'your_password'`, and `'your_enable_password'` with the actual credentials for your device.
-
-3. **Command Variations**: The commands used (`show running-config`, `show lldp neighbors`, `show cdp neighbors`) are common to both IOS and NX-OS, but you may need to adjust them if using other features or specific configurations.
-
-4. **Security**: Make sure to handle credentials securely and avoid hardcoding them into scripts for production environments.
-
-This script provides a basic overview and can be expanded to include additional error handling, logging, and more robust data processing if needed.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show version</code>: False</p>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show cdp neighbors detail</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show cdp neighbors</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show run</code>: True</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show privilege</code>: False</p>
-<h2>Final Answer: False</h2>
-</div>
-    
-<div id="tab2" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
-<h2>Output</h2>
-<p>To collect device information and configuration from a Cisco IOS or NX-OS device, you can use Python and the `netmiko` library. `Netmiko` is a simplified layer on top of the Paramiko SSH library that makes it easier to automate network tasks. Below is an example script that connects to a Cisco device and gathers information such as the current privilege level, running configuration, and LLDP/CDP neighbors.
-
-Before running this script, ensure that you have the necessary Python packages installed. You can install `netmiko` via pip if it’s not already installed:
+First, you'll need to install the `netmiko` library if you haven't already:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -456,588 +178,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </pre></div></td></tr></table></div>
 
 
-Here is the Python script:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
-
-<span class="c1"># Define the device parameters</span>
-<span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># Change to &#39;cisco_nxos&#39; for Nexus devices</span>
-    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>       <span class="c1"># IP address of the device</span>
-    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;your_username&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;your_password&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;your_enable_password&#39;</span><span class="p">,</span>  <span class="c1"># Optional, for privilege exec mode</span>
-    <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>                   <span class="c1"># Default SSH port</span>
-<span class="p">}</span>
-
-<span class="k">def</span> <span class="nf">gather_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># Establish SSH connection to the device</span>
-        <span class="n">connection</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
-
-        <span class="c1"># Elevate to privilege exec mode if necessary</span>
-        <span class="n">connection</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
-
-        <span class="c1"># Gather the current privilege level</span>
-        <span class="n">privilege_level</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show privilege&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Privilege Level:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">privilege_level</span><span class="p">)</span>
-
-        <span class="c1"># Gather the running configuration</span>
-        <span class="n">running_config</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show running-config&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Running Configuration:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">running_config</span><span class="p">)</span>
-
-        <span class="c1"># Gather LLDP neighbor information (relevant for IOS devices)</span>
-        <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show lldp neighbors&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LLDP Neighbors:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">)</span>
-
-        <span class="c1"># Gather CDP neighbor information</span>
-        <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show cdp neighbors&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CDP Neighbors:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">)</span>
-
-        <span class="c1"># Close the connection</span>
-        <span class="n">connection</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">gather_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-</pre></div></td></tr></table></div>
-
-
-### Explanation:
-- **Connection Setup**: The connection to the Cisco IOS or NX-OS device is set up using `netmiko`, specifying details like device type, host IP, username, password, and optional enable password for privileged exec mode.
-- **Elevate Privileges**: Once connected, the connection is elevated to privileged exec mode using the `enable()` method if a secret is provided.
-- **Command Execution**: The script executes commands to fetch various configurations and outputs:
-  - **`show privilege`**: Reports the current privilege level.
-  - **`show running-config`**: Retrieves the running configuration.
-  - **`show lldp neighbors`**: (Optional for devices with LLDP enabled - typically necessary for IOS) Fetches LLDP neighbor information.
-  - **`show cdp neighbors`**: Retrieves CDP neighbor details.
-- **Error Handling**: The script includes basic error handling to catch and print exceptions that might occur during script execution.
-
-### Notes:
-- **Credentials Security**: Consider using environment variables, a configuration file, or a credentials manager to handle sensitive information securely.
-- **Device Type**: Adjust the `device_type` in the script to match the type of Cisco device you're working with, as Netmiko supports both `cisco_ios` and `cisco_nxos`.
-- **Command Variations**: For NX-OS devices, LLDP commands and output might vary slightly compared to IOS devices. Adjust commands as necessary based on the specific platform's command syntax and available features.
-
-Ensure you have appropriate permissions and follow your organization's security policies when accessing and managing network devices.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show version</code>: False</p>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show cdp neighbors detail</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show cdp neighbors</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show run</code>: True</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show privilege</code>: True</p>
-<h2>Final Answer: False</h2>
-</div>
-    
-<div id="tab3" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
-<h2>Output</h2>
-<p>To collect information from a Cisco IOS or NXOS device, you can use Python with the `netmiko` library, which simplifies SSH connections to network devices. Below is a sample script that connects to a Cisco device and retrieves the current privilege level, running configuration, LLDP neighbors, and CDP neighbors.
-
-First, make sure you have `netmiko` installed:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">netmiko</span>
-</pre></div></td></tr></table></div>
-
-
-Here's the Python script:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
-
-<span class="c1"># Define the device to connect to</span>
-<span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># For IOS devices</span>
-    <span class="c1"># &#39;device_type&#39;: &#39;cisco_nxos&#39;,  # For NXOS devices, comment the line above and uncomment this line</span>
-    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>  <span class="c1"># IP address of your Cisco device</span>
-    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;your_username&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;your_password&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;your_enable_password&#39;</span><span class="p">,</span>  <span class="c1"># If enable is required</span>
-<span class="p">}</span>
-
-<span class="c1"># Establish SSH connection to the device</span>
-<span class="n">net_connect</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
-
-<span class="c1"># Enter enable mode if required</span>
-<span class="n">net_connect</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
-
-<span class="c1"># Collect various device information</span>
-<span class="n">privilege_level</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">find_prompt</span><span class="p">()</span>  <span class="c1"># This shows the current prompt, indicating the privilege level</span>
-<span class="n">running_config</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">)</span>
-<span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors&quot;</span><span class="p">)</span>
-<span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors&quot;</span><span class="p">)</span>
-
-<span class="c1"># Optionally, for detailed neighbor information:</span>
-<span class="n">lldp_neighbors_detail</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors detail&quot;</span><span class="p">)</span>
-<span class="n">cdp_neighbors_detail</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors detail&quot;</span><span class="p">)</span>
-
-<span class="c1"># Close the connection</span>
-<span class="n">net_connect</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-
-<span class="c1"># Output information</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current Privilege Level Prompt: &quot;</span><span class="p">,</span> <span class="n">privilege_level</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Running Configuration:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">running_config</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LLDP Neighbors:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">lldp_neighbors</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LLDP Neighbors Detail:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">lldp_neighbors_detail</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CDP Neighbors:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cdp_neighbors</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CDP Neighbors Detail:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cdp_neighbors_detail</span><span class="p">)</span>
-</pre></div></td></tr></table></div>
-
-
-### Key Points:
-
-- **Device Type**: Ensure you're using the correct `device_type` for your device (either `cisco_ios` for IOS or `cisco_nxos` for NXOS).
-  
-- **Credentials**: Replace `'your_username'`, `'your_password'`, and `'your_enable_password'` with the appropriate credentials for your network device.
-
-- **Enable Mode**: If enable mode is required, ensure you provide the `secret`.
-
-- **Command Adjustments**: Cisco devices can have different commands based on the IOS/NXOS version and device configuration - adapt the commands if necessary.
-
-- **Security**: Handle credentials securely; consider using environment variables or secure vaults.
-
-Before running on production equipment, ensure appropriate access permissions and test in a controlled environment.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show version</code>: False</p>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: True</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show cdp neighbors detail</code>: True</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show cdp neighbors</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show run</code>: True</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show privilege</code>: False</p>
-<h2>Final Answer: False</h2>
-</div>
-    
-<div id="tab4" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
-<h2>Output</h2>
-<p>To collect information from Cisco IOS or NXOS devices, you can use a Python script with the `Netmiko` library, which simplifies SSH connections to network devices. Here's a script that connects to a Cisco device and gathers the current privilege level, running configuration, LLDP neighbors, and CDP neighbors:
-
-1. First, make sure to install Netmiko if you haven't already:
-
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><span class="w">   </span>pip<span class="w"> </span>install<span class="w"> </span>netmiko
-<span class="w">   </span>
-</pre></div></td></tr></table></div>
-
-
-2. Use the following Python script to gather the required information:
+Now, here is a sample script:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1168,68 +309,68 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">53</span>
 <span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
 
-<span class="c1"># Define device credentials and details</span>
-<span class="n">cisco_device</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># Use &#39;cisco_nxos&#39; for Nexus devices</span>
-    <span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>         <span class="c1"># Replace with your device&#39;s IP address</span>
-    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>         <span class="c1"># Replace with your username</span>
-    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>      <span class="c1"># Replace with your password</span>
-    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;secret&#39;</span><span class="p">,</span>          <span class="c1"># Replace with enable secret if needed</span>
-<span class="p">}</span>
+<span class="k">def</span> <span class="nf">get_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+    <span class="c1"># Establish an SSH connection to the device</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">collect_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
-    <span class="c1"># Establish SSH connection</span>
-    <span class="n">net_connect</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
+    <span class="c1"># Get device prompt to ascertain current privilege level</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">find_prompt</span><span class="p">()</span>
+    <span class="n">privilege_level</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+    <span class="k">if</span> <span class="n">prompt</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+        <span class="n">privilege_level</span> <span class="o">=</span> <span class="s2">&quot;Privileged EXEC&quot;</span>
+    <span class="k">elif</span> <span class="n">prompt</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">):</span>
+        <span class="n">privilege_level</span> <span class="o">=</span> <span class="s2">&quot;User EXEC&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current Privilege Level: </span><span class="si">{</span><span class="n">privilege_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Enter enable mode if necessary</span>
-    <span class="k">if</span> <span class="s1">&#39;secret&#39;</span> <span class="ow">in</span> <span class="n">device</span> <span class="ow">and</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;secret&#39;</span><span class="p">]:</span>
-        <span class="n">net_connect</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+    <span class="c1"># Check the type of device to determine appropriate commands</span>
+    <span class="n">platform</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;device_type&#39;</span><span class="p">]</span>
+    
+    <span class="c1"># Get running configuration</span>
+    <span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;cisco_ios&quot;</span><span class="p">:</span>
+        <span class="n">running_config</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;cisco_nxos&quot;</span><span class="p">:</span>
+        <span class="n">running_config</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config all&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">running_config</span> <span class="o">=</span> <span class="s2">&quot;Running config command not supported for this device.&quot;</span>
 
-    <span class="c1"># Fetch and print device information</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Collecting device information...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Current privilege level</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show privilege&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current Privilege Level:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
-
-    <span class="c1"># Running configuration</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running Configuration:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">running_config</span><span class="p">)</span>
 
-    <span class="c1"># LLDP neighbors</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors&quot;</span><span class="p">)</span>
+    <span class="c1"># Get LLDP neighbors</span>
+    <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LLDP Neighbors:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">)</span>
 
-    <span class="c1"># CDP neighbors</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors&quot;</span><span class="p">)</span>
+    <span class="c1"># Get CDP neighbors</span>
+    <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CDP Neighbors:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">)</span>
 
-    <span class="c1"># Close the connection</span>
-    <span class="n">net_connect</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+    <span class="c1"># Close the SSH connection</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
-<span class="c1"># Call the function with the specified device details</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">collect_device_info</span><span class="p">(</span><span class="n">cisco_device</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Define the device information</span>
+    <span class="n">device_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># Or &#39;cisco_nxos&#39; for NX-OS devices</span>
+        <span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>  <span class="c1"># Device IP address</span>
+        <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>  <span class="c1"># Your username</span>
+        <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;Cisco123&#39;</span><span class="p">,</span>  <span class="c1"># Your password</span>
+        <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;enable_password&#39;</span><span class="p">,</span>  <span class="c1"># Enable password, if required</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Enable mode if necessary</span>
+    <span class="n">get_device_info</span><span class="p">(</span><span class="n">device_info</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 
 
-### Notes:
-- **Device Type**: Set `'device_type'` to `'cisco_ios'` for IOS devices and `'cisco_nxos'` for Nexus OS devices.
-- **Credentials**: Replace `ip`, `username`, `password`, and `secret` with your actual device's connection details.
-- **Commands**: The script uses common commands for gathering specific information. Modify these commands as needed depending on your device's configuration or personal requirements.
-- **Security**: Ensure that this script is securely stored, especially regarding sensitive information like passwords.
+### Key Points:
+- **Device Type**: Set `device_type` to either `'cisco_ios'` or `'cisco_nxos'` depending on your device.
+- **Connection Parameters**: Update the `ip`, `username`, `password`, and `secret` fields with your device's actual login credentials.
+- **Privilege Level**: The script checks the device prompt to determine the current privilege level (`User EXEC` or `Privileged EXEC`) based on typical Cisco prompt symbols (`&gt;` and `#`).
+- **Error Handling**: In production scripts, ensure to add error handling to manage connection failures or invalid command outputs gracefully.
 
-This script will establish a connection to your Cisco device, retrieve the specified information, and print it to the console. Adjust paths or other parameters as necessary to suit your environment and requirements.</p>
+Note: Make sure to comply with security guidelines and policies regarding SSH credentials and network configurations. Use environment variables or secure vaults to manage sensitive information if deploying this in a real-world scenario.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>show version</code>: False</p>
@@ -1248,18 +389,100 @@ This script will establish a connection to your Cisco device, retrieve the speci
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>show run</code>: True</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show privilege</code>: True</p>
+<p>Testing if the previous output contains the string <code>show privilege</code>: False</p>
 <h2>Final Answer: False</h2>
 </div>
     
-<div id="tab5" class="tab-content">
+<div id="tab2" class="tab-content">
     <h1>Initial Query</h1>
 <p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
 <h1>LLM Generation</h1>
 <h2>Query</h2>
 <p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
 <h2>Output</h2>
-<p>To collect device information and configuration from Cisco IOS or NX-OS devices, you can use Python along with libraries such as `Netmiko` for SSH connection and interaction with the network devices. Below is a sample script that performs these tasks:
+<p>To gather information and configurations from Cisco IOS or NXOS devices, you can make use of the `netmiko` library in Python. This library simplifies SSH connections to network devices for configuration and management purposes. Below is a Python script that connects to a device, retrieves the current privilege level, running configuration, LLDP neighbors, and CDP neighbors.
+
+First, ensure you have `netmiko` installed. You can install it using pip:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>netmiko
+</pre></div></td></tr></table></div>
+
+
+Here's a sample Python script for collecting the mentioned information:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1378,63 +601,109 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
-<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
 
-<span class="c1"># Define device information</span>
+<span class="c1"># Define device parameters</span>
 <span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># Change to &#39;cisco_nxos&#39; for NX-OS devices</span>
-    <span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>        <span class="c1"># Device IP address</span>
-    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;your_username&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;your_password&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;your_enable_password&#39;</span><span class="p">,</span>  <span class="c1"># If an enable password is required</span>
+    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># Use &#39;cisco_nxos&#39; for NXOS devices</span>
+    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>       <span class="c1"># Replace with the device&#39;s IP address</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>         <span class="c1"># Replace with your username</span>
+    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>      <span class="c1"># Replace with your password</span>
+    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;secret&#39;</span><span class="p">,</span>          <span class="c1"># Replace with your enable password if needed</span>
+    <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>                  <span class="c1"># Replace with the port if it&#39;s different</span>
 <span class="p">}</span>
 
-<span class="c1"># Establish SSH connection</span>
-<span class="k">try</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">collect_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+    <span class="c1"># Establish an SSH connection to the device</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
 
-    <span class="c1"># Enter enable mode if not already in it</span>
-    <span class="k">if</span> <span class="s1">&#39;&gt;&#39;</span> <span class="ow">in</span> <span class="n">connection</span><span class="o">.</span><span class="n">find_prompt</span><span class="p">():</span>
+    <span class="c1"># Enter enable mode if necessary</span>
+    <span class="k">if</span> <span class="s1">&#39;secret&#39;</span> <span class="ow">in</span> <span class="n">device</span><span class="p">:</span>
         <span class="n">connection</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
 
-    <span class="c1"># Get privilege level</span>
-    <span class="n">privilege_level</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show privilege&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current Privilege Level:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">privilege_level</span><span class="p">)</span>
+    <span class="c1"># Retrieve and print information</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Get the current privilege level</span>
+        <span class="n">privilege_level</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show privilege&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current Privilege Level:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">privilege_level</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
 
-    <span class="c1"># Get running configuration</span>
-    <span class="n">running_config</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show running-config&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Running Configuration:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">running_config</span><span class="p">)</span>
+        <span class="c1"># Get the running configuration</span>
+        <span class="n">running_config</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show running-config&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running Configuration:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">running_config</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
 
-    <span class="c1"># Get LLDP neighbors</span>
-    <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show lldp neighbors&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LLDP Neighbors:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">)</span>
+        <span class="c1"># Get LLDP neighbors</span>
+        <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show lldp neighbors&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LLDP Neighbors:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
 
-    <span class="c1"># Get CDP neighbors</span>
-    <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show cdp neighbors&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CDP Neighbors:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">)</span>
+        <span class="c1"># Get CDP neighbors</span>
+        <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show cdp neighbors&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CDP Neighbors:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
 
-    <span class="c1"># Close the connection</span>
-    <span class="n">connection</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Close the connection</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Call the function with the device information</span>
+<span class="n">collect_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 
 
-### Key Points:
-- **Device Type**: Change the `device_type` in the device dictionary to `cisco_nxos` if you are connecting to a Cisco NX-OS device.
-- **Authentication**: Ensure you provide the correct username, password, and enable password if necessary.
-- **Commands**: Adjust the commands (`show privilege`, `show running-config`, `show lldp neighbors`, `show cdp neighbors`) as necessary to match any variations in Cisco NX-OS command syntax.
-- **Error Handling**: The script includes basic error handling, but for production use, consider adding more robust error management and logging.
+### Notes:
+- **Device Type**: Adjust the `'device_type'` field as necessary for IOS or NXOS (`'cisco_ios'` or `'cisco_nxos'` respectively).
+- **Credentials**: Replace `&lt;device_ip&gt;`, `&lt;username&gt;`, `&lt;password&gt;`, and `&lt;enable_password&gt;` with your device's credentials. If the device does not require an enable secret, you can omit the `secret` entry.
+- **Output**: This script will print the current privilege level, running configuration, LLDP neighbors, and CDP neighbors for the specified device to the console.
 
-### Required Library:
-- **Netmiko**: You can install this library via pip if you haven't already done so:
+Make sure you have appropriate permissions and follow your organization's policies when accessing network devices. Additionally, handle any exceptions or errors that may arise during the connection or command execution as needed for robustness in production scripts.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show version</code>: False</p>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show lldp neighbors</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show cdp neighbors detail</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show cdp neighbors</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show run</code>: True</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show privilege</code>: True</p>
+<h2>Final Answer: False</h2>
+</div>
+    
+<div id="tab3" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
+<h2>Output</h2>
+<p>To collect information and configuration from Cisco IOS or NX-OS devices, you can use Python along with the Netmiko library. Netmiko simplifies SSH interactions with network devices and supports both IOS and NX-OS platforms.
 
-  <style>pre { line-height: 125%; }
+Here's an example script that connects to a Cisco device, retrieves various pieces of information, and prints them out. You'll need to install the Netmiko library if you haven't already (`pip install netmiko`).
+
+<style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -1508,13 +777,671 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><span class="w">  </span>pip<span class="w"> </span>install<span class="w"> </span>netmiko
-<span class="w">  </span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
+
+<span class="c1"># Define the device details</span>
+<span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># Use &#39;cisco_nxos&#39; for NX-OS</span>
+    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;enable_password&#39;</span><span class="p">,</span>  <span class="c1"># If you have an enable password, set it here</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">connect_and_collect</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Establish connection to the device</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
+        
+        <span class="c1"># Enter enable mode</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+        
+        <span class="c1"># Collect privilege level</span>
+        <span class="n">privilege_level</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show privilege&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current Privilege Level:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">privilege_level</span><span class="p">)</span>
+        
+        <span class="c1"># Collect running configuration</span>
+        <span class="n">running_config</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Running Configuration:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">running_config</span><span class="p">)</span>
+        
+        <span class="c1"># Collect LLDP neighbors information</span>
+        <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LLDP Neighbors:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">)</span>
+        
+        <span class="c1"># Collect CDP neighbors information</span>
+        <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CDP Neighbors:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">)</span>
+        
+        <span class="c1"># Close the connection</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the information collection</span>
+<span class="n">connect_and_collect</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 
 
-This code provides a basic framework for connecting to a Cisco IOS or NX-OS device, gathering configuration and topology information, and printing it to the console. You can enhance this script by adding features such as writing output to a file, retrying connections, or integrating with other tools for better automation.</p>
+**Note:**
+- Replace `'192.168.1.1'`, `'admin'`, `'password'`, and `'enable_password'` with the IP address, username, password, and enable password of your Cisco device.
+- Adjust the `device_type` to `'cisco_nxos'` if you're connecting to an NX-OS device instead of IOS.
+- Ensure your network and firewall settings allow SSH traffic to the Cisco device.
+- Be mindful of network security policies and handle credentials securely.
+
+This script logs into a Cisco device, collects the current privilege level, running configuration, and neighbor information through LLDP and CDP. You can extend it to capture additional data as required.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show version</code>: False</p>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show lldp neighbors</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show cdp neighbors detail</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show cdp neighbors</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show run</code>: True</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show privilege</code>: True</p>
+<h2>Final Answer: False</h2>
+</div>
+    
+<div id="tab4" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
+<h2>Output</h2>
+<p>To collect information from Cisco IOS or NX-OS devices, you can use Python with libraries such as `netmiko` or `paramiko` for SSH communication. Below is an example using `netmiko`, which simplifies SSH connections to network devices.
+
+Make sure you have `netmiko` installed on your machine. You can install it via pip:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">netmiko</span>
+</pre></div></td></tr></table></div>
+
+
+Here's a sample Python script to collect the desired information from a Cisco device:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
+
+<span class="c1"># Define the device credentials and type</span>
+<span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># Use &#39;cisco_nxos&#39; for NX-OS devices</span>
+    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>       <span class="c1"># Replace with the IP address of your device</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>         <span class="c1"># Replace with your device username</span>
+    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>      <span class="c1"># Replace with your device password</span>
+    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;enable_password&#39;</span><span class="p">,</span> <span class="c1"># Replace with your enable password if needed</span>
+    <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>                  <span class="c1"># SSH port</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">get_device_info</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Establish SSH connection to the device</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># Enter enable mode</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+
+        <span class="c1"># Collect various details</span>
+        <span class="n">privilege_level</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show privilege&#39;</span><span class="p">)</span>
+        <span class="n">running_config</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show running-config&#39;</span><span class="p">)</span>
+        <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show cdp neighbors detail&#39;</span><span class="p">)</span>
+        <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show lldp neighbors detail&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Output the collected information</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Privilege Level:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">privilege_level</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Running Configuration:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">running_config</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CDP Neighbors:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cdp_neighbors</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LLDP Neighbors:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">lldp_neighbors</span><span class="p">)</span>
+
+        <span class="c1"># Disconnect from the device</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to retrieve information: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">get_device_info</span><span class="p">()</span>
+</pre></div></td></tr></table></div>
+
+
+### Instructions
+
+1. Replace placeholders like `192.168.1.1`, `admin`, `password`, and `enable_password` with the actual credentials and IP address of your Cisco device.
+2. If you're using an NX-OS device, change the `device_type` from `cisco_ios` to `cisco_nxos`.
+3. Run this script in your Python environment.
+
+This script is basic and only for demonstration purposes. Be cautious with sensitive data like device passwords. For production use, consider using more secure handling of credentials, like environment variables or secure vaults.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show version</code>: False</p>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: True</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show lldp neighbors</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show cdp neighbors detail</code>: True</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show cdp neighbors</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show run</code>: True</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show privilege</code>: True</p>
+<h2>Final Answer: False</h2>
+</div>
+    
+<div id="tab5" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
+<h2>Output</h2>
+<p>To collect device information and configuration from a Cisco IOS or NX-OS device, you typically use SSH to connect to the device and execute various show commands. Below is an example of a Python script utilizing the `netmiko` library to automate the process. This script assumes you have network connectivity to the device and the necessary credentials.
+
+First, ensure you have the necessary library installed:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>netmiko
+</pre></div></td></tr></table></div>
+
+
+Here's an example Python script for collecting the desired information:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
+
+<span class="c1"># Function to collect device info</span>
+<span class="k">def</span> <span class="nf">collect_device_info</span><span class="p">(</span><span class="n">device_params</span><span class="p">):</span>
+    <span class="c1"># Establish SSH connection to the device</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device_params</span><span class="p">)</span>
+    
+    <span class="c1"># Collect and print the current privilege level</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current Privilege Level:&quot;</span><span class="p">)</span>
+    <span class="n">priv_level</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show privilege&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">priv_level</span><span class="p">)</span>
+    
+    <span class="c1"># Collect and print the running configuration</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Running Configuration:&quot;</span><span class="p">)</span>
+    <span class="n">running_config</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">running_config</span><span class="p">)</span>
+    
+    <span class="c1"># Collect and print LLDP neighbors information</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LLDP Neighbors:&quot;</span><span class="p">)</span>
+    <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">)</span>
+    
+    <span class="c1"># Collect and print CDP neighbors information</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">CDP Neighbors:&quot;</span><span class="p">)</span>
+    <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">)</span>
+    
+    <span class="c1"># Close the connection</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+<span class="c1"># Define device parameters</span>
+<span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;device_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span>  <span class="c1"># or &#39;cisco_nxos&#39; for NX-OS devices</span>
+    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="p">,</span>       <span class="c1"># IP address of the device</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>         <span class="c1"># Replace with your username</span>
+    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>      <span class="c1"># Replace with your password</span>
+    <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>                  <span class="c1"># SSH port (default is 22)</span>
+    <span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="s1">&#39;secret&#39;</span><span class="p">,</span>          <span class="c1"># Enable secret if needed (optional)</span>
+    <span class="s1">&#39;verbose&#39;</span><span class="p">:</span> <span class="kc">True</span>              <span class="c1"># Enable verbose logging (optional)</span>
+<span class="p">}</span>
+
+<span class="c1"># Collect device information</span>
+<span class="n">collect_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+</pre></div></td></tr></table></div>
+
+
+### Important Notes:
+
+1. **Environment Setup**: Ensure you have Python and the `netmiko` library installed in your environment.
+
+2. **Device Details**: Update the `device` dictionary with the correct `host`, `username`, `password`, and other relevant details for your device.
+
+3. **IOS vs NX-OS**: Change the `device_type` to `'cisco_nxos'` if you're working with NX-OS devices instead of IOS.
+
+4. **Security Considerations**: Be careful with handling credentials in your scripts. Consider using environment variables or secure vaults for storing sensitive information.
+
+5. **Error Handling**: You may want to add error handling to catch exceptions related to network connectivity or authentication failures. 
+
+By executing this script, you'll gather and print the current privilege level, running configuration, and both LLDP and CDP neighbors' information from the device. Adjust the script as needed based on your requirements or environment specifics.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>show version</code>: False</p>

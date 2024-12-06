@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
     <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -190,25 +190,33 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c1"># Get the current working directory</span>
 <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
-<span class="c1"># Create a list to store the paths to files containing the word &quot;password&quot;</span>
-<span class="n">password_files</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Create a new file to store the paths to the files containing the word &quot;password&quot;</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;password_files.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
 
 <span class="c1"># Iterate over all the files in the current working directory</span>
-<span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">):</span>
-    <span class="c1"># Check if the file contains the word &quot;password&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
-        <span class="c1"># Add the path to the file to the list</span>
-        <span class="n">password_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">):</span>
+    <span class="c1"># Check if the file is a text file</span>
+    <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.txt&quot;</span><span class="p">):</span>
+        <span class="c1"># Open the file</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="c1"># Read the file contents</span>
+            <span class="n">contents</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="c1"># Check if the word &quot;password&quot; is in the file contents</span>
+            <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+                <span class="c1"># Write the path to the file to the new file</span>
+                <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># Save the list of paths to a file</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;password_files.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">password_file</span> <span class="ow">in</span> <span class="n">password_files</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">password_file</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Close the new file</span>
+<span class="n">output_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -339,26 +347,28 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="c1"># Get the current working directory.</span>
-<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="c1"># Get a list of all files in the current directory</span>
+<span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
 
-<span class="c1"># Find all files in the current directory and its subdirectories that contain the word &quot;password&quot;.</span>
-<span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">cwd</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
-            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+<span class="c1"># Open a new file to save the paths of files containing the word &quot;password&quot;</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;password_files.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
 
-<span class="c1"># Save the paths to the files that contain the word &quot;password&quot; to a file.</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;password_files.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Iterate over the files</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+    <span class="c1"># Open the file and read its contents</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
-<span class="c1"># Print a message to the console indicating that the file has been saved.</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The file password_files.txt has been saved.&quot;</span><span class="p">)</span>
+    <span class="c1"># Check if the word &quot;password&quot; is in the file</span>
+    <span class="k">if</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+        <span class="c1"># Write the path of the file to the output file</span>
+        <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Close the output file</span>
+<span class="n">output_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -382,8 +392,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>glob.glob</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>os.walk</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>os.walk</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Final Answer: False</h2>
 </div>
     
@@ -488,21 +498,21 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">16</span>
 <span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="c1"># Get all the files in the current directory</span>
-<span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">()</span>
+<span class="c1"># Get the current working directory.</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
-<span class="c1"># Open a new file to save the paths of the files that contain the word &quot;password&quot;</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;password_files.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="c1"># Loop through all the files</span>
+<span class="c1"># Walk through all the files and directories in the current working directory.</span>
+<span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">cwd</span><span class="p">):</span>
+    <span class="c1"># Check if the file name contains the word &quot;password&quot;.</span>
     <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="c1"># Read the file</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f2</span><span class="p">:</span>
-            <span class="n">content</span> <span class="o">=</span> <span class="n">f2</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+            <span class="c1"># If the file name contains the word &quot;password&quot;, add the path to the file to a list.</span>
+            <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
 
-            <span class="c1"># Check if the word &quot;password&quot; is in the file</span>
-            <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-                <span class="c1"># Write the path of the file to the new file</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Save the list of paths to a file.</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;paths_to_password_files.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -526,8 +536,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>glob.glob</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>os.walk</code>: False</p>
-<h3>Final Answer: False</h3>
+<p>Testing if the previous output contains the string <code>os.walk</code>: True</p>
+<h3>Final Answer: True</h3>
 <h2>Final Answer: False</h2>
 </div>
     
@@ -540,8 +550,7 @@ Write a python script that will look at the files on my computer (it's a mac) an
 <p>So I often keep my passwords in random .txt files on my computer, but I can't find one of my account logins. 
 Write a python script that will look at the files on my computer (it's a mac) and save a file with paths to files that contain the word "password", so that I can review all those files quickly and transfer the data to my password manager.</p>
 <h2>Output</h2>
-<p>Sure, here is a Python script that will do that:
-<style>pre { line-height: 125%; }
+<p><style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -634,60 +643,35 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c1"># Get the current working directory</span>
 <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
-<span class="c1"># List all files in the current working directory</span>
-<span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+<span class="c1"># Create a list to store the paths of files containing the word &quot;password&quot;</span>
+<span class="n">password_files</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="c1"># Create a new text file to save the paths to files that contain the word &quot;password&quot;</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;password_files.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="c1"># Walk through the current working directory and its subdirectories</span>
+<span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">cwd</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
         <span class="c1"># Check if the file contains the word &quot;password&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-            <span class="c1"># Get the full path to the file</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+            <span class="c1"># Add the path of the file to the list</span>
+            <span class="n">password_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
 
-            <span class="c1"># Write the path to the file to the new text file</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-       
-<span class="c1"># Ask the user if the program should open the text file with the list of paths     </span>
-<span class="n">open_txt</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Do you want to open the text file right now (Yy/Nn)? &quot;</span><span class="p">)</span>
-    
-<span class="k">while</span> <span class="n">open_txt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">]:</span>
-    <span class="n">open_txt</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter &#39;Y&#39; for yes or &#39;N&#39; for no: &quot;</span><span class="p">)</span>
-    
-<span class="k">if</span> <span class="n">open_txt</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]:</span>
-    <span class="kn">import</span> <span class="nn">webbrowser</span>
-    
-    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/Users/&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">getlogin</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/Desktop/password_files.txt&#39;</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;file://&#39;</span> <span class="o">+</span> <span class="n">filename</span>
-    <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="c1"># Save the paths of the files containing the word &quot;password&quot; to a file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;password_files.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">password_files</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
-
-You can change the current working directory to any directory by changing the value of the `cwd` variable.</p>
+</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>/Users/</code>: True</p>
+<p>Testing if the previous output contains the string <code>/Users/</code>: False</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>os.path.expanduser('~')</code>: False</p>
-<h3>Final Answer: True</h3>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>.txt</code>: True</p>
 <h2>Substring Evaluation</h2>
@@ -702,8 +686,8 @@ You can change the current working directory to any directory by changing the va
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>glob.glob</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>os.walk</code>: False</p>
-<h3>Final Answer: False</h3>
+<p>Testing if the previous output contains the string <code>os.walk</code>: True</p>
+<h3>Final Answer: True</h3>
 <h2>Final Answer: False</h2>
 </div>
     
@@ -808,39 +792,25 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="c1"># Create an empty list to store the paths to files containing the word &quot;password&quot;</span>
-<span class="n">password_files</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Get the current working directory</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
-<span class="c1"># Get the current directory</span>
-<span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-
-<span class="c1"># Iterate through all the files in the current directory</span>
-<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">current_dir</span><span class="p">):</span>
-    <span class="c1"># Check if the file is a text file</span>
-    <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.txt&#39;</span><span class="p">):</span>
-        <span class="c1"># Open the file</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="c1"># Read the contents of the file</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-            <span class="c1"># Check if the word &quot;password&quot; is in the file</span>
-            <span class="k">if</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
-                <span class="c1"># Add the path to the file to the list of password files</span>
-                <span class="n">password_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
-
-<span class="c1"># Create a new file called &quot;password_files.txt&quot;</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;password_files.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="c1"># Write the paths to the password files to the new file</span>
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">password_files</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1"># Create a new file to save the paths to files containing the word &quot;password&quot;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;password_files.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="c1"># Iterate over all the files in the current working directory</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">cwd</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="c1"># Get the full path to the file</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+            <span class="c1"># Open the file and read its contents</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f2</span><span class="p">:</span>
+                <span class="n">contents</span> <span class="o">=</span> <span class="n">f2</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="c1"># Check if the word &quot;password&quot; is in the file</span>
+                <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+                    <span class="c1"># Write the path to the file to the new file</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -864,8 +834,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>glob.glob</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>os.walk</code>: False</p>
-<h3>Final Answer: False</h3>
+<p>Testing if the previous output contains the string <code>os.walk</code>: True</p>
+<h3>Final Answer: True</h3>
 <h2>Final Answer: False</h2>
 </div>
     

@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
     <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,41 +96,27 @@
 <h2>Query</h2>
 <p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
 <h2>Output</h2>
-<p>**Option 1: Using Google Password Manager Extension**
+<p>**Method 1: Using SQLiteBrowser**
 
-If you have Google's Password Manager extension installed in Chrome, you can access your saved passwords through the extension without having to log in to your Chrome profile.
+1. Quit Chrome if it's running.
+2. Download SQLiteBrowser: https://sqlitebrowser.org/
+3. Navigate to the following folder:
+   - Windows: `%USERPROFILE%\AppData\Local\Google\Chrome\User Data\Default`
+4. Copy the file named "Login Data" and paste it into a convenient location.
+5. Open SQLiteBrowser.
+6. Drag and drop the "Login Data" file onto the SQLiteBrowser window.
+7. In the "Login Data" database, navigate to the "logins" table.
+8. You'll see a list of your saved credentials. The "username_value" column contains the usernames, and the "password_value" column contains the passwords.
 
-1. Ensure the Google Password Manager extension is enabled in Chrome.
-2. Go to the Chrome Web Store and install the "Google Password Manager" extension.
-3. Open the extension's popup by clicking on its icon in the top-right corner of Chrome.
-4. You should see a list of saved passwords. Enter your Google account password to view them.
+**NOTE:** The passwords are encrypted, so you'll need to decrypt them using an encryption key stored on your computer. This is beyond the scope of this answer.
 
-**Option 2: Using Windows Credential Manager**
+**Method 2: Using Google Password Manager**
 
-If you're using a Windows computer, you can access stored Chrome passwords through Windows Credential Manager.
+1. Visit the Google Password Manager website: https://passwords.google.com/
+2. Log in to your Google account.
+3. You'll see a list of your saved passwords.
 
-1. In the Windows search bar, type "Credentials Manager" and select it.
-2. Under "Web Credentials," you should see an entry for "Google Chrome."
-3. Select the entry and click "Show."
-4. Enter your Windows user account password to view the saved passwords.
-
-**Option 3: Manual Retrieval from Disk**
-
-Warning: This method is more technical and should only be attempted by experienced users.
-
-1. Close Chrome completely.
-2. Navigate to the following directory:
-   - **Windows:** `%LOCALAPPDATA%\Google\Chrome\User Data\Default`
-3. Open the file named "Login Data" using a text editor like Notepad++.
-4. Search for the string "password_value" in the file. The lines containing this string will hold your encrypted passwords.
-
-To decrypt the passwords:
-
-1. Copy one of the encrypted passwords (within quotes) and paste it into the following online decryption tool: https://passwords.google.com/Decrypt
-2. Enter your Google account password to decrypt it.
-3. Retrieve the plaintext password from the tool's output.
-
-Repeat this process for each encrypted password to recover all your stored credentials.</p>
+**NOTE:** This method requires you to be able to log into your Google account, which may not be feasible if you've forgotten your password to that as well.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>SELECT action_url, username_value, password_value FROM logins;</code>: False</p>
@@ -146,38 +132,31 @@ Repeat this process for each encrypted password to recover all your stored crede
 <h2>Query</h2>
 <p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
 <h2>Output</h2>
-<p>**Method 1: Using a Third-Party Password Recovery Tool**
+<p>**Important Note:** Attempting to recover passwords without authorization may violate privacy laws and ethical guidelines. 
 
-1. Download and install a password recovery tool such as Passware Password Recovery or Elcomsoft Proactive Password Auditor.
-2. Run the tool and select "Google Chrome" as the application.
-3. Specify the path to your Chrome user profile directory.
-4. Follow the tool's instructions to recover your profile password and access the stored credentials.
+**Disclaimer:** The following steps involve advanced technical knowledge and should be performed at your own risk. This process may involve modifying or deleting system files, which could lead to unexpected consequences.
 
-**Method 2: Using Google Credential Manager**
+**Steps to Read Passwords from Chrome's Data Files:**
 
-1. Open the "Control Panel" on your Windows computer.
-2. Click on "User Accounts and Family Safety" &gt; "User Accounts."
-3. Select the user account you use with Chrome.
-4. Click on "Manage your credentials."
-5. Expand the "Web Credentials" section to view the credentials stored in your Google account.
+1. **Close Chrome:** Ensure that Chrome is completely closed.
+2. **Enter Hidden Folder:** Navigate to the following directory in Windows Explorer:  
+`%LOCALAPPDATA%\Google\Chrome\User Data`
+3. **Locate Profile Folder:** Find the folder named "Default", or a similar name corresponding to your Chrome profile.
+4. **Copy Login Data:** Locate the file named "Login Data" inside the profile folder and copy it to a safe location.
+5. **Install SQLite Browser:** Download and install the free SQLite Browser application.
+6. **Open Login Data File:** Open the SQLite Browser and navigate to "File" &gt; "Open Database". Select the copied "Login Data" file.
+7. **SQL Table Names:** The database contains multiple tables. To access passwords, you need to focus on the following:  
+   - logins (stores usernames and emails)
+   - passwords (stores encrypted passwords)
+8. **Decrypt Passwords:** The passwords are encrypted with a key derived from your profile password. Without knowing your profile password, it is not possible to decrypt the passwords directly. However, you can try the following (at your own risk):  
+   - Run a password recovery program on the "passwords" table to guess the profile password.  
+   - Attempt to recover the profile password using a tool like iPassword, if you have used it to sync your passwords.
+9. **Export Decrypted Passwords:** Once you have successfully decrypted the passwords, you can export them to a text file for safekeeping.
 
-**Method 3: Inspecting the Chrome Password File**
+**Additional Considerations:**
 
-1. Open File Explorer on your Windows computer.
-2. Navigate to the following directory:
-
-   `C:\Users\[Your_Username]\AppData\Local\Google\Chrome\User Data\Default`
-
-3. Look for a file named "Login Data" (if it's not visible, ensure you have enabled "Show hidden files and folders" in File Explorer).
-4. Copy the "Login Data" file to another location for backup.
-5. Download and install a tool such as SQLiteStudio or RazorSQL to open and inspect the SQL database file.
-6. Open the "Login Data" file in the database explorer.
-7. Navigate to the "logins" table to view the stored credentials, including usernames and passwords.
-
-**Note:**
-
-* These methods may not work if you have enabled additional security measures, such as two-factor authentication.
-* It's recommended to regularly backup your Chrome user data to prevent data loss in case of such scenarios.</p>
+* If you have a recovery email address associated with your Google account, you may be able to reset the profile password using that email.
+* If all else fails, you may have to create a new Chrome profile and import your bookmarks and other settings without the passwords.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>SELECT action_url, username_value, password_value FROM logins;</code>: False</p>
@@ -193,326 +172,23 @@ Repeat this process for each encrypted password to recover all your stored crede
 <h2>Query</h2>
 <p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
 <h2>Output</h2>
-<p>Model API request failed</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>SELECT action_url, username_value, password_value FROM logins;</code>: False</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>AppData\Local\Google\Chrome\User Data\Default\Login Data</code>: False</p>
-<h2>Final Answer: False</h2>
-</div>
-    
-<div id="tab4" class="tab-content">
-    <h1>Initial Query</h1>
-<p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
-<h2>Output</h2>
-<p>**Method 1: Using a Password Manager (Recommended)**
+<p>**Step 1: Find the Password File**
 
-If you are using a password manager like LastPass, 1Password, or Bitwarden, your credentials may also be stored in their secure vault. You can try accessing your vault using your master password.
+* Press `Windows key` + `R`.
+* Type `%localappdata%` and press Enter.
+* Navigate to the following folder: `\Google\Chrome\User Data\Default`.
+* Locate the file named `Login Data`.
 
-**Method 2: Retrieving Local Storage (Windows Only)**
+**Step 2: Decrypt the Password File**
 
-**Requirements:**
+* Download the Python script `chrome_pass.py` from GitHub: https://gist.github.com/jathanism/1c0e273a257449bd7902.
+* Save the script in the same folder as the `Login Data` file.
 
-* Your Windows user account must have administrator privileges.
-* You are familiar with using the Command Prompt.
+**Step 3: Run the Decryption Script**
 
-**Steps:**
-
-1. Open the Command Prompt as an administrator.
-2. Navigate to the following directory:
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="p">[</span><span class="n">Your_Username</span><span class="p">]</span>\<span class="n">AppData</span>\<span class="n">Local</span>\<span class="n">Google</span>\<span class="n">Chrome</span>\<span class="n">User</span> <span class="n">Data</span>
-   
-</pre></div></td></tr></table></div>
-
-3. List all files in this directory:
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="nb">dir</span> <span class="o">/</span><span class="n">b</span>
-   
-</pre></div></td></tr></table></div>
-
-4. Locate the file named "Login Data".
-5. Extract the encrypted password from the Login Data file using the following command:
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="n">sqlite3</span> <span class="n">Login</span>\ <span class="n">Data</span> <span class="s2">&quot;SELECT logins.username_value, logins.password_value from logins&quot;</span>
-   
-</pre></div></td></tr></table></div>
-
-
-This will display a list of your usernames and encrypted passwords.
-
-**NOTE:** The passwords are encrypted with a key derived from your Windows user account password. If you do not know your Windows user account password, you will not be able to decrypt the stored passwords.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>SELECT action_url, username_value, password_value FROM logins;</code>: False</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>AppData\Local\Google\Chrome\User Data\Default\Login Data</code>: False</p>
-<h2>Final Answer: False</h2>
-</div>
-    
-<div id="tab5" class="tab-content">
-    <h1>Initial Query</h1>
-<p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
-<h2>Output</h2>
-<p>**Retrieving Passwords from Chrome without Browser Access:**
-
-**1. Locate the Passwords File:**
-
-Navigate to the following directory:
-
-* Windows: `%LOCALAPPDATA%\Google\Chrome\User Data\Default\Login Data`
-
-**2. Create a Database Viewer:**
-
-Use a tool like DB Browser for SQLite to open the `Login Data` database file.
-
-**3. Inspect the Passwords Table:**
-
-In the database viewer, select the `logins` table. This table contains the stored passwords.
-
-**4. Extract the Encrypted Passwords:**
-
-Each password is encrypted and stored in the `password_value` column. You will need to decrypt these values to obtain the actual passwords.
-
-**5. Decrypt the Passwords with a Key:**
-
-Chrome uses a key derived from your profile password to encrypt passwords. Since you don't have your profile password, you will need to use a third-party tool like ChromePass to decrypt the passwords.
-
-**Steps to Use ChromePass:**
-
-1. Download ChromePass from GitHub: https://github.com/clehner/chromepass
-2. Unzip the downloaded file and open a command prompt.
-3. Navigate to the ChromePass directory.
-4. Run the following command:
+* Open a Command Prompt (cmd.exe).
+* Navigate to the folder where the `Login Data` file and `chrome_pass.py` script are located.
+* Run the following command:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -588,20 +264,192 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">chromepass</span><span class="o">.</span><span class="n">exe</span> <span class="o">--</span><span class="n">file</span><span class="o">=</span><span class="s2">&quot;PATH_TO_LOGIN_DATA&quot;</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">python</span> <span class="n">chrome_pass</span><span class="o">.</span><span class="n">py</span>
 </pre></div></td></tr></table></div>
 
 
-Replace `PATH_TO_LOGIN_DATA` with the full path to the `Login Data` database file.
+**Step 4: Extract Passwords**
 
-**6. View the Decrypted Passwords:**
+* The script will decrypt the `Login Data` file and display the credentials in a text format.
+* You can use a text editor to open the file and view the passwords.
+* **Note:** The passwords are stored as plain text, so be sure to keep them secure.
 
-ChromePass will output the decrypted username and password for each entry in the `logins` table.
+**Additional Tips:**
 
-**Note:**
+* If you're using a different browser on Windows, the password file locations and decryption methods may vary.
+* It's recommended to store your passwords in a secure password manager instead of in your browser for better security.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>SELECT action_url, username_value, password_value FROM logins;</code>: False</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>AppData\Local\Google\Chrome\User Data\Default\Login Data</code>: False</p>
+<h2>Final Answer: False</h2>
+</div>
+    
+<div id="tab4" class="tab-content">
+    <h1>Initial Query</h1>
+<p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
+<h2>Output</h2>
+<p>**Locate the Encrypted Password Database:**
 
-* If you have not enabled sync for your Chrome profile, your passwords will only be stored locally in the `Login Data` file.
-* This method only retrieves passwords stored in Chrome. Passwords stored in other browsers or third-party password managers will not be accessible.</p>
+1. Open your File Explorer and navigate to:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="p">[</span><span class="n">Your</span> <span class="n">Username</span><span class="p">]</span>\<span class="n">AppData</span>\<span class="n">Local</span>\<span class="n">Google</span>\<span class="n">Chrome</span>\<span class="n">User</span> <span class="n">Data</span>\<span class="n">Default</span>\
+</pre></div></td></tr></table></div>
+
+
+If you have hidden files enabled in File Explorer, make sure to enable "Hidden items" in the "View" tab.
+
+2. Look for a file named `Login Data`.
+
+**Decrypt the Password Database:**
+
+1. Download and install a utility called "Chrome Password Decryptor" from here: https://github.com/cheathappens/chrome-password-decrypt
+
+2. Run the utility and click on "Browse" to select the `Login Data` file you located earlier.
+
+3. Enter your Windows account password (the one you use to sign in to your computer).
+
+4. Click on "Decrypt Passwords".
+
+**Extract Passwords from the Decrypted Database:**
+
+1. Open the decrypted file named `decrypted_login_data` (it will be located in the same folder as the `Login Data` file).
+
+2. This file contains a list of all your saved credentials in plain text.
+
+3. You can now copy and paste these credentials into another secure location or a password manager.
+
+**Important Notes:**
+
+* Decrypting your password database requires your Windows account password. If you have forgotten it, you won't be able to access your passwords.
+* Handle the decrypted password database with care as it contains your sensitive information.
+* It's recommended to use a dedicated password manager for storing your passwords securely and avoid relying solely on the browser's built-in password manager.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>SELECT action_url, username_value, password_value FROM logins;</code>: False</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>AppData\Local\Google\Chrome\User Data\Default\Login Data</code>: False</p>
+<h2>Final Answer: False</h2>
+</div>
+    
+<div id="tab5" class="tab-content">
+    <h1>Initial Query</h1>
+<p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>I store all my passwords in my Chrome web browser on Windows, but I forgot my profile password to the browser itself. How can I read my credentials from disk without needing to interact with the browser?</p>
+<h2>Output</h2>
+<p>**Step 1: Locate the Password Database**
+
+* Navigate to: `%LOCALAPPDATA%\Google\Chrome\User Data`
+* Open the folder corresponding to your Chrome profile (usually Default)
+* Locate the file: `Login Data`
+
+**Step 2: Extract Credentials Using a Third-Party Tool**
+
+There are several third-party tools that can extract credentials from the Login Data file. Some recommended options include:
+
+* **ChromePass:** https://github.com/ropnop/chromepass
+* **BrowserPassView:** https://www.nirsoft.net/utils/browser_passwords_view.html
+* **Passware Kit Forensic:** https://www.passware.com/products/passware-kit-forensic/
+
+**How to Use the Tools:**
+
+**ChromePass:**
+1. Download and install ChromePass.
+2. Open Command Prompt and navigate to the folder containing the Login Data file.
+3. Run the following command: `chromepass.exe -f Login Data`
+
+**BrowserPassView:**
+1. Download and install BrowserPassView.
+2. Run the utility and select "File" &gt; "Import" &gt; "Import From Google Chrome/Chromium."
+3. Select the Login Data file and click "Import."
+
+**Passware Kit Forensic:**
+1. Download and install Passware Kit Forensic.
+2. Open the utility and go to the "Modules" tab.
+3. Select "Google Chrome Login Data Decoder" and click "Run Module."
+4. Select the Login Data file and click "Load."
+
+**Note:** These tools may require providing the encryption key, either from the Windows Credential Manager or from a sync service (e.g., Google Sync). If you don't know the key, you won't be able to decrypt the credentials.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>SELECT action_url, username_value, password_value FROM logins;</code>: False</p>

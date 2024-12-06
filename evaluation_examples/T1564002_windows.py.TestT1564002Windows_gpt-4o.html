@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
     <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,46 +96,47 @@
 <h2>Query</h2>
 <p>i'm creating lots of accounts for our windows systems, and i want to hide the administrative accounts from being listed to the primary user. how do i do that?</p>
 <h2>Output</h2>
-<p>To hide administrative accounts from the login screen in Windows, you can modify the Windows registry or use Group Policy settings. Here's how you can accomplish this:
+<p>To hide administrative accounts from being listed on the login screen or in user lists on Windows systems, you can modify the Windows registry or use the Local Security Policy. Here's how to do it using both methods:
 
-### Using the Windows Registry
+### Method 1: Modify the Windows Registry
 
 1. **Open Registry Editor:**
    - Press `Win + R` to open the Run dialog.
-   - Type `regedit` and press `Enter`. Click `Yes` if prompted by UAC.
+   - Type `regedit` and press Enter. Click "Yes" if prompted by User Account Control.
 
-2. **Navigate to the Winlogon Registry Key:**
-   - Go to `HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon`.
+2. **Navigate to the Winlogon Key:**
+   - Go to `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon`.
 
-3. **Create a New Key, if Necessary:**
-   - If it doesn’t exist, create a new key under `Winlogon` named `SpecialAccounts`.
-   - Inside `SpecialAccounts`, create another key named `UserList`.
+3. **Create a New Key for SpecialAccounts:**
+   - Right-click on `Winlogon`, select `New &gt; Key`, and name it `SpecialAccounts`.
+   - Inside `SpecialAccounts`, create another key and name it `UserList`.
 
-4. **Hide the Account:**
-   - Inside the `UserList` key, create a new `DWORD (32-bit) Value` for each account you want to hide.
-   - Name the new DWORD value the same as the account name you want to hide.
-   - Set the value of this DWORD to `0`.
+4. **Add the User Account:**
+   - Select `UserList`, right-click on the right pane, and select `New &gt; DWORD (32-bit) Value`.
+   - Name it exactly as the account username you want to hide.
+   - Make sure the value is set to `0` (which is the default).
 
-### Using Local Group Policy Editor (for Professional and Enterprise versions)
+5. **Close the Registry Editor:**
+   - Close the editor and restart your system for changes to take effect.
 
-1. **Open Local Group Policy Editor:**
-   - Press `Win + R` to open the Run dialog.
-   - Type `gpedit.msc` and press `Enter`.
+### Method 2: Local Security Policy (For Pro and Enterprise Versions)
 
-2. **Navigate to Logon Options:**
-   - Go to `Computer Configuration -&gt; Windows Settings -&gt; Security Settings -&gt; Local Policies -&gt; Security Options`.
+1. **Open Local Security Policy:**
+   - Press `Win + R` to open the Run dialog box.
+   - Type `secpol.msc` and press Enter.
 
-3. **Configure Policy:**
-   - Look for the option `Interactive logon: Do not display last user name` and enable it. This doesn’t directly hide user accounts, but it prevents showing any usernames on the login screen.
-   - For more specific settings about hiding users, you might have to alter scripts or deploy specific security policies not covered directly by the Group Policy Editor options.
+2. **Navigate to Local Policies:**
+   - Click on `Local Policies`, and then `Security Options`.
 
-### General Tips
+3. **Configure the Accounts:**
+   - Look for the policy named `Interactive logon: Do not display last user name`.
+   - If you want to avoid displaying any previous usernames on the login screen, double-click on it and set it to `Enabled`.
 
-- **Remember** that hiding the administrative accounts from the login screen does not disable login functionality. Users with knowledge of the username and password can still log in.
-- **Backup your Registry** before making changes to avoid potential issues.
-- **Test on a single machine** or in a controlled environment before deploying widely to ensure it doesn’t interfere with user access or other system functionalities.
+4. **Edit Local Group Policy:**
+   - Optionally, you can open the Group Policy Editor by typing `gpedit.msc` and navigate to `Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; Security Options`.
+   - Set `Interactive logon: Do not display last user name` to `Enabled`.
 
-These steps should help you maintain a cleaner login interface while still allowing administrative access as needed.</p>
+These methods will help hide the specified accounts from showing on the login screen and other lists visible to standard users. However, remember that these accounts can still exist and may be accessed by knowledgeable users through command-line tools or scripts, so ensure you have appropriate access controls and security measures in place.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>0</code>: True</p>
@@ -155,17 +156,16 @@ These steps should help you maintain a cleaner login interface while still allow
 <h2>Query</h2>
 <p>i'm creating lots of accounts for our windows systems, and i want to hide the administrative accounts from being listed to the primary user. how do i do that?</p>
 <h2>Output</h2>
-<p>To hide administrative accounts from the login screen in Windows systems, you can modify the Windows registry to prevent certain accounts from appearing. Here’s how you can do it:
+<p>To hide administrative accounts from the login screen on Windows systems, you can make adjustments in the registry or use the Group Policy Editor. Below are the methods you can use:
 
-### Method: Using the Registry Editor
+### Method 1: Using the Registry Editor
 
 1. **Open the Registry Editor**:
    - Press `Win + R` to open the Run dialog.
-   - Type `regedit` and press Enter. If prompted by UAC, click Yes to continue.
+   - Type `regedit` and press `Enter`.
 
-2. **Navigate to the Appropriate Key**:
-   - Go to the following path in the Registry Editor:
-     <style>pre { line-height: 125%; }
+2. **Navigate to the following registry key**:
+   <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -240,35 +240,131 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>     <span class="n">HKEY_LOCAL_MACHINE</span>\<span class="n">SOFTWARE</span>\<span class="n">Microsoft</span>\<span class="n">Windows</span> <span class="n">NT</span>\<span class="n">CurrentVersion</span>\<span class="n">Winlogon</span>
-     
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="n">HKEY_LOCAL_MACHINE</span>\<span class="n">Software</span>\<span class="n">Microsoft</span>\<span class="n">Windows</span> <span class="n">NT</span>\<span class="n">CurrentVersion</span>\<span class="n">Winlogon</span>
+   
 </pre></div></td></tr></table></div>
 
 
-3. **Create the SpecialAccounts Key**:
-   - In the `Winlogon` key, check if there is a subkey called `SpecialAccounts`. If it doesn’t exist, create it:
-     - Right-click on `Winlogon`, select **New** &gt; **Key**, and name it `SpecialAccounts`.
+3. **Create a new registry key under Winlogon**:
+   - Right-click on `Winlogon`, select `New`, and then `Key`.
+   - Name this new key `SpecialAccounts`.
 
-4. **Create the UserList Key**:
-   - Inside the `SpecialAccounts` key, check for a subkey named `UserList`. If it doesn’t exist, create it:
-     - Right-click on `SpecialAccounts`, select **New** &gt; **Key**, and name it `UserList`.
+4. **Create another registry key under SpecialAccounts**:
+   - Right-click on `SpecialAccounts`, select `New`, and then `Key`.
+   - Name this new key `UserList`.
 
-5. **Hide User Accounts**:
-   - Inside the `UserList` key, create a new DWORD (32-bit) Value for each administrative account you want to hide:
-     - Right-click on `UserList`, select **New** &gt; **DWORD (32-bit) Value**.
-     - Name the DWORD with the exact username of the administrative account you wish to hide.
-     - Ensure the value is set to `0` (zero), which indicates that the account should be hidden.
+5. **Add the administrative account to this key**:
+   - Select the `UserList` key.
+   - Right-click in the right pane, select `New`, and then `DWORD (32-bit) Value`.
+   - Set the value name to the exact username of the account you want to hide.
+   - Ensure the value is set to `0`.
 
-6. **Close the Registry Editor**:
-   - Exit the Registry Editor and restart your computer for the changes to take effect.
+6. **Repeat the above steps** for each administrative account you wish to hide.
 
-### Important Considerations
+7. **Close the Registry Editor** and restart your computer to apply the changes.
 
-- **Backup Registry**: Always back up the registry before making any changes. You can do this by selecting File &gt; Export in the Registry Editor and saving the current state.
-- **User Access**: Make sure that hidden accounts are still accessible for administrative purposes through alternative means such as through the CLI or remote desktop.
-- **Security**: Hiding the account from the login screen doesn’t disable it or prevent it from functioning normally. Ensure that these accounts are secured with strong passwords.
+### Method 2: Using Local Group Policy Editor
 
-Using this method, you can effectively hide administrative accounts from appearing on the login screen without affecting their functionality.</p>
+This method is available only in Professional, Enterprise, and Education editions of Windows.
+
+1. **Open the Local Group Policy Editor**:
+   - Press `Win + R` to open the Run dialog.
+   - Type `gpedit.msc` and press `Enter`.
+
+2. **Navigate to the following path**:
+   <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="n">Computer</span> <span class="n">Configuration</span> <span class="o">&gt;</span> <span class="n">Administrative</span> <span class="n">Templates</span> <span class="o">&gt;</span> <span class="n">System</span> <span class="o">&gt;</span> <span class="n">Logon</span>
+   
+</pre></div></td></tr></table></div>
+
+
+3. **Enable the policy to hide user accounts**:
+   - Look for the setting called **"Enumerate local users on domain-joined computers"** (or similarly named setting based on your Windows version).
+   - Double-click to open it, and set it to **Disabled**.
+
+4. **Apply and close the Group Policy Editor.** Then, restart your computer to apply the changes.
+
+### Notes
+
+- Be cautious when editing the registry, as incorrect changes can affect system stability.
+- Always create a backup of the registry before making any changes.
+- Hiding administrative accounts from the login screen does not deactivate these accounts. They remain functional and can be used via other means, such as the command line or remote access.
+
+These steps should help you hide administrative accounts from appearing on the login screen, giving a cleaner appearance to the primary user.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>0</code>: True</p>
@@ -288,14 +384,16 @@ Using this method, you can effectively hide administrative accounts from appeari
 <h2>Query</h2>
 <p>i'm creating lots of accounts for our windows systems, and i want to hide the administrative accounts from being listed to the primary user. how do i do that?</p>
 <h2>Output</h2>
-<p>To hide administrative accounts from the login screen and user list on Windows systems, you can modify the registry to prevent the accounts from being displayed. Here's a step-by-step guide:
+<p>To hide administrative accounts from the login screen and from appearing in the list of users in Windows, you can make use of the Windows Registry Editor or the Local Group Policy Editor. Here’s how you can do it using the Registry Editor:
 
-1. **Open the Registry Editor:**
-   - Press `Win + R` to open the Run dialog.
-   - Type `regedit` and press Enter. Confirm any prompts if you are asked for administrative permissions.
+### Using the Registry Editor:
 
-2. **Navigate to the appropriate Registry Key:**
-   - For Windows 10 and Windows 11, navigate to:
+1. **Open Registry Editor:**
+   - Press `Win + R` to open the Run dialog box.
+   - Type `regedit` and press Enter. Click 'Yes' if prompted by User Account Control.
+
+2. **Navigate to the User List Key:**
+   - In the Registry Editor, navigate to the following key:
      <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -375,30 +473,45 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
      
 </pre></div></td></tr></table></div>
 
-   - Under this, create a new key named `SpecialAccounts` if it doesn't already exist.
-   - Within `SpecialAccounts`, create another new key called `UserList`.
+   - If the `Winlogon` key is absent, create it.
 
-3. **Add the user account to the UserList key:**
-   - Under the `UserList` key, right-click in the right pane and select `New &gt; DWORD (32-bit) Value`.
-   - Name the new DWORD value with the exact username of the administrative account you want to hide (e.g., `AdminHidden`).
-   - Double-click the newly created DWORD value and set its value to `0` to hide the account. A value of `1` would make it visible again.
+3. **Create the SpecialAccounts Key:**
+   - Within the `Winlogon` key, you may need to create a new key named `SpecialAccounts`.
+     - Right-click on `Winlogon`, select New -&gt; Key, and name it `SpecialAccounts`.
 
-4. **Close the Registry Editor:**
+4. **Create the UserList Key:**
+   - Inside the `SpecialAccounts` key, create another key named `UserList`.
+     - Right-click on `SpecialAccounts`, select New -&gt; Key, and name it `UserList`.
 
-5. **Restart your computer:**
-   - The changes will take effect after a restart, and the specified accounts will not appear on the login screen.
+5. **Hide the Administrative Account:**
+   - Within the `UserList` key, create a new DWORD (32-bit) Value for each administrative account you want to hide.
+     - Right-click on `UserList`, select New -&gt; DWORD (32-bit) Value.
+     - Name the value the exact same as the account's username you want to hide.
+     - Set the value to `0` to hide the account.
 
-### Important Considerations:
+6. **Close the Registry Editor:**
+   - Close the Registry Editor and reboot the computer or log out and log back in.
 
-- **Backup the Registry:** Before making any changes, it's a good idea to back up your registry. You can do this by selecting `File &gt; Export` in the Registry Editor and saving the backup.
+### Using Local Group Policy Editor (for Professional, Enterprise, or Education Editions):
 
-- **Administrative Access Required:** You need administrative privileges to make these changes.
+Note: This method doesn’t directly hide user accounts but can restrict login access and modify group policies.
 
-- **Hidden Accounts are Only Hidden from the Login Screen:** The accounts are still accessible; users can log in by manually typing in the username and password.
+1. **Open Group Policy Editor:**
+   - Press `Win + R` to open the Run dialog box.
+   - Type `gpedit.msc` and press Enter.
 
-- **Security Implications:** Consider the security implications of having hidden administrative accounts. Ensure that only authorized personnel have access to those credentials.
+2. **Navigate to Logon Settings:**
+   - Go to `Computer Configuration` -&gt; `Windows Settings` -&gt; `Security Settings` -&gt; `Local Policies` -&gt; `User Rights Assignment`.
 
-By following these steps, you should be able to hide specific administrative accounts from being displayed to users on the login screen.</p>
+3. **Deny Login Locally Setting:**
+   - Find the policy for "Deny log on locally" and double-click it.
+   - Add the user account you want to restrict from logging in.
+
+4. **Hide Last Login:**
+   - Navigate to `Computer Configuration` -&gt; `Administrative Templates` -&gt; `System` -&gt; `Logon`.
+   - Enable the policy "Do not display last user name".
+
+Using these methods, you can ensure that the administrative accounts do not appear on the login screen and are hidden from everyday users, helping enhance security and user experience. Always be cautious when editing the registry or group policies to avoid misconfigurations.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>0</code>: True</p>
@@ -418,136 +531,43 @@ By following these steps, you should be able to hide specific administrative acc
 <h2>Query</h2>
 <p>i'm creating lots of accounts for our windows systems, and i want to hide the administrative accounts from being listed to the primary user. how do i do that?</p>
 <h2>Output</h2>
-<p>To hide administrative accounts from the login screen on Windows systems, you can modify the Windows Registry or use Group Policy settings. Here’s a step-by-step guide on how to achieve this:
-
-### Method 1: Using the Windows Registry
+<p>To hide administrative accounts from being listed on the login screen on Windows systems, you can modify the registry to prevent specific accounts from appearing. Here's how you can do it:
 
 1. **Open the Registry Editor:**
    - Press `Win + R` to open the Run dialog.
-   - Type `regedit` and press `Enter`. This opens the Registry Editor.
+   - Type `regedit` and press Enter.
 
-2. **Navigate to the Winlogon Key:**
-   - Go to the following path in the Registry Editor:
-     <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>     <span class="n">HKEY_LOCAL_MACHINE</span>\<span class="n">SOFTWARE</span>\<span class="n">Microsoft</span>\<span class="n">Windows</span> <span class="n">NT</span>\<span class="n">CurrentVersion</span>\<span class="n">Winlogon</span>
-     
-</pre></div></td></tr></table></div>
+2. **Navigate to the Winlogon Registry Key:**
+   - Navigate to `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon`.
 
+3. **Add the SpecialAccounts Key:**
+   - Right-click on `Winlogon`, select `New`, and then `Key`.
+   - Name this new key `SpecialAccounts`.
 
-3. **Create a New Key:**
-   - Right-click on `Winlogon`, select `New` &gt; `Key`.
-   - Name the new key `SpecialAccounts`.
+4. **Add the UserList Key:**
+   - Right-click on `SpecialAccounts`, select `New`, and then `Key`.
+   - Name this new key `UserList`.
 
-4. **Create Another Key Under SpecialAccounts:**
-   - Right-click on `SpecialAccounts`, select `New` &gt; `Key`.
-   - Name this key `UserList`.
+5. **Create a DWORD Entry for Each User:**
+   - Right-click on the `UserList` key, select `New`, then `DWORD (32-bit) Value`.
+   - Name this value with the username of the account you want to hide.
+   - Set the value to `0` to hide the account (setting it to `1` will show the account).
 
-5. **Add Your Administrative Account:**
-   - With `UserList` selected, right-click in the right pane and select `New` &gt; `DWORD (32-bit) Value`.
-   - Name the DWORD value with the username of the account you want to hide (e.g., `AdminUser`).
-   - Leave the value data as `0`.
+6. **Repeat for Other Accounts:**
+   - If you have more administrative accounts you wish to hide, repeat the steps above for each username.
 
-6. **Close the Registry Editor:**
-   - Exit the Registry Editor, and the changes should take effect after you restart the computer or log off the current user.
+7. **Exit Registry Editor:**
+   - Close the Registry Editor once you're done.
 
-### Method 2: Using Group Policy (Windows Pro or Enterprise)
-
-1. **Open Local Group Policy Editor:**
-   - Press `Win + R`, type `gpedit.msc`, and press `Enter` to open the Local Group Policy Editor.
-
-2. **Navigate to the Logon Policy:**
-   - Go to `Computer Configuration` &gt; `Administrative Templates` &gt; `System` &gt; `Logon`.
-
-3. **Add User to Exclude from Logon:**
-   - Find the policy named "Exclude usernames from the sign-in screen".
-   - Double-click it to open, and set it to `Enabled`.
-   - Click on the "Show" button to add usernames.
-   - Enter the administrative usernames you wish to hide here, one per line.
-
-4. **Apply and Close:**
-   - Click `OK`, then `Apply`, and close the Group Policy Editor.
-   - The changes should take effect after a restart or logoff.
+8. **Restart Your Computer:**
+   - Your changes will take effect after a restart.
 
 ### Important Notes:
-- These methods will prevent the account from being listed on the login screen, but the account will still exist and be accessible by other means if your users have administrative privileges.
-- Use these methods with caution and ensure you have another way to access administrative accounts if needed.
-- Always back up your registry before making changes to avoid accidental misconfigurations.
+- Be very careful when modifying the registry. Incorrect changes can cause system instability.
+- Make sure you have access to an account that is not hidden or have a way to access the system through another means, such as Safe Mode.
+- It’s advisable to back up your registry before making any changes. You can do this in the Registry Editor by selecting `File`, then `Export` to save a backup.
 
-Implementing these methods will help hide specific user accounts from the primary user view at the login screen, enhancing security by not advertising the presence of certain accounts.</p>
+By following these steps, you can hide administrative accounts from the login screen without affecting their usability for administrative tasks.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>0</code>: True</p>
@@ -567,128 +587,55 @@ Implementing these methods will help hide specific user accounts from the primar
 <h2>Query</h2>
 <p>i'm creating lots of accounts for our windows systems, and i want to hide the administrative accounts from being listed to the primary user. how do i do that?</p>
 <h2>Output</h2>
-<p>To hide administrative accounts from the login screen and from being listed to the primary user on Windows systems, you can use the Windows Registry Editor to make specific accounts invisible. Here's a step-by-step guide on how to achieve this:
+<p>To hide administrative accounts from the login screen on Windows systems, you can modify the Windows registry or use the Local Security Policy to make these accounts invisible. Here’s how you can do it:
 
-### Warning
-Editing the Windows Registry can have unintended consequences if not done correctly, so it's important to follow instructions carefully and consider backing up the registry first.
+### Method 1: Using the Windows Registry
 
-### Steps to Hide User Accounts
-
-1. **Open the Windows Registry Editor:**
+1. **Open the Registry Editor:**
    - Press `Win + R` to open the Run dialog.
-   - Type `regedit` and press `Enter`.
-   - If prompted by User Account Control, click `Yes` to proceed.
+   - Type `regedit` and press Enter.
 
-2. **Navigate to the Correct Key:**
-   - In the Registry Editor, navigate to the following path:
-     <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>     <span class="n">HKEY_LOCAL_MACHINE</span>\<span class="n">SOFTWARE</span>\<span class="n">Microsoft</span>\<span class="n">Windows</span> <span class="n">NT</span>\<span class="n">CurrentVersion</span>\<span class="n">Winlogon</span>
-     
-</pre></div></td></tr></table></div>
+2. **Navigate to the Winlogon key:**
+   - Go to `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon`.
 
+3. **Create a new key for SpecialAccounts:**
+   - Right-click on `Winlogon`, select **New** &gt; **Key**, and name it `SpecialAccounts`.
 
-3. **Locate or Create the SpecialAccounts Key:**
-   - Under `Winlogon`, look for a key named `SpecialAccounts`. If it doesn't exist, you need to create it:
-     - Right-click on `Winlogon`, select `New`, and then select `Key`.
-     - Name this new key `SpecialAccounts`.
+4. **Create a new key for UserList:**
+   - Right-click on `SpecialAccounts`, select **New** &gt; **Key**, and name it `UserList`.
 
-4. **Create the UserList Key:**
-   - Inside `SpecialAccounts`, create another key named `UserList`:
-     - Right-click on `SpecialAccounts`, select `New`, and then select `Key`.
-     - Name this new key `UserList`.
+5. **Add the user you want to hide:**
+   - In the `UserList` key, right-click in the right pane, select **New** &gt; **DWORD (32-bit) Value**.
+   - Name the new DWORD value as the username of the administrative account you want to hide.
+   - Make sure its value is set to `0`.
 
-5. **Create a DWORD for the Account:**
-   - Inside `UserList`, you'll add a new entry for each account you want to hide:
-     - Right-click in the right pane, select `New`, and choose `DWORD (32-bit) Value`.
-     - Name this new value exactly as the username of the account you want to hide.
-     - Make sure the value is set to `0`. (Double-click to ensure it is set to `0` if needed.)
+6. **Close the Registry Editor:**
 
-6. **Close Registry Editor:**
-   - Once you’ve added all the accounts you wish to hide, close the Registry Editor.
+### Method 2: Using Local Security Policy (Windows Pro editions)
 
-7. **Restart Your Computer:**
-   - Restart the computer to apply these changes.
+1. **Open Local Security Policy:**
+   - Press `Win + R`, type `secpol.msc`, and press Enter.
 
-### Additional Consideration
-- This process only hides the account from the sign-in screen. Users may still be able to see the accounts listed under the `Local Users and Groups` console if they have the appropriate permissions to access it.
-- Use security policy settings to further restrict access if necessary.
+2. **Navigate to Local Policies:**
+   - Expand **Local Policies** and click on **Security Options**.
 
-### Important Reminder
-While hiding administrative accounts can reduce clutter on the sign-in screen, make sure to maintain documentation for these accounts and ensure that local security policies are configured to prevent unauthorized access.</p>
+3. **Configure Interactive logon:**
+   - Find **Interactive logon: Do not display last user name**, and set it to **Enabled**.
+   - This policy changes behavior so that the last logged-in user isn't displayed on the login screen.
+
+### Additional Step: Using Group Policy Editor (Windows Pro editions)
+
+1. **Open Group Policy Editor:**
+   - Press `Win + R`, type `gpedit.msc`, and press Enter.
+
+2. **Navigate to Logon Options:**
+   - Go to `Computer Configuration` &gt; `Windows Settings` &gt; `Security Settings` &gt; `Local Policies` &gt; `Security Options`.
+
+3. **Adjust Logon Options:**
+   - Set **Interactive logon: Do not display last user name** to **Enabled**.
+   - Set **Do not enumerate connected users on domain-joined computer** to **Enabled** if applicable.
+
+**Note:** Be cautious when editing the Windows Registry and configuring security settings. Incorrect changes can affect system security and stability. Always make sure to back up the registry or create a System Restore point before making changes.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>0</code>: True</p>

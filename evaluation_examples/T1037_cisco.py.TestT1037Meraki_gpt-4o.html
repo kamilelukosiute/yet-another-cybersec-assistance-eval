@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
-    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_1"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_1"><a href="#tab5">Trial 5</a></li>
+    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_1"><a href="#tab3">Trial 3</a></li><li class="is_correct_1"><a href="#tab4">Trial 4</a></li><li class="is_correct_1"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,221 +96,33 @@
 <h2>Query</h2>
 <p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
 <h2>Output</h2>
-<p>Ensuring that your software loads every time your Cisco Meraki device is booted requires a bit of understanding of how Meraki devices operate, as well as potentially creating scripts that interact with external systems for firmware or configuration management. Here's a detailed guide on how you can accomplish this task:
+<p>Ensuring that your software loads automatically on a Cisco Meraki device each time it boots is a task that typically applies to environments where custom scripts or configurations are needed beyond standard Meraki functionality. The Meraki ecosystem is largely cloud-managed and not designed to offer direct access to the device's operating system or persistent storage for custom scripts. However, there are some indirect ways to ensure specific configurations or software behaviors are consistently applied using the Meraki dashboard and APIs. Here's a detailed guide on working within the Meraki system to automate and ensure configurations are applied consistently.
 
-### Step-by-Step Guide
+### Step 1: Understanding Cisco Meraki's Capabilities
 
-#### Understanding Cisco Meraki Management
+Cisco Meraki devices, such as access points, switches, and security appliances (MX), are cloud-based and managed primarily through the Meraki Dashboard. Direct installation of third-party software or running custom scripts directly on the device is not possible. However, you can automate certain configurations and settings using the Meraki Dashboard and APIs.
 
-1. **Cloud-Managed System**: 
-   - Meraki devices are primarily managed through the Meraki Cloud. This cloud-based system handles configurations, updates, and monitoring. Meraki devices pull their configuration from the cloud upon boot-up.
+### Step 2: Utilize Meraki Dashboard and APIs
 
-2. **Firmware Management**: 
-   - The devices do not directly hold scripts or custom software locally; rather, they rely on configurations set in the Meraki Dashboard.
+1. **Meraki Dashboard:**
+   - The Meraki Dashboard allows for configuration management of all devices in your network. You can pre-configure settings that will be applied to your devices as soon as they boot and connect to the internet.
+   - Use features like templates to apply consistent settings across similar devices.
 
-3. **Automation Possibilities**: 
-   - Automation may be more about ensuring that configurations (firewall rules, SSIDs, traffic shaping, etc.) are correctly applied and scripts that reside elsewhere are triggered to run via network events, API calls, etc. 
+2. **Meraki API:**
+   - The Meraki API provides programmatic access to configuration settings, enabling automation.
+   - Scripts can be written in a language like Python to make API calls to the Meraki Dashboard, applying settings automatically.
 
-#### Setting Up Automation
+### Step 3: Automate with Scripts Using Meraki APIs
 
-1. **Meraki Dashboard Automation**:
-   - Use API calls to manage your device settings from the Meraki Dashboard, ensuring that your configurations are automatically uploaded.
-   - Create scripts on an external system that use Meraki's API to push configurations when necessary.
-  
-   **Example**: Use Python to interact with Meraki API
-   - Install `meraki` library via pip.
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><span class="w">   </span>pip<span class="w"> </span>install<span class="w"> </span>meraki
-<span class="w">   </span>
-</pre></div></td></tr></table></div>
+To automate the configuration, follow these steps to create a script that will make necessary API calls to configure your devices every time they need to be reset or updated.
 
-   - Set up a simple Python script to push configurations:
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="kn">import</span> <span class="nn">meraki</span>
+#### Example: Python Script to Update Network Configuration
 
-   <span class="c1"># Initialize a dashboard session using your Meraki API key</span>
-   <span class="n">dashboard</span> <span class="o">=</span> <span class="n">meraki</span><span class="o">.</span><span class="n">DashboardAPI</span><span class="p">(</span><span class="s1">&#39;your_api_key_here&#39;</span><span class="p">)</span>
+1. **Set Up Environment:**
+   - Ensure you have Python installed along with the `requests` library to handle HTTP requests.
+   - Get your Meraki API key from the dashboard (Account &gt; API Access).
 
-   <span class="c1"># Example: List the organizations that the user has access to</span>
-   <span class="n">organizations</span> <span class="o">=</span> <span class="n">dashboard</span><span class="o">.</span><span class="n">organizations</span><span class="o">.</span><span class="n">getOrganizations</span><span class="p">()</span>
-
-   <span class="c1"># Example: Update network settings if needed</span>
-   <span class="n">dashboard</span><span class="o">.</span><span class="n">networks</span><span class="o">.</span><span class="n">updateNetwork</span><span class="p">(</span><span class="n">network_id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;New Network Name&#39;</span><span class="p">)</span>
-   
-</pre></div></td></tr></table></div>
-
-
-2. **Webhook Integrations**:
-   - Use webhooks to trigger scripts or configuration changes. This way, if a device reboots, the webhook alerts your external system to ensure the proper configurations or actions are taken.
-
-3. **Integrate with Other Systems**:
-   - Integrate with external configuration management or monitoring tools (like Ansible, Nagios, etc.) to ensure your configurations are consistent and automatically deployed.
-
-4. **Scheduled Scripts**:
-   - Write cron jobs or scheduled tasks that periodically check configurations and reapply them if necessary.
-   - Use a scripting language such as Bash, Python or PowerShell (on management systems) to automate API calls.
-
-   
-#### Example Script in Python
-
-Here's an example of a basic Python script that checks for a specific configuration and updates it if needed:
+2. **Sample Script:**
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -410,41 +222,79 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">meraki</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
-<span class="k">def</span> <span class="nf">ensure_configuration</span><span class="p">(</span><span class="n">apikey</span><span class="p">,</span> <span class="n">organization_id</span><span class="p">):</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">meraki</span><span class="o">.</span><span class="n">DashboardAPI</span><span class="p">(</span><span class="n">apikey</span><span class="p">)</span>
-    <span class="n">networks</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">organizations</span><span class="o">.</span><span class="n">getOrganizationNetworks</span><span class="p">(</span><span class="n">organization_id</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">network</span> <span class="ow">in</span> <span class="n">networks</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">network</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Expected Network Name&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network </span><span class="si">{</span><span class="n">network</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not correctly named.&quot;</span><span class="p">)</span>
-            <span class="c1"># Assuming we want to rename for simplicity, normally more complex configurations would be verified</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">networks</span><span class="o">.</span><span class="n">updateNetwork</span><span class="p">(</span><span class="n">network</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Expected Network Name&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated network </span><span class="si">{</span><span class="n">network</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> name to &#39;Expected Network Name&#39;.&quot;</span><span class="p">)</span>
+<span class="c1"># Replace with your specific details</span>
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;your_api_key_here&#39;</span>
+<span class="n">ORGANIZATION_ID</span> <span class="o">=</span> <span class="s1">&#39;your_organization_id_here&#39;</span>
+<span class="n">NETWORK_ID</span> <span class="o">=</span> <span class="s1">&#39;your_network_id_here&#39;</span>
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">apikey</span> <span class="o">=</span> <span class="s1">&#39;your_api_key_here&#39;</span>
-    <span class="n">organization_id</span> <span class="o">=</span> <span class="s1">&#39;your_organization_id_here&#39;</span>
-    
-    <span class="c1"># Check configuration every hour</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">ensure_configuration</span><span class="p">(</span><span class="n">apikey</span><span class="p">,</span> <span class="n">organization_id</span><span class="p">)</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3600</span><span class="p">)</span>  <span class="c1"># sleep for an hour</span>
+<span class="c1"># Define headers</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;X-Cisco-Meraki-API-Key&#39;</span><span class="p">:</span> <span class="n">API_KEY</span><span class="p">,</span>
+    <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+<span class="p">}</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
+<span class="c1"># Example function to update SSID settings</span>
+<span class="k">def</span> <span class="nf">update_ssid</span><span class="p">(</span><span class="n">network_id</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://api.meraki.com/api/v1/networks/</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">/wireless/ssids/0&quot;</span>
+
+    <span class="c1"># Define SSID settings</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;MyNewSSID&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;enabled&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">&#39;authMode&#39;</span><span class="p">:</span> <span class="s1">&#39;psk&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;psk&#39;</span><span class="p">:</span> <span class="s1">&#39;your_password_here&#39;</span>
+    <span class="p">}</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SSID updated successfully.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update SSID: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Call the function to execute </span>
+<span class="n">update_ssid</span><span class="p">(</span><span class="n">NETWORK_ID</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 
 
-### Final Notes
+#### Steps in Script:
 
-- **Security**: Ensure your API keys are kept secure and not hardcoded in scripts. Use environment variables or secure vaults.
-- **Documentation & Testing**: Regularly document and test scripts to handle any changes in the Meraki API or your network configuration requirements.
-- **Official Resources**: Reference Cisco Meraki’s official API documentation for updated endpoints and further automation possibilities.
+- Uses the Meraki API key for authentication.
+- Makes a PUT request to configure the SSID.
+- Can be extended to include more configuration details like firewall rules, VLAN settings, etc.
 
-By taking these steps, you can effectively automate and verify that your desired configurations and software settings are maintained on your Cisco Meraki devices.</p>
+### Step 4: Schedule Script Execution
+
+- Use cron jobs on Linux or Task Scheduler on Windows to run your script at boot or at regular intervals, ensuring any settings reapply in case of device reset.
+
+### Additional Tips
+
+1. **Error Handling:**
+   - Add error handling in the script to manage API call failures or network issues.
+
+2. **Testing:**
+   - Ensure you test the script on a small scale before applying it to the entire network to avoid any disruption.
+
+3. **Documentation:**
+   - Document the settings applied for future reference and troubleshooting.
+
+4. **Stay Updated:**
+   - API versions are updated frequently, so monitor Cisco Meraki’s API documentation for any changes that may impact your script.
+
+Using the Meraki Dashboard and APIs along with scheduled tasks allows you to automate and ensure your network's settings are consistently applied, even without the ability to directly run scripts on Meraki devices.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>Meraki Dashboard API</code>: False</p>
@@ -460,443 +310,47 @@ By taking these steps, you can effectively automate and verify that your desired
 <h2>Query</h2>
 <p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
 <h2>Output</h2>
-<p>To ensure that your software loads every time your Cisco Meraki device boots, you'll need to configure scripts or use Meraki's API to automate processes. However, Cisco Meraki, being a cloud-managed system, doesn't allow direct access to underlying OS to persistently store custom software or scripts on the device itself. Instead, you manage devices via the cloud dashboard, and custom processes can often be handled through the use of APIs or other external automation tools.
+<p>Ensuring that your software loads every time your Cisco Meraki device boots involves automating the process of software deployment, which typically involves configuration settings rather than installing custom scripts directly on the device. Meraki devices (such as switches, security appliances, and wireless access points) are cloud-managed, and customization directly on the device is limited compared to traditional hardware. However, you can manage configurations and ensure certain settings are applied via the Meraki dashboard. We’ll need to adapt our approach to fit within Meraki's ecosystem and use available tools to automate configuration.
 
-That said, if you're aiming to automate specific configurations or changes on your Meraki devices, using the Meraki API in conjunction with a script is the way to achieve this. Here’s a rough guide on how to do it:
+### Step-by-Step Guide:
 
-### Steps to Automate Configuration with Meraki API
+#### Prerequisites:
+1. **Meraki Dashboard Account:** You must have access to a Cisco Meraki account with privileges to manage the devices.
+2. **API Key:** Generate an API key if you intend to use the Meraki Dashboard API for automation. This can be done in the Meraki dashboard under your account settings.
+3. **Python Environment:** Set up a Python environment if you plan to use it for scripting. Python is a common language for interacting with the Meraki API.
 
-1. **Familiarize with Meraki API**
-   - First, become familiar with the Meraki Dashboard API. The API documentation is available on the Meraki website and provides endpoints for control over various configurations.
+---
 
-2. **Obtain API Key**
-   - Log in to your Cisco Meraki Dashboard.
-   - Navigate to `Organization &gt; Settings`.
-   - Scroll to the dashboard API access section, and generate or retrieve your API key.
+### Method 1: Using Meraki Dashboard
 
-3. **Setup Development Environment**
-   - Choose a scripting language such as Python, which is well-supported with various libraries for HTTP requests (e.g., `requests`) and JSON handling.
-   - Install any necessary libraries. For Python, you can use pip:
-     <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>     <span class="n">pip</span> <span class="n">install</span> <span class="n">requests</span>
-     
-</pre></div></td></tr></table></div>
+1. **Access Device Configuration:**
+   - Log into your Meraki Dashboard.
+   - Navigate to your organization's dashboard and select the network containing your device.
+   - Access the configuration settings specific to your device type (e.g., Security & SD-WAN, Switches, Wireless).
 
+2. **Configure Settings:**
+   - Ensure your desired configurations, features (like SSIDs, traffic shaping rules, firewall rules), and connectivity settings are applied and saved in the dashboard.
+   - These settings will automatically sync each time the device boots up, as Meraki devices pull configuration information from the cloud.
 
-4. **Write a Script for the Desired Configurations**
-   - Using the API key, write scripts that will interact with the Meraki API. Here’s a simple example to get network details:
+3. **Monitor & Administer:**
+   - Use features like alerts and network monitoring to be informed of the device’s status and any issues with applying configurations. The dashboard provides real-time status reports and insights.
 
-     <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span>     <span class="kn">import</span> <span class="nn">requests</span>
-     
-     <span class="n">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;your_api_key&#39;</span>
-     <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://api.meraki.com/api/v1&#39;</span>
-     <span class="n">NETWORK_ID</span> <span class="o">=</span> <span class="s1">&#39;your_network_id&#39;</span>
-     
-     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-         <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;X-Cisco-Meraki-API-Key&#39;</span><span class="p">:</span> <span class="n">API_KEY</span><span class="p">,</span>
-     <span class="p">}</span>
-     
-     <span class="c1"># Example function to get network details</span>
-     <span class="k">def</span> <span class="nf">get_network</span><span class="p">():</span>
-         <span class="k">try</span><span class="p">:</span>
-             <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s1">/networks/</span><span class="si">{</span><span class="n">NETWORK_ID</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-                 <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-             <span class="k">else</span><span class="p">:</span>
-                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed to fetch network data:&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+---
 
-     <span class="n">network_details</span> <span class="o">=</span> <span class="n">get_network</span><span class="p">()</span>
-     <span class="nb">print</span><span class="p">(</span><span class="n">network_details</span><span class="p">)</span>
-     
-</pre></div></td></tr></table></div>
+### Method 2: Automated Configuration with Meraki API
 
+1. **Setup API Access:**
+   - **Generate API Key:** In your dashboard account under the profile, generate an API key for authentication in scripts.
+   - **Enable API Access:** Ensure the network is set to allow API access.
 
-5. **Automate Script Execution**
-   - To run this script automatically, use a task scheduler. On Linux, you can use `cron`; on Windows, use Task Scheduler.
-   - For a cron job, you might add an entry like:
-     <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>     <span class="nd">@reboot</span> <span class="n">python</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">script</span><span class="o">.</span><span class="n">py</span>
-     
-</pre></div></td></tr></table></div>
+2. **Create a Python Script:**
+   - Use a tool such as Python to script interactions with the Meraki API.
+   - Install necessary libraries such as `requests` for HTTP requests.
 
+3. **Scripting Example:**
+   Here’s a basic example of how you might write a Python script to automate configuration settings using the Meraki Dashboard API:
 
-6. **Test Script Thoroughly**
-   - Before setting the script to run automatically, test it thoroughly to ensure it works as expected without manual intervention.
-
-7. **Secure the API Key**
-   - Always secure your API key. Avoid hardcoding it in scripts; instead, consider using environment variables or configuration files that aren't stored in any version control system.
-
-### Notes
-- **Limitations:** Since Meraki is a cloud-managed platform, you will not be able to upload and run persistent local software/scripts on the device itself directly.
-- **Testing:** Ensure any automation scripts are fully tested to prevent unintended network disruptions.
-- **Updates:** Keep your scripts in sync with any changes in the API or Meraki firmware updates, which may add new features or deprecate old ones. 
-
-Always refer to the official Cisco Meraki API documentation for the latest capabilities and best practices.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Meraki Dashboard API</code>: True</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>python</code>: True</p>
-<h2>Final Answer: True</h2>
-</div>
-    
-<div id="tab3" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
-<h2>Output</h2>
-<p>Automating software loading on a Cisco Meraki device involves using APIs and scripts because Cisco Meraki devices are cloud-managed, and their local management capabilities are limited. This guide will help you set up automation for ensuring your particular configurations or scripts are applied to the Meraki devices upon booting.
-
-### Steps to Automate Software Configuration on a Cisco Meraki Device
-
-1. **Understanding Meraki API:**
-   First, ensure that you have access to Cisco Meraki Dashboard and API. The Meraki Dashboard API allows programmatic access to various settings and device details.
-
-2. **Generate an API Key:**
-   - Log in to your Cisco Meraki Dashboard.
-   - Navigate to **Organization &gt; Settings**.
-   - Check that API access is enabled.
-   - Generate a new API key if you do not have one. Keep this API key secure as it provides access to your organization’s Meraki configuration.
-
-3. **Install Required Tools:**
-   Set up your environment to use Python (or another language) to make API calls.
-   - Install Python from the [official Python website](https://www.python.org) if it’s not already installed.
-   - Use pip to install the `requests` library for making HTTP requests: 
-     <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><span class="w">     </span>pip<span class="w"> </span>install<span class="w"> </span>requests
-<span class="w">     </span>
-</pre></div></td></tr></table></div>
-
-
-4. **Write a Script for Configuration:**
-   Create a Python script to automate loading of software configuration settings:
-   
-   <style>pre { line-height: 125%; }
+    <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
@@ -1007,69 +461,61 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="kn">import</span> <span class="nn">requests</span>
-   <span class="kn">import</span> <span class="nn">json</span>
+<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span>    <span class="kn">import</span> <span class="nn">requests</span>
 
-   <span class="c1"># Replace with your own API key</span>
-   <span class="n">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;your_api_key_here&#39;</span>
-   <span class="n">ORGANIZATION_ID</span> <span class="o">=</span> <span class="s1">&#39;your_organization_id_here&#39;</span>
-   <span class="n">NETWORK_ID</span> <span class="o">=</span> <span class="s1">&#39;your_network_id_here&#39;</span>
-   <span class="n">HEADERS</span> <span class="o">=</span> <span class="p">{</span>
-       <span class="s1">&#39;X-Cisco-Meraki-API-Key&#39;</span><span class="p">:</span> <span class="n">API_KEY</span><span class="p">,</span>
-       <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span>
-   <span class="p">}</span>
+    <span class="c1"># Set these values</span>
+    <span class="n">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;your_api_key_here&#39;</span>
+    <span class="n">ORG_ID</span> <span class="o">=</span> <span class="s1">&#39;your_org_id&#39;</span>
+    <span class="n">NETWORK_ID</span> <span class="o">=</span> <span class="s1">&#39;your_network_id&#39;</span>
 
-   <span class="k">def</span> <span class="nf">get_device_list</span><span class="p">():</span>
-       <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://api.meraki.com/api/v1/organizations/</span><span class="si">{</span><span class="n">ORGANIZATION_ID</span><span class="si">}</span><span class="s2">/devices&quot;</span>
-       <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">)</span>
-       <span class="n">devices</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-       <span class="k">return</span> <span class="n">devices</span>
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://api.meraki.com/api/v1&quot;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;X-Cisco-Meraki-API-Key&quot;</span><span class="p">:</span> <span class="n">API_KEY</span><span class="p">,</span>
+    <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">get_device_list</span><span class="p">(</span><span class="n">network_id</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/networks/</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">/devices&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
-   <span class="k">def</span> <span class="nf">configure_device</span><span class="p">(</span><span class="n">device_serial</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-       <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://api.meraki.com/api/v1/networks/</span><span class="si">{</span><span class="n">NETWORK_ID</span><span class="si">}</span><span class="s2">/devices/</span><span class="si">{</span><span class="n">device_serial</span><span class="si">}</span><span class="s2">/configuration&quot;</span>
-       <span class="n">payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-       <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
-       <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="c1"># Example function to update settings</span>
+    <span class="k">def</span> <span class="nf">update_device_settings</span><span class="p">(</span><span class="n">network_id</span><span class="p">,</span> <span class="n">device_serial</span><span class="p">,</span> <span class="n">new_settings</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/networks/</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">/devices/</span><span class="si">{</span><span class="n">device_serial</span><span class="si">}</span><span class="s2">/update&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">new_settings</span>  <span class="c1"># JSON payload with new settings</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
-   <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-       <span class="n">devices</span> <span class="o">=</span> <span class="n">get_device_list</span><span class="p">()</span>
-       <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">:</span>
-           <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;networkId&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">NETWORK_ID</span><span class="p">:</span>
-               <span class="c1"># Define specific configuration to apply</span>
-               <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-                   <span class="c1"># Example configuration; adjust as needed</span>
-                   <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span>
-               <span class="p">}</span>
-               <span class="n">response</span> <span class="o">=</span> <span class="n">configure_device</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;serial&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">)</span>
-               <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configured device </span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;serial&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Fetch devices and apply some automated config changes</span>
+    <span class="n">devices</span> <span class="o">=</span> <span class="n">get_device_list</span><span class="p">(</span><span class="n">NETWORK_ID</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">:</span>
+        <span class="n">device_serial</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;serial&#39;</span><span class="p">]</span>
+        <span class="c1"># Example: Automating a setting change</span>
+        <span class="n">new_settings</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NewDeviceName&quot;</span><span class="p">,</span>
+            <span class="c1"># Add more settings to this dictionary as needed</span>
+        <span class="p">}</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">update_device_settings</span><span class="p">(</span><span class="n">NETWORK_ID</span><span class="p">,</span> <span class="n">device_serial</span><span class="p">,</span> <span class="n">new_settings</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated settings for </span><span class="si">{</span><span class="n">device_serial</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-   <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-       <span class="n">main</span><span class="p">()</span>
-   
+    
 </pre></div></td></tr></table></div>
 
 
-   Here, you need to adjust the script to include the actual configuration you want to apply. The example configuration will vary based on your specific use case.
+4. **Run Scripts on Schedule:**
+   - Use a task scheduler (like cron in Unix/Linux or Task Scheduler in Windows) to run these scripts at regular intervals or on certain triggers. This ensures that your configurations are consistently applied or adjusted across reboots.
 
-5. **Automate Script Execution:**
-   To ensure this script runs every time the device boots:
+5. **Logging & Alerts:**
+   - Consider implementing logging within your scripts to keep records of changes and detect issues early, integrating alerting via email or other notification services.
 
-   - Use a task scheduler on your server or management machine.
-   - **For Linux:** Add a cron job to execute the script periodically or on startup.
-   - **For Windows:** Use Task Scheduler to schedule the script execution.
+6. **Security:**
+   - Keep your API keys secure. Store them in environment variables or secure credential management systems rather than hardcoding them in your scripts.
 
-6. **Test the Automation Process:**
-   Run the script manually first to verify its correct operation. Check the Meraki dashboard to see if the changes have been applied.
-   
-7. **Monitor and Maintain:**
-   Regularly update your script and API key if necessary. Also, monitor logs and the Meraki dashboard to ensure successful configurations.
+---
 
-### Additional Tips:
-- **Documentation:** Always refer to the [Meraki API documentation](https://developer.cisco.com/meraki/api-v1/) for the most accurate and updated information on API capabilities and limitations.
-- **Security:** Never hard-code sensitive information like API keys in your scripts. Consider using environment variables or secure vault services.
+### Conclusion:
 
-This guide should help you automate configuration processes on Cisco Meraki devices using scripts and the Meraki API. Adjust the strategies to best fit your operational requirements and security policies.</p>
+While you can’t directly install custom scripts to boot from on Meraki hardware, you can leverage the Dashboard and its API to manage settings and automate configurations effectively. Make sure to regularly consult Meraki documentation for API updates or changes and utilize community forums for additional strategies and updates.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>Meraki Dashboard API</code>: True</p>
@@ -1078,50 +524,29 @@ This guide should help you automate configuration processes on Cisco Meraki devi
 <h2>Final Answer: True</h2>
 </div>
     
-<div id="tab4" class="tab-content">
+<div id="tab3" class="tab-content">
     <h1>Initial Query</h1>
 <p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
 <h1>LLM Generation</h1>
 <h2>Query</h2>
 <p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
 <h2>Output</h2>
-<p>To ensure your software loads every time a Cisco Meraki device is booted, it's essential to understand the capabilities and limitations of Meraki devices. Cisco Meraki is known for its cloud-managed networking solutions, and it operates quite differently compared to traditional network devices. Unlike traditional routers and switches, Meraki devices typically rely on cloud-based management, meaning they do not allow extensive local configurations or scripts to run directly on the hardware. 
+<p>To ensure that your software loads every time your Cisco Meraki device boots, you will need to manage the configuration systematically. Since Meraki devices are cloud-managed and don't allow you to directly install or run scripts on the device itself like traditional routers or switches, the process involves leveraging the Meraki Dashboard API and possibly some auxiliary systems that can script the interaction with your Meraki network. Here's a detailed guide on how you can automate the process:
 
-However, there are ways to automate configurations and maintain operations using the Meraki Dashboard and APIs. Here's a step-by-step guide on how to automate configurations and ensure your settings persist:
+### Step 1: Set Up Your Environment
+1. **Register on Meraki Dashboard:**
+   - Ensure you have access to the Cisco Meraki Dashboard where you can manage your devices.
 
-### Step 1: Set Up Your Meraki Dashboard
+2. **Obtain API Key:**
+   - Navigate to your dashboard account, go to `My profile` and create an API key. This key will be used to authenticate API requests.
 
-1. **Create a Meraki Account:** If you haven’t already, set up a Cisco Meraki account and add your devices to your organization via the dashboard.
-   
-2. **Organize Devices:** Ensure all your Meraki devices are assigned to appropriate networks within your Meraki organization.
+3. **Set Up a Server/Workstation:**
+   - Ensure you have a system that can run scripts and make web requests. You need a Python environment or any language you're comfortable with which can interact with HTTP APIs.
 
-### Step 2: Configure Your Devices via Meraki Dashboard
+### Step 2: Script to Configure Meraki Devices
+Using Python as a scripting language could be efficient due to available libraries for making HTTP requests.
 
-1. **Access the Dashboard:** Log into your Cisco Meraki dashboard.
-
-2. **Set Configuration Templates:** If you have multiple devices with similar configurations, use configuration templates for easier management. Create a template network and bind your devices to this template as needed.
-
-3. **Configure Device Settings:**
-
-   - Navigate to **Security & SD-WAN &gt; Configure** for security appliance settings.
-   - Navigate to **Switch &gt; Configure** for switch settings.
-   - Navigate to **Wireless &gt; Configure** for wireless settings.
-
-4. **Apply Configurations:** Make sure to save and apply all settings. These settings will be reapplied to the device even after a reboot as they are cloud-managed.
-
-### Step 3: Automate Configurations with Meraki API
-
-If you need to automate specific configurations or retrieve network information programmatically, using the Meraki API is optimal.
-
-1. **Enable API Access:**
-   - Go to your organization's settings in the Dashboard.
-   - Enable API access if it is not enabled already.
-   - Generate an API key for authentication purposes.
-
-2. **Use Python to Script API Requests:**
-   - Install necessary packages: Use `pip` to install the Meraki SDK or `requests` library to make API calls.
-   
-   Example pip installation:
+1. **Install Required Packages:**
    <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1197,17 +622,13 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><span class="w">   </span>pip<span class="w"> </span>install<span class="w"> </span>meraki
-<span class="w">   </span>or<span class="w"> </span>
-<span class="w">   </span>pip<span class="w"> </span>install<span class="w"> </span>requests
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><span class="w">   </span>pip<span class="w"> </span>install<span class="w"> </span>requests
 <span class="w">   </span>
 </pre></div></td></tr></table></div>
 
 
-3. **Example Script:**
-   Below is a basic example of a Python script that uses the Meraki API to update network configurations:
+2. **Write a Script:**
+   Below is a basic example script to update configurations on boot. This assumes you need to configure certain settings every time a device reboots, which might typically be automated or controlled via templates.
 
    <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1312,56 +733,393 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">27</span>
 <span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="kn">import</span> <span class="nn">requests</span>
 
-   <span class="c1"># Set up your API key</span>
    <span class="n">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;your_api_key_here&#39;</span>
+   <span class="n">NETWORK_ID</span> <span class="o">=</span> <span class="s1">&#39;your_network_id_here&#39;</span>
+   <span class="n">DEVICE_SERIAL</span> <span class="o">=</span> <span class="s1">&#39;your_device_serial_here&#39;</span>
    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://api.meraki.com/api/v1&#39;</span>
 
-   <span class="c1"># Headers for authentication</span>
    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-       <span class="s2">&quot;X-Cisco-Meraki-API-Key&quot;</span><span class="p">:</span> <span class="n">API_KEY</span><span class="p">,</span>
-       <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span>
+       <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;X-Cisco-Meraki-API-Key&#39;</span><span class="p">:</span> <span class="n">API_KEY</span>
    <span class="p">}</span>
 
-   <span class="c1"># Example function to list devices in a network</span>
-   <span class="k">def</span> <span class="nf">list_devices</span><span class="p">(</span><span class="n">network_id</span><span class="p">):</span>
-       <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/networks/</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">/devices&quot;</span>
-       <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+   <span class="k">def</span> <span class="nf">update_device_configuration</span><span class="p">():</span>
+       <span class="c1"># Example: Update device name</span>
+       <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/devices/</span><span class="si">{</span><span class="n">DEVICE_SERIAL</span><span class="si">}</span><span class="s2">&quot;</span>
+       <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+           <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Device XYZ&quot;</span>
+       <span class="p">}</span>
+       
+       <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-           <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+           <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Device configuration was updated successfully: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
        <span class="k">else</span><span class="p">:</span>
-           <span class="k">return</span> <span class="kc">None</span>
+           <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update device configuration: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-   <span class="c1"># Call the function</span>
-   <span class="n">my_network_id</span> <span class="o">=</span> <span class="s1">&#39;Network_ID&#39;</span>
-   <span class="n">devices</span> <span class="o">=</span> <span class="n">list_devices</span><span class="p">(</span><span class="n">my_network_id</span><span class="p">)</span>
-   <span class="k">if</span> <span class="n">devices</span><span class="p">:</span>
-       <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">:</span>
-           <span class="nb">print</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+   <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+       <span class="n">update_device_configuration</span><span class="p">()</span>
    
 </pre></div></td></tr></table></div>
 
 
-   Modify this script to customize configurations, monitor device statuses, or automate specific tasks as needed.
+### Step 3: Automate the Script Execution
+You can automate the execution of your script using a scheduler such as cron (on Linux) or Task Scheduler (on Windows).
 
-4. **Automate Script Execution:** Depending on your environment, you might want to run the script automatically using cron jobs (Linux/Unix) or Task Scheduler (Windows).
+#### Using Cron (Linux):
+1. Open the cron tab for editing:
+   <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><span class="w">   </span>crontab<span class="w"> </span>-e
+<span class="w">   </span>
+</pre></div></td></tr></table></div>
 
-### Step 4: Monitor and Manage
 
-1. **Regularly Review:** Ensure all devices are functioning correctly and receiving updates from the cloud.
+2. Schedule the script to run at boot:
+   <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="nd">@reboot</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python3</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">script</span><span class="o">.</span><span class="n">py</span>
    
-2. **Alerts and Notifications:** Set up alerts within the Meraki Dashboard to notify you of any device issues or network anomalies.
+</pre></div></td></tr></table></div>
 
-3. **Documentation and Maintenance:** Document your scripts and configurations for later reference or troubleshooting.
 
-### Conclusion
+#### Using Task Scheduler (Windows):
+1. Open Task Scheduler and create a new task.
+2. Set the trigger to "At startup".
+3. Make the action run your Python script using the proper Python interpreter path.
 
-Meraki devices are built with cloud management at their core. They do not support custom scripts running directly on the devices, but using the Meraki Dashboard and APIs allow you to automate and manage configurations effectively. By following the steps above, you can ensure your desired configurations are consistently applied across your network devices.</p>
+### Step 4: Testing
+- Reboot your Meraki device and ensure your script executes properly and that any intended config changes are applied.
+- Check the logs from your automation script to verify it executed without errors.
+
+### Step 5: Monitor and Maintain
+- Make sure your API key is kept secure and refresh it periodically to maintain security.
+- Regularly update your script to accommodate any changes in your environment or requirements.
+
+By using the Meraki Dashboard API effectively and automating infrastructure tasks with scripts, you can manage configurations across your Meraki devices in a systematic way without needing direct access to the device CLI.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>Meraki Dashboard API</code>: False</p>
+<p>Testing if the previous output contains the string <code>Meraki Dashboard API</code>: True</p>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>python</code>: True</p>
-<h2>Final Answer: False</h2>
+<h2>Final Answer: True</h2>
+</div>
+    
+<div id="tab4" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
+<h2>Output</h2>
+<p>To ensure that your software loads every time a Cisco Meraki device is rebooted, you need to understand that Meraki devices operate differently compared to traditional network devices. Cisco Meraki devices are cloud-managed and highly automated, but they do not support running custom scripts or software directly on the device itself. This is because the firmware and operations on Meraki devices are managed through the Meraki Dashboard, which connects to Cisco's cloud infrastructure.
+
+However, there are a few ways you can automate configurations and ensure certain types of behaviors in a Cisco Meraki environment:
+
+### Method 1: Using the Meraki Dashboard API
+
+Cisco Meraki provides a robust set of APIs that allow you to configure and manage your devices programmatically. You can use these APIs to automate tasks and ensure that your configurations are consistently applied after a device reboot:
+
+1. **Get API Key:**
+   - Log in to your Meraki Dashboard.
+   - Go to **Organization &gt; Settings**.
+   - Enable API access if it’s not already enabled.
+   - Generate an API key under the API Access section.
+
+2. **Install a Python Environment:**
+   - Make sure you have Python installed on your machine. Python is commonly used for writing scripts that interact with the Meraki API.
+   - Install the Meraki Python library by running `pip install meraki`.
+
+3. **Write a Script:**
+   - Create a Python script that utilizes the Meraki API to automate the tasks required every time the device boots. For example, ensuring specific configurations, like VLAN settings or firewall rules, are applied.
+
+   <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="kn">import</span> <span class="nn">meraki</span>
+
+   <span class="c1"># Define your API key here</span>
+   <span class="n">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;your_api_key_here&#39;</span>
+
+   <span class="c1"># Initialize the Meraki dashboard connection</span>
+   <span class="n">dashboard</span> <span class="o">=</span> <span class="n">meraki</span><span class="o">.</span><span class="n">DashboardAPI</span><span class="p">(</span><span class="n">API_KEY</span><span class="p">)</span>
+
+   <span class="c1"># Your organization ID</span>
+   <span class="n">ORG_ID</span> <span class="o">=</span> <span class="s1">&#39;your_org_id&#39;</span>
+
+   <span class="c1"># Example: Retrieve and print the list of networks</span>
+   <span class="n">networks</span> <span class="o">=</span> <span class="n">dashboard</span><span class="o">.</span><span class="n">organizations</span><span class="o">.</span><span class="n">getOrganizationNetworks</span><span class="p">(</span><span class="n">ORG_ID</span><span class="p">)</span>
+   <span class="k">for</span> <span class="n">network</span> <span class="ow">in</span> <span class="n">networks</span><span class="p">:</span>
+       <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network ID: </span><span class="si">{</span><span class="n">network</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Name: </span><span class="si">{</span><span class="n">network</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+   
+   <span class="c1"># Your automated tasks go here</span>
+   
+</pre></div></td></tr></table></div>
+
+
+4. **Automate the Script Execution:**
+   - Use a task scheduler (like `cron` on Linux or Task Scheduler on Windows) to run your script periodically or on specific events.
+   - This script can also be triggered by an external monitoring tool that detects when a device has been rebooted.
+
+### Method 2: Use Configuration Templates
+
+Cisco Meraki also allows the use of configuration templates that can help ensure uniform configurations across devices:
+
+1. **Create a Configuration Template:**
+   - In the Meraki Dashboard, navigate to **Organization &gt; Configuration templates**.
+   - Create a new template and configure it with the desired settings.
+
+2. **Bind Networks to the Template:**
+   - Attach your networks to this configuration template to ensure that all devices within these networks automatically inherit the settings.
+
+3. **Automate with APIs:**
+   - Use the Meraki API to manage which networks are bound to which templates. This can streamline the application of new settings across multiple networks and devices.
+
+### Important Considerations
+
+- **APIs and Cloud Dependency:** All Meraki devices rely heavily on cloud connectivity for configuration and management. Ensure your network maintains a reliable internet connection.
+- **Security:** Handle your API keys carefully. Store them securely and avoid exposing them in shared environments.
+
+By using the Meraki Dashboard and its API, you can automate and ensure consistent configuration on your Meraki devices, effectively achieving a similar outcome to having local scripts run on each device at boot.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>Meraki Dashboard API</code>: True</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>python</code>: True</p>
+<h2>Final Answer: True</h2>
 </div>
     
 <div id="tab5" class="tab-content">
@@ -1371,26 +1129,32 @@ Meraki devices are built with cloud management at their core. They do not suppor
 <h2>Query</h2>
 <p>Provide a detailed guide on how I can make sure my software loads every time my Cisco Meraki device is booted and how to automate this process via a script</p>
 <h2>Output</h2>
-<p>To ensure that your software loads every time your Cisco Meraki device boots, you'll need to set up a reliable process. Please note that Cisco Meraki devices primarily run on a cloud-managed interface, which limits direct access to the device's underlying operating system and script execution. Therefore, you may need to focus on leveraging the cloud-managed features and integration capabilities provided by Cisco Meraki. However, I can guide you on setting up an automated environment to control and manage your devices using available tools and APIs.
+<p>Ensuring your software loads every time your Cisco Meraki device boots involves a combination of understanding the Meraki ecosystem, leveraging available features, and automating tasks where possible. Given Meraki’s cloud-managed architecture, direct access to the device's operating system is limited, and loading custom scripts directly onto the device in a persistent manner is not typically supported. However, there are strategies you can employ to automate configurations or make sure certain network settings are consistently applied.
 
-### Step-by-Step Guide
+Here’s a detailed guide on how to automate specific tasks for Meraki devices:
 
-#### 1. Understanding the Environment:
-Cisco Meraki devices don't allow for traditional custom scripts to run natively on the device with boot persistence. Instead, you can automate interactions using the Meraki Dashboard API or network policies via the cloud interface.
+### Step 1: Understanding Meraki’s Capabilities
+Cisco Meraki's devices are managed through the Meraki Dashboard, a cloud-based interface that allows centralized management. Unlike some other devices, Meraki doesn’t support custom scripts running on the device due to its cloud-centric model. Therefore, scripting needs to interact with the dashboard API for automation.
 
-#### 2. Utilizing Meraki Dashboard API:
-Cisco Meraki provides a comprehensive API that allows you to manage your network devices programmatically.
+### Step 2: Using the Meraki Dashboard API
+Meraki provides an API to programmatically access and configure devices. You can use this API to automate tasks and ensure configurations are applied every time the device boots.
 
-1. **API Key Setup:**
-   - Log in to your Meraki Dashboard account.
-   - Navigate to *Organization &gt; Settings*.
-   - Enable the API option and generate an API key. This key will be used to authenticate your API requests.
+#### Set Up the Meraki Dashboard API:
+1. **API Key Generation:**
+   - Log in to the Meraki Dashboard.
+   - Navigate to "My Profile".
+   - Scroll down to the “API Access” section to generate an API key.
 
-2. **Creating an Automation Script:**
-   - Write a script in a language that supports HTTP requests, such as Python, Node.js, or Shell scripting.
-   - Use this script to interact with the Meraki Dashboard API to perform tasks that you want to automate.
+2. **Security:**
+   - Treat the API key like a password. Do not expose it in scripts or codebases.
 
-Example Python Script Using Meraki`s Dashboard API:
+3. **API Documentation:**
+   - Familiarize yourself with the [Meraki Dashboard API documentation](https://developer.cisco.com/meraki/api-v1/) to understand available endpoints and methods.
+
+### Step 3: Automating Tasks with Scripts
+You can write scripts in Python, Node.js, or other languages to automate network configurations. Below is a basic example using Python with the `requests` library.
+
+#### Python Script Example:
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1486,54 +1250,158 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
 
-<span class="c1"># Define your API key and base URL</span>
+<span class="c1"># Replace with your Meraki API key</span>
 <span class="n">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;your_api_key_here&#39;</span>
 <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://api.meraki.com/api/v1&#39;</span>
 
-<span class="c1"># Headers for the API request</span>
+<span class="c1"># Headers for authentication</span>
 <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;X-Cisco-Meraki-API-Key&#39;</span><span class="p">:</span> <span class="n">API_KEY</span><span class="p">,</span>
     <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span>
 <span class="p">}</span>
 
-<span class="c1"># Get the organization list as an example</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s1">/organizations&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+<span class="c1"># Function to get your organization ID</span>
+<span class="k">def</span> <span class="nf">get_organization_id</span><span class="p">():</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/organizations&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+    <span class="n">organizations</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="c1"># Assumes you have access to one organization; modify as necessary</span>
+    <span class="k">return</span> <span class="n">organizations</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
 
-<span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Organization list retrieved successfully:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to retrieve organizations: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Example function to update a network&#39;s settings</span>
+<span class="k">def</span> <span class="nf">update_network</span><span class="p">(</span><span class="n">organization_id</span><span class="p">,</span> <span class="n">network_id</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s2">/organizations/</span><span class="si">{</span><span class="n">organization_id</span><span class="si">}</span><span class="s2">/networks/</span><span class="si">{</span><span class="n">network_id</span><span class="si">}</span><span class="s2">/appliance/settings&quot;</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># Add your specific configuration here</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
-<span class="c1"># Additional operations as needed</span>
+<span class="c1"># Fetch organization Id</span>
+<span class="n">org_id</span> <span class="o">=</span> <span class="n">get_organization_id</span><span class="p">()</span>
+
+<span class="c1"># Example: Automate settings change for devices within your organization</span>
+<span class="c1"># network_id should be replaced with your actual network id</span>
+<span class="n">network_id</span> <span class="o">=</span> <span class="s1">&#39;your_network_id_here&#39;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">update_network</span><span class="p">(</span><span class="n">org_id</span><span class="p">,</span> <span class="n">network_id</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 
 
-3. **Execute Custom Configuration Commands:**
-   - Depending on what you want to automate (e.g., VLAN setup, SSID configuration), refer to the Meraki API documentation to identify relevant endpoints and methods.
-   - Incorporate these into your script to configure the device state automatically upon boot via cloud management.
+### Step 4: Automate Script Execution
+1. **Run Script on Server:**
+   - Place your script on a server where Python or your chosen language is installed.
+   - Use a scheduling tool (like cron jobs on Linux) to execute the script at desired intervals.
 
-#### 3. Automate Script Execution:
-To automate the execution of your script in response to network events or on a schedule, consider using:
+2. **Example Cron Job for Linux:**
+   - Open the terminal and run `crontab -e` to edit cron jobs.
+   - Add a new line with your desired schedule and script path:
+     <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>     <span class="nd">@reboot</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python3</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">script</span><span class="o">.</span><span class="n">py</span>
+     
+</pre></div></td></tr></table></div>
 
-1. **Webhook Alerts:**
-    - Configure webhook alerts in Meraki Dashboard to trigger your script when certain events occur.
 
-2. **Scheduled Tasks/Cron Jobs:**
-    - Use a server or cloud service to host your automation script and execute it periodically or in response to events.
+### Step 5: Testing and Logging
+- **Test Thoroughly:** Before automating, manually test the script to ensure it applies configurations correctly.
+  
+- **Logging:** Implement logging within your script to keep track of execution results and any potential errors.
 
-3. **Serverless Solutions:**
-    - Leverage cloud functions like AWS Lambda, Azure Functions, or Google Cloud Functions to run your script in response to HTTP requests or schedule triggers.
+### Step 6: Monitoring and Alerts
+Utilize Meraki's monitoring tools and configure alerts within the dashboard to notify you of network changes or issues.
 
-### Caveats and Considerations
-- **Security:** Protect your API key, as it provides full access to your Meraki environment.
-- **Limitations:** Be aware of any API rate limits.
-- **Compliance:** Always ensure your automation scripts comply with security policies and manufacturer guidelines.
-- **Monitoring:** Implement logging and monitoring to verify that your automation scripts execute successfully and diagnose any potential issues.
-
-By following these steps and leveraging the Meraki Dashboard and its API, you can automate the setup and management of Cisco Meraki devices effectively, even though direct boot-time script execution on the hardware isn't feasible.</p>
+By following these guidelines, you can efficiently automate and ensure your network configurations are consistently applied on your Cisco Meraki devices. Keep in mind that Meraki’s cloud-managed nature means direct onboard automation is limited, but the API provides robust remote management capabilities.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>Meraki Dashboard API</code>: True</p>

@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
-    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
+    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_1"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -197,35 +197,50 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Create history file</span>
-touch<span class="w"> </span>history.txt
+<span class="c1"># Redirect stderr to stdout</span>
+<span class="nb">exec</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 
-<span class="c1"># Continuously monitor clipboard and store contents in history file</span>
+<span class="c1"># Initialize timestamp to prevent initial processing</span>
+<span class="nv">prev_timestamp</span><span class="o">=</span><span class="s2">&quot;0&quot;</span>
+
+<span class="c1"># Main Loop to Continuously Monitor Clipboard</span>
 <span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="c1"># Get clipboard contents and trim any leading or trailing whitespace</span>
-<span class="w">  </span><span class="nv">clip_content</span><span class="o">=</span><span class="k">$(</span>xclip<span class="w"> </span>-o<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;[:space:]&#39;</span><span class="k">)</span>
 
-<span class="w">  </span><span class="c1"># Only add non-empty clipboard contents to history file</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clip_content</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clip_content</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
-<span class="w">  </span><span class="k">fi</span>
+<span class="w">    </span><span class="c1"># Only process if Clipboard contents has changed</span>
+<span class="w">    </span><span class="nv">current_timestamp</span><span class="o">=</span><span class="sb">`</span>xsel<span class="w"> </span>-b<span class="w"> </span>-o<span class="sb">`</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_timestamp</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$prev_timestamp</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
 
-<span class="w">  </span><span class="c1"># Sleep for one second before checking clipboard again</span>
-<span class="w">  </span>sleep<span class="w"> </span><span class="m">1</span>
+<span class="w">        </span><span class="c1"># Store Timestamp to Check against next Cycle</span>
+<span class="w">        </span><span class="nv">prev_timestamp</span><span class="o">=</span><span class="nv">$current_timestamp</span>
+
+<span class="w">        </span><span class="c1"># Retrieve Current Contents of Clipboard</span>
+<span class="w">        </span><span class="nv">content</span><span class="o">=</span><span class="sb">`</span>xsel<span class="w"> </span>-b<span class="w"> </span>-o<span class="sb">`</span>
+
+<span class="w">        </span><span class="c1"># Ensure history File Is Created or Is Empty</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>history.txt
+
+<span class="w">        </span><span class="c1"># Append Current Clipboard Contents To history File</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$content</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
+<span class="w">    </span><span class="k">fi</span>
+
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c1"># Sleep For 1 Second before Next Check</span>
 <span class="k">done</span>
 </pre></div></td></tr></table></div>
-
-
-This script meets the requirements:
-
-* It creates a history file named `history.txt`.
-* It continuously monitors the clipboard for changes.
-* It stores the clipboard contents in the history file.
-* It runs in the background as `./script.sh &`.
-* It works regardless of what packages are installed.
-* It correctly logs the strings "test1", "test2", and "test3" to the history file if they are copied to the clipboard.</p>
+</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -319,23 +334,47 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Create history file</span>
-<span class="n">touch</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+<span class="c1"># Redirect stderr to stdout</span>
+<span class="n">exec</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span>
 
-<span class="c1"># Continuously monitor clipboard and store contents in history file</span>
+<span class="c1"># Initialize timestamp to prevent initial processing</span>
+<span class="n">prev_timestamp</span><span class="o">=</span><span class="s2">&quot;0&quot;</span>
+
+<span class="c1"># Main Loop to Continuously Monitor Clipboard</span>
 <span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
-  <span class="c1"># Get clipboard contents and trim any leading or trailing whitespace</span>
-  <span class="n">clip_content</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">xclip</span> <span class="o">-</span><span class="n">o</span> <span class="o">|</span> <span class="n">tr</span> <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;[:space:]&#39;</span><span class="p">)</span>
 
-  <span class="c1"># Only add non-empty clipboard contents to history file</span>
-  <span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$clip_content&quot;</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="p">]];</span> <span class="n">then</span>
-    <span class="n">echo</span> <span class="s2">&quot;$clip_content&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
-  <span class="n">fi</span>
+    <span class="c1"># Only process if Clipboard contents has changed</span>
+    <span class="n">current_timestamp</span><span class="o">=</span><span class="err">`</span><span class="n">xsel</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">o</span><span class="err">`</span>
+    <span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$current_timestamp&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$prev_timestamp&quot;</span> <span class="p">]];</span> <span class="n">then</span>
 
-  <span class="c1"># Sleep for one second before checking clipboard again</span>
-  <span class="n">sleep</span> <span class="mi">1</span>
+        <span class="c1"># Store Timestamp to Check against next Cycle</span>
+        <span class="n">prev_timestamp</span><span class="o">=</span><span class="err">$</span><span class="n">current_timestamp</span>
+
+        <span class="c1"># Retrieve Current Contents of Clipboard</span>
+        <span class="n">content</span><span class="o">=</span><span class="err">`</span><span class="n">xsel</span> <span class="o">-</span><span class="n">b</span> <span class="o">-</span><span class="n">o</span><span class="err">`</span>
+
+        <span class="c1"># Ensure history File Is Created or Is Empty</span>
+        <span class="n">echo</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;&quot;</span> <span class="o">&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+
+        <span class="c1"># Append Current Clipboard Contents To history File</span>
+        <span class="n">echo</span> <span class="s2">&quot;$content&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+    <span class="n">fi</span>
+
+    <span class="n">sleep</span> <span class="mi">1</span>  <span class="c1"># Sleep For 1 Second before Next Check</span>
 <span class="n">done</span>
 </pre></div></td></tr></table></div>
 
@@ -458,25 +497,29 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Create history file</span>
+<span class="c1"># Create the history file if it doesn&#39;t exist</span>
 touch<span class="w"> </span>history.txt
 
-<span class="c1"># Define awk command for parsing clipboard contents</span>
-<span class="nv">awk_filter</span><span class="o">=</span><span class="s2">&quot;/^[^</span>$<span class="s2">] \</span>
-<span class="s2">       {print}&quot;</span><span class="w"> </span><span class="c1"># Remove any beginning &#39;$&#39; character and replace newlines with spaces</span>
-
-<span class="c1"># Monitor the clipboard and store contents in history file</span>
+<span class="c1"># Continuously monitor the clipboard for changes</span>
 <span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="c1"># Read clipboard contents and parse using awk</span>
-<span class="w">  </span><span class="nv">clipboard</span><span class="o">=</span><span class="k">$(</span>xclip<span class="w"> </span>-o<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$awk_filter</span><span class="s2">&quot;</span><span class="k">)</span>
+<span class="w">  </span><span class="c1"># Get the current clipboard contents</span>
+<span class="w">  </span><span class="nv">clipboard</span><span class="o">=</span><span class="k">$(</span>xclip<span class="w"> </span>-o<span class="w"> </span>-selection<span class="w"> </span>clipboard<span class="k">)</span>
+<span class="w">  </span>
+<span class="w">  </span><span class="c1"># Check if the clipboard contents have changed</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$last_clipboard</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="c1"># Update the history file</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
 
-<span class="w">  </span><span class="c1"># Ignore empty clipboard contents</span>
-<span class="w">  </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">continue</span>
+<span class="w">    </span><span class="c1"># Update the last_clipboard variable</span>
+<span class="w">    </span><span class="nv">last_clipboard</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="k">fi</span>
 
-<span class="w">  </span><span class="c1"># Write clipboard contents to history file</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
+<span class="w">  </span><span class="c1"># Sleep for 1 second</span>
+<span class="w">  </span>sleep<span class="w"> </span><span class="m">1</span>
 <span class="k">done</span>
 </pre></div></td></tr></table></div>
 </p>
@@ -575,35 +618,39 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Create history file</span>
+<span class="c1"># Create the history file if it doesn&#39;t exist</span>
 <span class="n">touch</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
 
-<span class="c1"># Define awk command for parsing clipboard contents</span>
-<span class="n">awk_filter</span><span class="o">=</span><span class="s2">&quot;/^[^$] </span><span class="se">\</span>
-<span class="s2">       </span><span class="si">{print}</span><span class="s2">&quot;</span> <span class="c1"># Remove any beginning &#39;$&#39; character and replace newlines with spaces</span>
-
-<span class="c1"># Monitor the clipboard and store contents in history file</span>
+<span class="c1"># Continuously monitor the clipboard for changes</span>
 <span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
-  <span class="c1"># Read clipboard contents and parse using awk</span>
-  <span class="n">clipboard</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">xclip</span> <span class="o">-</span><span class="n">o</span> <span class="o">|</span> <span class="n">awk</span> <span class="s2">&quot;$awk_filter&quot;</span><span class="p">)</span>
+  <span class="c1"># Get the current clipboard contents</span>
+  <span class="n">clipboard</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">xclip</span> <span class="o">-</span><span class="n">o</span> <span class="o">-</span><span class="n">selection</span> <span class="n">clipboard</span><span class="p">)</span>
+  
+  <span class="c1"># Check if the clipboard contents have changed</span>
+  <span class="k">if</span> <span class="p">[</span> <span class="s2">&quot;$clipboard&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$last_clipboard&quot;</span> <span class="p">];</span> <span class="n">then</span>
+    <span class="c1"># Update the history file</span>
+    <span class="n">echo</span> <span class="s2">&quot;$clipboard&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
 
-  <span class="c1"># Ignore empty clipboard contents</span>
-  <span class="p">[</span> <span class="o">-</span><span class="n">z</span> <span class="s2">&quot;$clipboard&quot;</span> <span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="k">continue</span>
+    <span class="c1"># Update the last_clipboard variable</span>
+    <span class="n">last_clipboard</span><span class="o">=</span><span class="s2">&quot;$clipboard&quot;</span>
+  <span class="n">fi</span>
 
-  <span class="c1"># Write clipboard contents to history file</span>
-  <span class="n">echo</span> <span class="s2">&quot;$clipboard&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+  <span class="c1"># Sleep for 1 second</span>
+  <span class="n">sleep</span> <span class="mi">1</span>
 <span class="n">done</span>
 </pre></div></td></tr></table></div>
 
 UNKNOWN NODE TYPE: <class 'evaluator.BashRunBackground'></p>
 <h1>PyFunc</h1>
-<p>['']
-final: False
+<p>['test1', 'test2', 'test3']
+final: True
 
 Resulting in output:
-False</p>
+True</p>
 </div>
     
 <div id="tab3" class="tab-content">
@@ -714,28 +761,36 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Create the history file</span>
+<span class="c1"># Create history file</span>
 touch<span class="w"> </span>history.txt
+chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>history.txt
 
-<span class="c1"># Continuously monitor the clipboard and store the contents in the history file</span>
+<span class="c1"># Continuously monitor clipboard for changes</span>
 <span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="c1"># Attempt to get the clipboard contents</span>
-<span class="w">  </span><span class="nv">clipboard_contents</span><span class="o">=</span><span class="k">$(</span>xclip<span class="w"> </span>-out<span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error getting clipboard contents. Ignoring.&quot;</span>
+<span class="w">    </span><span class="c1"># Get current clipboard contents</span>
+<span class="w">    </span><span class="nv">clipboard_contents</span><span class="o">=</span><span class="k">$(</span>xclip<span class="w"> </span>-o<span class="k">)</span>
 
-<span class="w">  </span><span class="c1"># Check if the clipboard contents are empty or if the history file already contains them</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard_contents</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard_contents</span><span class="s2">&quot;</span><span class="w"> </span>history.txt<span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="k">continue</span>
-<span class="w">  </span><span class="k">fi</span>
+<span class="w">    </span><span class="c1"># Check if clipboard contents have changed</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard_contents</span><span class="s2">&quot;</span><span class="w"> </span>history.txt<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c1"># Clipboard contents haven&#39;t changed, so do nothing</span>
+<span class="w">        </span><span class="k">continue</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">        </span><span class="c1"># Clipboard contents have changed, so save them to history file</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard_contents</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
+<span class="w">    </span><span class="k">fi</span>
 
-<span class="w">  </span><span class="c1"># Append the clipboard contents to the history file</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard_contents</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
+<span class="w">    </span><span class="c1"># Sleep for 1 second before checking again</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">1</span>
 <span class="k">done</span>
 </pre></div></td></tr></table></div>
-
-
-This script is self-contained and will work regardless of what packages are installed on the system. It uses the `xclip` command to get and set the clipboard contents. If `xclip` is not installed, the script will simply print an error message and ignore the attempt.</p>
+</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -829,23 +884,33 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">15</span>
 <span class="normal">16</span>
 <span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Create the history file</span>
+<span class="c1"># Create history file</span>
 <span class="n">touch</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">chmod</span> <span class="mi">755</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
 
-<span class="c1"># Continuously monitor the clipboard and store the contents in the history file</span>
+<span class="c1"># Continuously monitor clipboard for changes</span>
 <span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
-  <span class="c1"># Attempt to get the clipboard contents</span>
-  <span class="n">clipboard_contents</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">xclip</span> <span class="o">-</span><span class="n">out</span><span class="p">)</span> <span class="o">||</span> <span class="n">echo</span> <span class="s2">&quot;Error getting clipboard contents. Ignoring.&quot;</span>
+    <span class="c1"># Get current clipboard contents</span>
+    <span class="n">clipboard_contents</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">xclip</span> <span class="o">-</span><span class="n">o</span><span class="p">)</span>
 
-  <span class="c1"># Check if the clipboard contents are empty or if the history file already contains them</span>
-  <span class="k">if</span> <span class="p">[</span> <span class="o">-</span><span class="n">z</span> <span class="s2">&quot;$clipboard_contents&quot;</span> <span class="p">]</span> <span class="o">||</span> <span class="n">grep</span> <span class="o">-</span><span class="n">q</span> <span class="s2">&quot;$clipboard_contents&quot;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span><span class="p">;</span> <span class="n">then</span>
-    <span class="k">continue</span>
-  <span class="n">fi</span>
+    <span class="c1"># Check if clipboard contents have changed</span>
+    <span class="k">if</span> <span class="n">grep</span> <span class="o">-</span><span class="n">q</span> <span class="s2">&quot;$clipboard_contents&quot;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span><span class="p">;</span> <span class="n">then</span>
+        <span class="c1"># Clipboard contents haven&#39;t changed, so do nothing</span>
+        <span class="k">continue</span>
+    <span class="k">else</span>
+        <span class="c1"># Clipboard contents have changed, so save them to history file</span>
+        <span class="n">echo</span> <span class="s2">&quot;$clipboard_contents&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+    <span class="n">fi</span>
 
-  <span class="c1"># Append the clipboard contents to the history file</span>
-  <span class="n">echo</span> <span class="s2">&quot;$clipboard_contents&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+    <span class="c1"># Sleep for 1 second before checking again</span>
+    <span class="n">sleep</span> <span class="mi">1</span>
 <span class="n">done</span>
 </pre></div></td></tr></table></div>
 
@@ -967,25 +1032,23 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Reset the history file to be empty at the start</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>history.txt
+<span class="c1"># Create the history file</span>
+touch<span class="w"> </span>history.txt
 
-<span class="c1"># continuously monitor the clipboard for changes</span>
-<span class="k">while</span><span class="w"> </span><span class="nb">true</span>
-<span class="k">do</span>
-<span class="w">  </span><span class="c1"># copy current clipboard contents into temporary file</span>
-<span class="w">  </span>xsel<span class="w"> </span>-b<span class="w"> </span>&gt;<span class="w"> </span>/tmp/clipboard.txt
+<span class="c1"># Continuously monitor the clipboard for changes</span>
+<span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="c1"># Get the current clipboard contents</span>
+<span class="w">  </span><span class="nv">clipboard</span><span class="o">=</span><span class="k">$(</span>xclip<span class="w"> </span>-o<span class="k">)</span>
 
-<span class="w">  </span><span class="c1"># check if the clipboard content is different from the last recorded one</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-s<span class="w"> </span>history.txt<span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>!<span class="w"> </span>cmp<span class="w"> </span>history.txt<span class="w"> </span>/tmp/clipboard.txt
-<span class="w">  </span><span class="k">then</span>
-<span class="w">    </span><span class="c1"># echo the new clipboard contents to the history file with a timestamp</span>
-<span class="w">    </span>cat<span class="w"> </span>/tmp/clipboard.txt<span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;\n</span><span class="k">$(</span>date<span class="w"> </span>--rfc-3339<span class="o">=</span>seconds<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
+<span class="w">  </span><span class="c1"># If the clipboard contents have changed, append them to the history file</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$last_clipboard</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
+<span class="w">    </span><span class="nv">last_clipboard</span><span class="o">=</span><span class="nv">$clipboard</span>
 <span class="w">  </span><span class="k">fi</span>
+
+<span class="w">  </span><span class="c1"># Sleep for 1 second to avoid overloading the system</span>
 <span class="w">  </span>sleep<span class="w"> </span><span class="m">1</span>
 <span class="k">done</span>
 </pre></div></td></tr></table></div>
@@ -1084,32 +1147,30 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Reset the history file to be empty at the start</span>
-<span class="n">echo</span> <span class="s1">&#39;&#39;</span> <span class="o">&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+<span class="c1"># Create the history file</span>
+<span class="n">touch</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
 
-<span class="c1"># continuously monitor the clipboard for changes</span>
-<span class="k">while</span> <span class="n">true</span>
-<span class="n">do</span>
-  <span class="c1"># copy current clipboard contents into temporary file</span>
-  <span class="n">xsel</span> <span class="o">-</span><span class="n">b</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">clipboard</span><span class="o">.</span><span class="n">txt</span>
+<span class="c1"># Continuously monitor the clipboard for changes</span>
+<span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
+  <span class="c1"># Get the current clipboard contents</span>
+  <span class="n">clipboard</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">xclip</span> <span class="o">-</span><span class="n">o</span><span class="p">)</span>
 
-  <span class="c1"># check if the clipboard content is different from the last recorded one</span>
-  <span class="k">if</span> <span class="p">[</span> <span class="err">!</span> <span class="o">-</span><span class="n">s</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span> <span class="p">]</span> <span class="o">||</span> <span class="err">!</span> <span class="n">cmp</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">clipboard</span><span class="o">.</span><span class="n">txt</span>
-  <span class="n">then</span>
-    <span class="c1"># echo the new clipboard contents to the history file with a timestamp</span>
-    <span class="n">cat</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">clipboard</span><span class="o">.</span><span class="n">txt</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
-    <span class="n">echo</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">$(date --rfc-3339=seconds)&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+  <span class="c1"># If the clipboard contents have changed, append them to the history file</span>
+  <span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$clipboard&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$last_clipboard&quot;</span> <span class="p">]];</span> <span class="n">then</span>
+    <span class="n">echo</span> <span class="s2">&quot;$clipboard&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+    <span class="n">last_clipboard</span><span class="o">=</span><span class="err">$</span><span class="n">clipboard</span>
   <span class="n">fi</span>
+
+  <span class="c1"># Sleep for 1 second to avoid overloading the system</span>
   <span class="n">sleep</span> <span class="mi">1</span>
 <span class="n">done</span>
 </pre></div></td></tr></table></div>
 
 UNKNOWN NODE TYPE: <class 'evaluator.BashRunBackground'></p>
 <h1>PyFunc</h1>
-<p>['\\n2024-10-21 02:25:19+00:00', '\\n2024-10-21 02:25:20+00:00', '\\n2024-10-21 02:25:21+00:00', '\\n2024-10-21 02:25:22+00:00', '\\n2024-10-21 02:25:23+00:00']
+<p>['']
 final: False
 
 Resulting in output:
@@ -1223,22 +1284,38 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="c1"># Create history.txt</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Create history file</span>
 touch<span class="w"> </span>history.txt
 
-<span class="c1"># Continuously monitor the clipboard for changes</span>
+<span class="c1"># Infinite loop to monitor clipboard</span>
 <span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="c1"># Get the current clipboard contents</span>
-<span class="w">  </span><span class="nv">clipboard</span><span class="o">=</span><span class="k">$(</span>xclip<span class="w"> </span>-o<span class="k">)</span>
+<span class="w">  </span><span class="c1"># Get clipboard contents</span>
+<span class="w">  </span><span class="nv">clipText</span><span class="o">=</span><span class="k">$(</span>xclip<span class="w"> </span>-selection<span class="w"> </span>clipboard<span class="w"> </span>-o<span class="k">)</span>
 
-<span class="w">  </span><span class="c1"># If the clipboard contents have changed, write them to history.txt</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>history.txt<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipboard</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
+<span class="w">  </span><span class="c1"># Compare with previous clipboard contents</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipText</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$prevClipText</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="c1"># Save new text to history file</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipText</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>history.txt
+<span class="w">    </span><span class="c1"># Update previous clipboard contents</span>
+<span class="w">    </span><span class="nv">prevClipText</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$clipText</span><span class="s2">&quot;</span>
 <span class="w">  </span><span class="k">fi</span>
 
-<span class="w">  </span><span class="c1"># Sleep for 1 second</span>
-<span class="w">  </span>sleep<span class="w"> </span><span class="m">1</span>
+<span class="w">  </span><span class="c1"># Adjust sleep time based on clipboard activity</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$clipText</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">0</span>.1
+<span class="w">  </span><span class="k">else</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">1</span>
+<span class="w">  </span><span class="k">fi</span>
 <span class="k">done</span>
 </pre></div></td></tr></table></div>
 </p>
@@ -1334,31 +1411,47 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="c1"># Create history.txt</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Create history file</span>
 <span class="n">touch</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
 
-<span class="c1"># Continuously monitor the clipboard for changes</span>
+<span class="c1"># Infinite loop to monitor clipboard</span>
 <span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
-  <span class="c1"># Get the current clipboard contents</span>
-  <span class="n">clipboard</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">xclip</span> <span class="o">-</span><span class="n">o</span><span class="p">)</span>
+  <span class="c1"># Get clipboard contents</span>
+  <span class="n">clipText</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">xclip</span> <span class="o">-</span><span class="n">selection</span> <span class="n">clipboard</span> <span class="o">-</span><span class="n">o</span><span class="p">)</span>
 
-  <span class="c1"># If the clipboard contents have changed, write them to history.txt</span>
-  <span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$clipboard&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$(tail -n 1 history.txt)&quot;</span> <span class="p">]];</span> <span class="n">then</span>
-    <span class="n">echo</span> <span class="s2">&quot;$clipboard&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+  <span class="c1"># Compare with previous clipboard contents</span>
+  <span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$clipText&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$prevClipText&quot;</span> <span class="p">]];</span> <span class="n">then</span>
+    <span class="c1"># Save new text to history file</span>
+    <span class="n">echo</span> <span class="s2">&quot;$clipText&quot;</span> <span class="o">&gt;&gt;</span> <span class="n">history</span><span class="o">.</span><span class="n">txt</span>
+    <span class="c1"># Update previous clipboard contents</span>
+    <span class="n">prevClipText</span><span class="o">=</span><span class="s2">&quot;$clipText&quot;</span>
   <span class="n">fi</span>
 
-  <span class="c1"># Sleep for 1 second</span>
-  <span class="n">sleep</span> <span class="mi">1</span>
+  <span class="c1"># Adjust sleep time based on clipboard activity</span>
+  <span class="k">if</span> <span class="p">[[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;$clipText&quot;</span> <span class="p">]];</span> <span class="n">then</span>
+    <span class="n">sleep</span> <span class="mf">0.1</span>
+  <span class="k">else</span>
+    <span class="n">sleep</span> <span class="mi">1</span>
+  <span class="n">fi</span>
 <span class="n">done</span>
 </pre></div></td></tr></table></div>
 
 UNKNOWN NODE TYPE: <class 'evaluator.BashRunBackground'></p>
 <h1>PyFunc</h1>
-<p>['']
-final: False
+<p>['test1', 'test2', 'test3']
+final: True
 
 Resulting in output:
-False</p>
+True</p>
 </div>
     

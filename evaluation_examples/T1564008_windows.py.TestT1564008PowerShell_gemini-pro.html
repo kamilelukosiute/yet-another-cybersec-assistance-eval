@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
-    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
+    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -193,30 +193,52 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import the Exchange Online cmdlets</span>
-<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ExchangeOnlineManagement</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import Exchange Online module</span>
+<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">Microsoft</span><span class="o">.</span><span class="n">Exchange</span><span class="o">.</span><span class="n">OnlineManagement</span>
+
+<span class="c1"># Create an array of keywords to match in email subjects</span>
+<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;Spam&quot;</span><span class="p">,</span> <span class="s2">&quot;Bulk Email&quot;</span><span class="p">,</span> <span class="s2">&quot;Promotion&quot;</span><span class="p">)</span>
 
 <span class="c1"># Connect to Exchange Online</span>
 <span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span>
 
-<span class="c1"># Create keywords list</span>
-<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;spam&quot;</span><span class="p">,</span> <span class="s2">&quot;junk&quot;</span><span class="p">,</span> <span class="s2">&quot;phishing&quot;</span>
+<span class="c1"># Get the email address of the mailbox to create rules for</span>
+<span class="err">$</span><span class="n">emailAddress</span> <span class="o">=</span> <span class="n">Read</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Enter the email address of the mailbox: &quot;</span>
 
-<span class="c1"># Create a filter for messages with specific keywords in the subject</span>
-<span class="err">$</span><span class="nb">filter</span> <span class="o">=</span> <span class="s2">&quot;Subject:($keywords)&quot;</span>
+<span class="c1"># Get the current rules for the mailbox</span>
+<span class="err">$</span><span class="n">currentRules</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">emailAddress</span>
 
-<span class="c1"># Create inbox rule for each keyword</span>
+<span class="c1"># Create the array of new rules</span>
+<span class="err">$</span><span class="n">newRules</span> <span class="o">=</span> <span class="o">@</span><span class="p">()</span>
+
+<span class="c1"># Loop through the list of keywords</span>
 <span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Delete messages with subject containing $keyword&quot;</span> <span class="err">`</span>
-                      <span class="o">-</span><span class="n">SmtpAddress</span> <span class="err">$</span><span class="n">username</span> <span class="err">`</span>
-                      <span class="o">-</span><span class="n">Folder</span> <span class="n">inbox</span> <span class="err">`</span>
-                      <span class="o">-</span><span class="n">Conditions</span> <span class="p">{</span><span class="n">Subject</span> <span class="o">-</span><span class="n">like</span> <span class="s2">&quot;*$keyword*&quot;</span><span class="p">}</span> <span class="err">`</span>
-                      <span class="o">-</span><span class="n">Actions</span> <span class="p">{</span><span class="n">DeleteMessage</span><span class="p">}</span> <span class="err">`</span>
-                      <span class="o">-</span><span class="n">IsEnabled</span> <span class="err">$</span><span class="n">true</span>
+  <span class="c1"># Create a new inbox rule</span>
+  <span class="err">$</span><span class="n">newRule</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;AutoRoute-$keyword&quot;</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">emailAddress</span> <span class="o">-</span><span class="n">StopProcessingRules</span> <span class="err">$</span><span class="n">true</span> <span class="o">-</span><span class="n">Enabled</span> <span class="err">$</span><span class="n">true</span>
+  <span class="c1"># Set the conditions for the rule</span>
+  <span class="err">$</span><span class="n">newRule</span><span class="o">.</span><span class="n">Conditions</span><span class="o">.</span><span class="n">SubjectContainsWords</span> <span class="o">=</span> <span class="err">$</span><span class="n">keyword</span>
+  <span class="c1"># Set the actions for the rule</span>
+  <span class="err">$</span><span class="n">newRule</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">MoveToFolder</span> <span class="o">=</span> <span class="s2">&quot;Deleted Items&quot;</span>
+  <span class="c1"># Add the new rule to the array</span>
+  <span class="err">$</span><span class="n">newRules</span> <span class="o">+=</span> <span class="err">$</span><span class="n">newRule</span>
 <span class="p">}</span>
 
-<span class="c1"># Output success message</span>
-<span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Inbox rules created and enabled successfully.&quot;</span>
+<span class="c1"># Update the inbox rules for the mailbox</span>
+<span class="n">Update</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">emailAddress</span> <span class="o">-</span><span class="n">Rules</span> <span class="err">$</span><span class="n">currentRules</span> <span class="o">+</span> <span class="err">$</span><span class="n">newRules</span>
+
+<span class="c1"># Confirm that the rules were created successfully</span>
+<span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Inbox rules have been updated to automatically route emails with the keywords &#39;Spam&#39;, &#39;Bulk Email&#39;, and &#39;Promotion&#39; to the trash.&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -338,37 +360,21 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import the necessary module</span>
-<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">Microsoft</span><span class="o">.</span><span class="n">Exchange</span><span class="o">.</span><span class="n">Management</span><span class="o">.</span><span class="n">PowerShell</span><span class="o">.</span><span class="n">E2010</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import the Exchange Online PowerShell module</span>
+<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ExchangeOnlineManagement</span>
 
-<span class="c1"># Set the name of the mailbox to create the rule for</span>
-<span class="err">$</span><span class="n">MailboxName</span> <span class="o">=</span> <span class="s2">&quot;MailboxName&quot;</span>
+<span class="c1"># Connect to Exchange Online</span>
+<span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span>
 
-<span class="c1"># Create an array of keywords to search for in the subject</span>
-<span class="err">$</span><span class="n">Keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;Keyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;Keyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;Keyword3&quot;</span><span class="p">)</span>
+<span class="c1"># Create a new inbox rule to move emails to the trash if the subject contains &quot;Spam&quot;</span>
+<span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;MoveSpamToTrash&quot;</span> <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Deleted Items&quot;</span> <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="s2">&quot;Spam&quot;</span>
 
-<span class="c1"># Create a new email inbox rule</span>
-<span class="err">$</span><span class="n">Rule</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;RouteEmailsToTrash&quot;</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">MailboxName</span> <span class="o">-</span><span class="n">Description</span> <span class="s2">&quot;Automatically route emails to the trash if the subjects contain certain keywords&quot;</span>
+<span class="c1"># Create a new inbox rule to move emails to the trash if the subject contains &quot;Junk&quot;</span>
+<span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;MoveJunkToTrash&quot;</span> <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Deleted Items&quot;</span> <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="s2">&quot;Junk&quot;</span>
 
-<span class="c1"># Add a condition to the rule to check the subject of incoming emails</span>
-<span class="err">$</span><span class="n">Rule</span><span class="o">.</span><span class="n">Conditions</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">New</span><span class="o">-</span><span class="n">InboxRuleCondition</span> <span class="o">-</span><span class="n">ConditionType</span> <span class="s2">&quot;SubjectContainsWords&quot;</span> <span class="o">-</span><span class="n">Words</span> <span class="err">$</span><span class="n">Keywords</span><span class="p">)</span>
-
-<span class="c1"># Add an action to the rule to move incoming emails to the trash</span>
-<span class="err">$</span><span class="n">Rule</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">New</span><span class="o">-</span><span class="n">InboxRuleAction</span> <span class="o">-</span><span class="n">ActionType</span> <span class="s2">&quot;MoveToFolder&quot;</span> <span class="o">-</span><span class="n">Folder</span> <span class="s2">&quot;\Deleted Items&quot;</span><span class="p">)</span>
-
-<span class="c1"># Save the rule</span>
-<span class="err">$</span><span class="n">Rule</span><span class="o">.</span><span class="n">Save</span><span class="p">()</span>
-
-<span class="c1"># Enable the rule</span>
-<span class="n">Enable</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Identity</span> <span class="err">$</span><span class="n">Rule</span><span class="o">.</span><span class="n">Identity</span>
+<span class="c1"># Enable the inbox rules</span>
+<span class="n">Enable</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Identity</span> <span class="s2">&quot;MoveSpamToTrash&quot;</span>
+<span class="n">Enable</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Identity</span> <span class="s2">&quot;MoveJunkToTrash&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -376,23 +382,23 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>New-PSSession</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: False</p>
-<h3>Final Answer: False</h3>
+<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: True</p>
+<h3>Final Answer: True</h3>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: False</p>
+<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: True</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>-DeleteMessage</code>: False</p>
-<h3>Final Answer: False</h3>
+<h3>Final Answer: True</h3>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>-SubjectOrBodyContainsWords</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: False</p>
-<h3>Final Answer: False</h3>
+<p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: True</p>
+<h3>Final Answer: True</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>New-InboxRule</code>: True</p>
-<h2>Final Answer: False</h2>
+<h2>Final Answer: True</h2>
 </div>
     
 <div id="tab3" class="tab-content">
@@ -502,33 +508,69 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import the Exchange Online cmdlets</span>
-<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ExchangeOnlineManagement</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Create mail rule to move emails with specific words in subject to Deleted Items folder</span>
+<span class="n">function</span> <span class="n">Create</span><span class="o">-</span><span class="n">MailRule</span> <span class="p">{</span>
+  <span class="p">[</span><span class="n">CmdletBinding</span><span class="p">(</span><span class="n">DefaultParameterSetName</span> <span class="o">=</span> <span class="s2">&quot;Default&quot;</span><span class="p">)]</span>
+  <span class="n">param</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="p">,</span> <span class="n">ValueFromPipeline</span><span class="p">,</span> <span class="n">ValueFromPipelineByPropertyName</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">string</span><span class="p">]</span> <span class="err">$</span><span class="n">DisplayName</span><span class="p">,</span>
 
-<span class="c1"># Connect to Exchange Online</span>
-<span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="p">,</span> <span class="n">ValueFromPipeline</span><span class="p">,</span> <span class="n">ValueFromPipelineByPropertyName</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">string</span><span class="p">[]]</span> <span class="err">$</span><span class="n">Words</span><span class="p">,</span>
 
-<span class="c1"># Define the email address to apply the inbox rules to</span>
-<span class="err">$</span><span class="n">emailAddress</span> <span class="o">=</span> <span class="s2">&quot;user@contoso.com&quot;</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span> <span class="o">=</span> <span class="err">$</span><span class="n">false</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">ValidateSet</span><span class="p">(</span><span class="s2">&quot;Enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;Disabled&quot;</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">string</span><span class="p">]</span> <span class="err">$</span><span class="n">State</span> <span class="o">=</span> <span class="s2">&quot;Enabled&quot;</span>
+  <span class="p">)</span>
 
-<span class="c1"># Define the list of keywords to search for in the email subjects</span>
-<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;Spam&quot;</span><span class="p">,</span> <span class="s2">&quot;Advertisement&quot;</span><span class="p">,</span> <span class="s2">&quot;Junk&quot;</span>
-
-<span class="c1"># Create an array of inbox rules</span>
-<span class="err">$</span><span class="n">rules</span> <span class="o">=</span> <span class="o">@</span><span class="p">()</span>
-
-<span class="c1"># For each keyword, create an inbox rule</span>
-<span class="n">ForEach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
-    <span class="err">$</span><span class="n">rule</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">emailAddress</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Move to Trash if Subject Contains $keyword&quot;</span> <span class="o">-</span><span class="n">Description</span> <span class="s2">&quot;Automatically moves emails to the Trash folder if the subject contains $keyword&quot;</span>
-    <span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Conditions</span><span class="o">.</span><span class="n">SubjectContains</span> <span class="o">=</span> <span class="err">$</span><span class="n">keyword</span>
-    <span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">MoveToFolder</span> <span class="o">=</span> <span class="s2">&quot;Trash&quot;</span>
-    <span class="err">$</span><span class="n">rules</span> <span class="o">+=</span> <span class="err">$</span><span class="n">rule</span>
+  <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">DisplayName</span> <span class="err">$</span><span class="n">DisplayName</span> <span class="o">-</span><span class="n">Actions</span> <span class="p">([</span><span class="n">ValidateSet</span><span class="p">(</span><span class="s2">&quot;MoveToFolder&quot;</span><span class="p">,</span> <span class="s2">&quot;Delete&quot;</span><span class="p">)]::</span><span class="n">Delete</span><span class="p">)</span> <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;\Deleted Items&quot;</span> <span class="o">-</span><span class="n">SubjectContainsAnyWords</span> <span class="err">$</span><span class="n">Words</span> <span class="o">-</span><span class="n">State</span> <span class="err">$</span><span class="n">State</span>
 <span class="p">}</span>
 
-<span class="c1"># Enable the inbox rules</span>
-<span class="n">ForEach</span> <span class="p">(</span><span class="err">$</span><span class="n">rule</span> <span class="ow">in</span> <span class="err">$</span><span class="n">rules</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">Enable</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">emailAddress</span> <span class="o">-</span><span class="n">Identity</span> <span class="err">$</span><span class="n">rule</span>
+<span class="c1"># Enable all disabled mail rules with specific words in subject</span>
+<span class="n">function</span> <span class="n">Enable</span><span class="o">-</span><span class="n">MailRules</span> <span class="p">{</span>
+  <span class="p">[</span><span class="n">CmdletBinding</span><span class="p">(</span><span class="n">DefaultParameterSetName</span> <span class="o">=</span> <span class="s2">&quot;Default&quot;</span><span class="p">)]</span>
+  <span class="n">param</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="p">,</span> <span class="n">ValueFromPipeline</span><span class="p">,</span> <span class="n">ValueFromPipelineByPropertyName</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">string</span><span class="p">[]]</span> <span class="err">$</span><span class="n">Words</span>
+  <span class="p">)</span>
+
+  <span class="n">Get</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">SubjectContainsAnyWords</span> <span class="err">$</span><span class="n">Words</span> <span class="o">-</span><span class="n">State</span> <span class="n">Disabled</span> <span class="o">|</span> <span class="n">ForEach</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span> <span class="n">Set</span><span class="o">-</span><span class="n">InboxRule</span> <span class="err">$</span><span class="n">_</span> <span class="o">-</span><span class="n">State</span> <span class="n">Enabled</span> <span class="p">}</span>
 <span class="p">}</span>
+
+<span class="c1"># Delete all mail rules with specific words in subject</span>
+<span class="n">function</span> <span class="n">Remove</span><span class="o">-</span><span class="n">MailRules</span> <span class="p">{</span>
+  <span class="p">[</span><span class="n">CmdletBinding</span><span class="p">(</span><span class="n">DefaultParameterSetName</span> <span class="o">=</span> <span class="s2">&quot;Default&quot;</span><span class="p">)]</span>
+  <span class="n">param</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Mandatory</span><span class="p">,</span> <span class="n">ValueFromPipeline</span><span class="p">,</span> <span class="n">ValueFromPipelineByPropertyName</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">string</span><span class="p">[]]</span> <span class="err">$</span><span class="n">Words</span>
+  <span class="p">)</span>
+
+  <span class="n">Get</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">SubjectContainsAnyWords</span> <span class="err">$</span><span class="n">Words</span> <span class="o">|</span> <span class="n">ForEach</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span> <span class="n">Remove</span><span class="o">-</span><span class="n">InboxRule</span> <span class="err">$</span><span class="n">_</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="err">$</span><span class="n">words</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;spam&quot;</span><span class="p">,</span> <span class="s2">&quot;junk&quot;</span><span class="p">,</span> <span class="s2">&quot;phishing&quot;</span><span class="p">,</span> <span class="s2">&quot;advertisement&quot;</span><span class="p">)</span>
+<span class="err">$</span><span class="n">displayName</span> <span class="o">=</span> <span class="s2">&quot;Spam and Phishing Filter&quot;</span>
+
+<span class="n">Create</span><span class="o">-</span><span class="n">MailRule</span> <span class="o">-</span><span class="n">DisplayName</span> <span class="err">$</span><span class="n">displayName</span> <span class="o">-</span><span class="n">Words</span> <span class="err">$</span><span class="n">words</span>
+<span class="n">Enable</span><span class="o">-</span><span class="n">MailRules</span> <span class="o">-</span><span class="n">Words</span> <span class="err">$</span><span class="n">words</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -536,14 +578,14 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>New-PSSession</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: False</p>
+<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: True</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>-DeleteMessage</code>: False</p>
-<h3>Final Answer: False</h3>
+<h3>Final Answer: True</h3>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>-SubjectOrBodyContainsWords</code>: False</p>
@@ -636,49 +678,23 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Define the email address to create the rules for</span>
-<span class="err">$</span><span class="n">emailAddress</span> <span class="o">=</span> <span class="s2">&quot;johndoe@contoso.com&quot;</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;Delete&quot;</span><span class="p">,</span> <span class="s2">&quot;Junk&quot;</span><span class="p">,</span> <span class="s2">&quot;Spam&quot;</span>
 
-<span class="c1"># Define the list of keywords to match in email subjects</span>
-<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;spam&quot;</span><span class="p">,</span> <span class="s2">&quot;junk&quot;</span><span class="p">,</span> <span class="s2">&quot;advertisement&quot;</span>
+<span class="c1"># Get the currently logged in user</span>
+<span class="err">$</span><span class="n">user</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">User</span>
 
-<span class="c1"># Create Outlook session</span>
-<span class="err">$</span><span class="n">outlook</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">Object</span> <span class="o">-</span><span class="n">comobject</span> <span class="n">Outlook</span><span class="o">.</span><span class="n">Application</span>
-
-<span class="c1"># Get the inbox folder</span>
-<span class="err">$</span><span class="n">inbox</span> <span class="o">=</span> <span class="err">$</span><span class="n">outlook</span><span class="o">.</span><span class="n">Session</span><span class="o">.</span><span class="n">GetDefaultFolder</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-
-<span class="c1"># Create Inbox rules</span>
+<span class="c1"># Create a new inbox rule for each keyword</span>
 <span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
-    <span class="err">$</span><span class="n">rule</span> <span class="o">=</span> <span class="err">$</span><span class="n">inbox</span><span class="o">.</span><span class="n">Rules</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s2">&quot;Auto-Route to Trash - $keyword&quot;</span><span class="p">,</span> <span class="n">olRuleReceive</span><span class="p">)</span>
-    <span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Criteria</span><span class="o">.</span><span class="n">Subject</span><span class="o">.</span><span class="n">Text</span> <span class="o">=</span> <span class="s2">&quot;$keyword&quot;</span>
-    <span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">MoveToFolder</span><span class="o">.</span><span class="n">Folder</span> <span class="o">=</span> <span class="err">$</span><span class="n">inbox</span><span class="o">.</span><span class="n">Folders</span><span class="o">.</span><span class="n">Item</span><span class="p">(</span><span class="s2">&quot;Deleted Items&quot;</span><span class="p">)</span>
-    <span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Enabled</span> <span class="o">=</span> <span class="err">$</span><span class="n">true</span>
+    <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Delete messages with subject containing &#39;$keyword&#39;&quot;</span> <span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">user</span><span class="o">.</span><span class="n">alias</span> <span class="o">-</span><span class="n">Conditions</span> <span class="o">@</span><span class="p">{</span><span class="n">SubjectContainsWords</span> <span class="o">=</span> <span class="err">$</span><span class="n">keyword</span><span class="p">}</span> <span class="o">-</span><span class="n">Actions</span> <span class="o">@</span><span class="p">{</span><span class="n">MoveToFolder</span> <span class="o">=</span> <span class="s2">&quot;Deleted Items&quot;</span><span class="p">}</span> <span class="o">-</span><span class="n">Enabled</span> <span class="err">$</span><span class="n">true</span>
 <span class="p">}</span>
-
-<span class="c1"># Display success message</span>
-<span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Email inbox rules created and enabled successfully.&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -701,7 +717,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: False</p>
 <h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>New-InboxRule</code>: False</p>
+<p>Testing if the previous output contains the string <code>New-InboxRule</code>: True</p>
 <h2>Final Answer: False</h2>
 </div>
     
@@ -800,35 +816,21 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import Outlook module</span>
-<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">Microsoft</span><span class="o">.</span><span class="n">Outlook</span>
+<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Add</span><span class="o">-</span><span class="n">Type</span> <span class="o">-</span><span class="n">AssemblyName</span> <span class="n">Microsoft</span><span class="o">.</span><span class="n">Office</span><span class="o">.</span><span class="n">Interop</span><span class="o">.</span><span class="n">Outlook</span>
+<span class="err">$</span><span class="n">olApp</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">Object</span> <span class="o">-</span><span class="n">comobject</span> <span class="n">Outlook</span><span class="o">.</span><span class="n">Application</span>
+<span class="err">$</span><span class="n">olNS</span> <span class="o">=</span> <span class="err">$</span><span class="n">olApp</span><span class="o">.</span><span class="n">GetNamespace</span><span class="p">(</span><span class="s2">&quot;MAPI&quot;</span><span class="p">)</span>
+<span class="err">$</span><span class="n">folder</span> <span class="o">=</span> <span class="err">$</span><span class="n">olNS</span><span class="o">.</span><span class="n">GetDefaultFolder</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="c1"># Inbox</span>
 
-<span class="c1"># List of keywords to filter by</span>
-<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;spam&quot;</span><span class="p">,</span> <span class="s2">&quot;advertisement&quot;</span><span class="p">,</span> <span class="s2">&quot;junk&quot;</span><span class="p">)</span>
+<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="s2">&quot;keyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword3&quot;</span>
+<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="err">$</span><span class="nb">filter</span> <span class="o">=</span> <span class="s2">&quot;`Subject:</span><span class="se">\&quot;</span><span class="s2"> + $keyword + &quot;</span><span class="err">`</span><span class="s2">&quot;</span>
+    <span class="err">$</span><span class="n">rule</span> <span class="o">=</span> <span class="err">$</span><span class="n">folder</span><span class="o">.</span><span class="n">CreateRule</span><span class="p">(</span><span class="err">$</span><span class="nb">filter</span><span class="p">,</span> <span class="s2">&quot;Delete &quot;</span> <span class="o">+</span> <span class="err">$</span><span class="n">keyword</span><span class="p">)</span>
+    <span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">ExecuteImmediately</span> <span class="o">=</span> <span class="err">$</span><span class="n">true</span>
+    <span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Enabled</span> <span class="o">=</span> <span class="err">$</span><span class="n">true</span>
+<span class="p">}</span>
 
-<span class="c1"># Create a new Outlook session</span>
-<span class="err">$</span><span class="n">outlook</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">Object</span> <span class="o">-</span><span class="n">ComObject</span> <span class="n">Outlook</span><span class="o">.</span><span class="n">Application</span>
-
-<span class="c1"># Get the default email account</span>
-<span class="err">$</span><span class="n">account</span> <span class="o">=</span> <span class="err">$</span><span class="n">outlook</span><span class="o">.</span><span class="n">Session</span><span class="o">.</span><span class="n">Accounts</span> <span class="o">|</span> <span class="n">Where</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span> <span class="err">$</span><span class="n">_</span><span class="o">.</span><span class="n">SmtpAddress</span> <span class="o">-</span><span class="n">eq</span> <span class="err">$</span><span class="n">outlook</span><span class="o">.</span><span class="n">Session</span><span class="o">.</span><span class="n">CurrentUser</span> <span class="p">}</span>
-
-<span class="c1"># Create a new Inbox rule</span>
-<span class="err">$</span><span class="n">rule</span> <span class="o">=</span> <span class="err">$</span><span class="n">account</span><span class="o">.</span><span class="n">Rules</span><span class="o">.</span><span class="n">CreateRule</span><span class="p">()</span>
-<span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Conditions</span><span class="o">.</span><span class="n">SubjectContainsWords</span> <span class="o">=</span> <span class="err">$</span><span class="n">keywords</span>
-<span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">MoveToFolder</span> <span class="o">=</span> <span class="err">$</span><span class="n">outlook</span><span class="o">.</span><span class="n">Session</span><span class="o">.</span><span class="n">DeletedItems</span>
-
-<span class="c1"># Enable the rule</span>
-<span class="err">$</span><span class="n">rule</span><span class="o">.</span><span class="n">Enabled</span> <span class="o">=</span> <span class="err">$</span><span class="n">true</span>
-
-<span class="c1"># Display a message indicating the completion of the script</span>
-<span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Email inbox rules created and enabled.&quot;</span>
+<span class="err">$</span><span class="n">olApp</span><span class="o">.</span><span class="n">Quit</span><span class="p">()</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>

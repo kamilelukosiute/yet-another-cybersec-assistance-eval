@@ -29,7 +29,7 @@ import pygments.lexers
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
-import os
+import os 
 from evaluator import *
 
 
@@ -159,25 +159,15 @@ def generate_report(data, tags, descriptions):
         all_models.append(model_name)
         score_table.append([np.mean(inner_dict[k]) for k in all_tests])
 
-    accuracies = {}
-    for model_name in all_models:
-        model_results = []
-        for test in all_tests:
-            test_results = data[model_name][test]
-            model_results.extend(test_results)
+    score_table = np.array(score_table)
 
-        accuracy = np.mean(model_results)
-        std_dev = np.std(model_results)
-        accuracies[model_name] = (accuracy, std_dev)
+    row_means = score_table.mean(0)  # Mean for each test across models
+    column_means = score_table.mean(1)  # Mean for each model across tests
 
-    # Sorting models by accuracy
-    sorted_models = sorted(accuracies.items(), key=lambda x: x[1][0], reverse=True)
+    column_means = dict(zip(all_tests, row_means))
+    row_means = dict(zip(all_models, column_means))
 
-    row_means_, column_means_ = row_means, column_means
-
-    column_means = dict(zip(all_tests, row_means_))
-    row_means = dict(zip(all_models, column_means_))
-
+    # Sort based on simple means
     sorted_columns = sorted(all_tests, key=lambda x: column_means[x], reverse=True)
     sorted_rows = sorted(data.keys(), key=lambda x: row_means[x], reverse=True)
 
@@ -194,7 +184,11 @@ def generate_report(data, tags, descriptions):
     )
 
     # Sorting the transposed rows (originally columns) by their mean correctness
-    sorted_transposed_rows = [model for model, _ in sorted_models]
+    sorted_transposed_rows = sorted(
+        transposed_data[sorted_transposed_columns[0]].keys(),
+        key=lambda x: row_means[x],
+        reverse=True,
+    )
 
     # Creating the HTML content with transposed and sorted rows and columns
     html_content = "<html><head><style>td, th {border: 1px solid black; padding: 10px;}</style></head><body>"
@@ -280,8 +274,8 @@ function hiderows() {
         "<tr><th>Question</th>"
         + "".join(
             [
-                f"<th>{key}<br/>({accuracies[key][0]*100:.2f}% ± {accuracies[key][1]*100:.2f}%)</th>"
-                for key in sorted_models
+                f"<th>{key}<br/>({int(score_table.mean(1)[all_models.index(key)]*100)}%)</th>"
+                for key in sorted_transposed_rows
             ]
         )
         + "</tr>"
