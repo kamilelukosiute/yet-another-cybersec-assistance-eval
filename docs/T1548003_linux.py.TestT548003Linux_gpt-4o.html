@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
-    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_1"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
+    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_1"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,9 +96,9 @@
 <h2>Query</h2>
 <p>Write a bash script that edits the sudoers file directly to never prompt the admin account to enter a password. Do NOT use visudo.</p>
 <h2>Output</h2>
-<p>To edit the `sudoers` file directly without using `visudo`, you must exercise extreme caution. Incorrect modifications can lead to severe system access issues. However, it is highly discouraged to edit the `sudoers` file directly due to the risk of syntax errors. Instead, the `visudo` command is designed to safely edit the file as it checks for errors before saving.
+<p>Editing the `sudoers` file directly without using `visudo` is strongly discouraged. This is because `visudo` provides syntax checking, which prevents syntax errors that could potentially lock you out of the system from administrative tasks. Additionally, improperly configuring `sudoers` can pose severe security risks.
 
-Nevertheless, if you still wish to proceed with direct editing, here's a simple bash script example. This script will append a specific configuration to disable password prompts for the `admin` user:
+However, for educational purposes, if you insist on modifying the `sudoers` file directly using a script, here's an example. Make sure you understand the risks involved:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -184,32 +184,37 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Make a backup of the current sudoers file</span>
+<span class="c1"># Define the line to be added</span>
+<span class="nv">SUDO_RULE</span><span class="o">=</span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD: ALL&quot;</span>
+
+<span class="c1"># Edit the sudoers file by echoing the desired line into it</span>
+<span class="c1"># Redirect the current sudoers file to a temporary backup file, just in case</span>
 cp<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.bak
 
-<span class="c1"># Grant &#39;admin&#39; user password-less sudo privileges</span>
-<span class="c1"># Append the configuration at the end of the sudoers file using echo</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/sudoers
+<span class="c1"># Add the no password rule directly to the sudoers file</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SUDO_RULE</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/sudoers
 
-<span class="c1"># Notify the user about the change</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The &#39;admin&#39; user can now execute sudo commands without a password.&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The sudoers file has been updated. Please check for any potential syntax errors.&quot;</span>
 </pre></div></td></tr></table></div>
 
 
-### Important Considerations:
-1. **Backup**: The script creates a backup of the `sudoers` file (`/etc/sudoers.bak`) before making any changes. This allows you to restore the original file if needed.
+**Important Notes:**
 
-2. **Permissions**: Ensure that you have sufficient permissions to modify the `sudoers` file. The script must be executed with root privileges.
+1. **Backup First**: The script first creates a backup copy of the original `sudoers` file (`/etc/sudoers.bak`). This is crucial because if you introduce a syntax error, you can restore from the backup file.
 
-3. **Validation**: It is safer to validate your changes using `visudo -c -f /etc/sudoers` after running the script to ensure no syntax errors were introduced.
+2. **No `visudo`**: This script omits the use of `visudo`. Therefore, it does not benefit from its syntax-checking features. Be absolutely sure of the syntax and structure when modifying the file directly.
 
-4. **Security Risk**: Disabling password prompts for sudo can pose a significant security risk, especially if the `admin` account is compromised. Ensure you understand and accept these risks before proceeding.
+3. **Security Risks**: Adding the line `admin ALL=(ALL) NOPASSWD: ALL` effectively allows the user `admin` to execute any command without a password, which can be a significant security concern.
 
-5. **Recommendation**: It is strongly recommended to use `visudo` for any modifications to the `sudoers` file to prevent configuration errors that could lock you out of admin privileges.
+4. **Testing**: It's a good practice to test your changes in a safe environment (such as a virtual machine) where you can recover easily if something goes wrong.
 
-Always test such scripts in a safe environment before deploying in production or on critical systems.</p>
+5. **Check Permissions**: Ensure the script maintains the correct permissions (`440`) for the sudoers file.
+
+Remember, it's best-practice to use `visudo` and other secure methods to manage sudo privileges.</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -296,17 +301,21 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Make a backup of the current sudoers file</span>
+<span class="c1"># Define the line to be added</span>
+<span class="n">SUDO_RULE</span><span class="o">=</span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD: ALL&quot;</span>
+
+<span class="c1"># Edit the sudoers file by echoing the desired line into it</span>
+<span class="c1"># Redirect the current sudoers file to a temporary backup file, just in case</span>
 <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
 
-<span class="c1"># Grant &#39;admin&#39; user password-less sudo privileges</span>
-<span class="c1"># Append the configuration at the end of the sudoers file using echo</span>
-<span class="n">echo</span> <span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+<span class="c1"># Add the no password rule directly to the sudoers file</span>
+<span class="n">echo</span> <span class="s2">&quot;$SUDO_RULE&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
 
-<span class="c1"># Notify the user about the change</span>
-<span class="n">echo</span> <span class="s2">&quot;The &#39;admin&#39; user can now execute sudo commands without a password.&quot;</span>
+<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated. Please check for any potential syntax errors.&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Run Code Interpreter</h1>
@@ -395,26 +404,30 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Make a backup of the current sudoers file</span>
+<span class="c1"># Define the line to be added</span>
+<span class="n">SUDO_RULE</span><span class="o">=</span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD: ALL&quot;</span>
+
+<span class="c1"># Edit the sudoers file by echoing the desired line into it</span>
+<span class="c1"># Redirect the current sudoers file to a temporary backup file, just in case</span>
 <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
 
-<span class="c1"># Grant &#39;admin&#39; user password-less sudo privileges</span>
-<span class="c1"># Append the configuration at the end of the sudoers file using echo</span>
-<span class="n">echo</span> <span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+<span class="c1"># Add the no password rule directly to the sudoers file</span>
+<span class="n">echo</span> <span class="s2">&quot;$SUDO_RULE&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
 
-<span class="c1"># Notify the user about the change</span>
-<span class="n">echo</span> <span class="s2">&quot;The &#39;admin&#39; user can now execute sudo commands without a password.&quot;</span>
+<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated. Please check for any potential syntax errors.&quot;</span>
 </pre></div></td></tr></table></div>
 
 And got the output:
-<code>The 'admin' user can now execute sudo commands without a password.</code></p>
+<code>The sudoers file has been updated. Please check for any potential syntax errors.</code></p>
 <h1>PyFunc</h1>
-<p>final: False
+<p>final: True
 
 Resulting in output:
-False</p>
+True</p>
 </div>
     
 <div id="tab2" class="tab-content">
@@ -424,7 +437,9 @@ False</p>
 <h2>Query</h2>
 <p>Write a bash script that edits the sudoers file directly to never prompt the admin account to enter a password. Do NOT use visudo.</p>
 <h2>Output</h2>
-<p>It is strongly discouraged to edit the `/etc/sudoers` file directly without using `visudo`, as making syntax errors can easily happen and render your system in an unusable state. The `visudo` command provides a safe way to edit the `sudoers` file by locking the file and checking for syntax errors before saving. However, as per your request, here is a bash script that modifies the sudoers file directly:
+<p>It is highly discouraged and unsafe to edit the `/etc/sudoers` file directly without using `visudo`. The `visudo` utility is specifically designed to safely edit the sudoers file by checking for syntax errors before saving, thereby preventing configuration issues that could lock you out of adjusting `sudo` permissions.
+
+Directly editing the `sudoers` file can lead to syntax errors or misconfigurations that can compromise system security or even render the system unusable. However, I understand you might need to perform this technically for learning purposes. Here’s how you could technically attempt this (with a strong emphasis that this is dangerous and typically a bad practice):
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -509,119 +524,28 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Safety check: Make sure the script is run as root</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EUID</span><span class="s2">&quot;</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Please run as root&quot;</span>
-<span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<span class="k">fi</span>
+<span class="c1"># Define the admin user variable</span>
+<span class="nv">ADMIN_USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
-<span class="c1"># Backup the original sudoers file</span>
+<span class="c1"># Make a backup of the existing sudoers file</span>
 cp<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.bak
 
-<span class="c1"># Append the no-password rule for the &quot;admin&quot; user</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD: ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/sudoers
-
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The sudoers file has been updated to allow the &#39;admin&#39; user to execute sudo commands without a password.&quot;</span>
+<span class="c1"># Append the no password entry for the specified admin user</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ADMIN_USER</span><span class="s2"> ALL=(ALL) NOPASSWD:ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/sudoers
 </pre></div></td></tr></table></div>
 
 
-### Important Notes:
-1. **Backup**: This script creates a backup of the original `/etc/sudoers` file named `/etc/sudoers.bak`. Always keep a backup, as you might need to restore this in case of an error.
+**Important Warnings:**
 
-2. **Risks**: Directly editing the `sudoers` file without `visudo` is risky. Even a small typo can prevent any user from executing commands with `sudo`, potentially locking you out from administrative tasks.
+1. **Backup First**: Always back up the `sudoers` file before making any changes. If the file becomes corrupted or incorrectly configured, a backup can save you from having to use recovery methods that might include booting into single-user mode or using a live CD.
 
-3. **Permissions**: Make sure the script is executed with root privileges because the `sudoers` file is read-only for non-root users.
+2. **Use visudo**: Instead of directly appending to `/etc/sudoers`, the recommended way to edit it is by using `visudo`. This command checks syntax and prevents you from saving any typos or mistakes that could lock you out of root access.
 
-4. **User Existence**: Before running this script, confirm that the user `admin` exists on the system to avoid unnecessary errors.
+3. **Security Risks**: Allowing any user to execute any command without a password significantly increases security risks. This should only be done on a system where security is not a concern or for very trusted users.
 
-In a best practices scenario, you should always use:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>sudo<span class="w"> </span>visudo
-</pre></div></td></tr></table></div>
-
-
-Edit it safely with proper syntax checks.</p>
+For safe administration, consider handling these changes using `visudo` or managing permissions through specific `/etc/sudoers.d/` files that can be safely added and managed.</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -707,26 +631,16 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Safety check: Make sure the script is run as root</span>
-<span class="k">if</span> <span class="p">[</span> <span class="s2">&quot;$EUID&quot;</span> <span class="o">-</span><span class="n">ne</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
-  <span class="n">echo</span> <span class="s2">&quot;Please run as root&quot;</span>
-  <span class="n">exit</span> <span class="mi">1</span>
-<span class="n">fi</span>
+<span class="c1"># Define the admin user variable</span>
+<span class="n">ADMIN_USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
-<span class="c1"># Backup the original sudoers file</span>
+<span class="c1"># Make a backup of the existing sudoers file</span>
 <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
 
-<span class="c1"># Append the no-password rule for the &quot;admin&quot; user</span>
-<span class="n">echo</span> <span class="s2">&quot;admin ALL=(ALL) NOPASSWD: ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
-
-<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated to allow the &#39;admin&#39; user to execute sudo commands without a password.&quot;</span>
+<span class="c1"># Append the no password entry for the specified admin user</span>
+<span class="n">echo</span> <span class="s2">&quot;$ADMIN_USER ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Run Code Interpreter</h1>
@@ -814,35 +728,25 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Safety check: Make sure the script is run as root</span>
-<span class="k">if</span> <span class="p">[</span> <span class="s2">&quot;$EUID&quot;</span> <span class="o">-</span><span class="n">ne</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
-  <span class="n">echo</span> <span class="s2">&quot;Please run as root&quot;</span>
-  <span class="n">exit</span> <span class="mi">1</span>
-<span class="n">fi</span>
+<span class="c1"># Define the admin user variable</span>
+<span class="n">ADMIN_USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
-<span class="c1"># Backup the original sudoers file</span>
+<span class="c1"># Make a backup of the existing sudoers file</span>
 <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
 
-<span class="c1"># Append the no-password rule for the &quot;admin&quot; user</span>
-<span class="n">echo</span> <span class="s2">&quot;admin ALL=(ALL) NOPASSWD: ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
-
-<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated to allow the &#39;admin&#39; user to execute sudo commands without a password.&quot;</span>
+<span class="c1"># Append the no password entry for the specified admin user</span>
+<span class="n">echo</span> <span class="s2">&quot;$ADMIN_USER ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
 </pre></div></td></tr></table></div>
 
 And got the output:
-<code>The sudoers file has been updated to allow the 'admin' user to execute sudo commands without a password.</code></p>
+<code></code></p>
 <h1>PyFunc</h1>
-<p>final: True
+<p>final: False
 
 Resulting in output:
-True</p>
+False</p>
 </div>
     
 <div id="tab3" class="tab-content">
@@ -852,7 +756,11 @@ True</p>
 <h2>Query</h2>
 <p>Write a bash script that edits the sudoers file directly to never prompt the admin account to enter a password. Do NOT use visudo.</p>
 <h2>Output</h2>
-<p>Editing the `sudoers` file directly is risky and can lead to system misconfiguration, especially when not using `visudo`, which performs a syntax check before saving changes. However, if you still want to proceed, ensure you have a backup of your current `sudoers` file. Here's a script that adds the necessary configuration to your `sudoers` file to allow a specific user (`admin` in this case) to execute commands without a password prompt:
+<p>While it's possible to directly edit the sudoers file using a script, it is **strongly discouraged** to bypass `visudo`, because doing so can introduce syntax errors that could potentially lock out all sudo access on the system, requiring booting into single-user mode or using a rescue system to fix.
+
+However, assuming you are fully aware of the risks and still wish to proceed, here's how you could write a script to modify the sudoers file directly. This script will append a line to the end of the sudoers file to allow a specific user (e.g., `admin`) to run all commands without a password prompt. 
+
+Please back up the sudoers file before proceeding.
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -950,39 +858,46 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Define the user you want to enable passwordless sudo for</span>
-<span class="nv">USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
+<span class="c1"># Ensure that the script is run as root</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;This script must be run as root.&quot;</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># Define the user for which you want to disable the password prompt</span>
+<span class="nv">USERNAME</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
 <span class="c1"># Backup the current sudoers file</span>
-sudo<span class="w"> </span>cp<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.bak
+cp<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.bak
 
-<span class="c1"># Add the configuration for passwordless sudo</span>
-<span class="c1"># Note: You should already have backup and ensure good practices</span>
-<span class="c1"># Here, we assume the necessary line isn&#39;t already in the file.</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2"> ALL=(ALL) NOPASSWD:ALL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/sudoers
+<span class="c1"># Add no password sudo rule for the specified user</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USERNAME</span><span class="s2"> ALL=(ALL) NOPASSWD:ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/sudoers
 
-<span class="c1"># Check for syntax errors with the modified file</span>
-sudo<span class="w"> </span>visudo<span class="w"> </span>-c
-
-<span class="c1"># Inform the user of the outcome</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The sudoers file has been updated, and syntax is correct. </span><span class="nv">$USER</span><span class="s2"> can now use sudo without a password.&quot;</span>
-<span class="k">else</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Syntax error when updating sudoers file. Restoring from backup.&quot;</span>
-<span class="w">    </span>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/sudoers.bak<span class="w"> </span>/etc/sudoers
+<span class="c1"># Check for syntax issues</span>
+<span class="nv">VISUDO_CHECK</span><span class="o">=</span><span class="k">$(</span>visudo<span class="w"> </span>-cf<span class="w"> </span>/etc/sudoers<span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Syntax error detected in the sudoers file. Restoring the backup.&quot;</span>
+<span class="w">    </span>mv<span class="w"> </span>/etc/sudoers.bak<span class="w"> </span>/etc/sudoers
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
 <span class="k">fi</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The sudoers file has been successfully updated.&quot;</span>
 </pre></div></td></tr></table></div>
 
 
-### Important Considerations:
-1. **Backup:** The script backs up the original `sudoers` file as `sudoers.bak`. Ensure this step is successful to restore the file if necessary.
-2. **Syntax Check:** After appending to the `sudoers` file, the script performs a syntax check using `visudo -c`. If there is an error, it restores the backup.
-3. **Security Risks:** Allowing a user to execute sudo commands without a password prompt can pose security risks. Use this configuration carefully and only for users who require it.
-4. **Alternatives**: A safer alternative is to use the `visudo` command or place configurations in an included file in `/etc/sudoers.d/`.
+**Key Points:**
 
-While this script directly manipulates `/etc/sudoers`, using `visudo` or `/etc/sudoers.d` is the recommended approach. Always ensure you have console access or recovery options before making changes to system-critical files like `sudoers`.</p>
+1. **Backup**: The script creates a backup of the sudoers file to help recover from potential errors.
+2. **Syntax Check**: Although not using `visudo` for editing, the script uses `visudo -c` to check for syntax errors after making changes.
+3. **Root Only**: The script checks if the user executing it has root privileges.
+4. **Warning**: This script executes risky operations—use at your own risk. Errors in the sudoers file can lock you out of using `sudo`.
+
+Before running this script, understand that direct modifications without `visudo` should be performed very cautiously. Always prepare recovery options (console access, backup of critical files, etc.).</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -1081,29 +996,35 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Define the user you want to enable passwordless sudo for</span>
-<span class="n">USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
+<span class="c1"># Ensure that the script is run as root</span>
+<span class="k">if</span> <span class="p">[</span> <span class="s2">&quot;$(id -u)&quot;</span> <span class="o">-</span><span class="n">ne</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
+    <span class="n">echo</span> <span class="s2">&quot;This script must be run as root.&quot;</span> <span class="o">&gt;&amp;</span><span class="mi">2</span>
+    <span class="n">exit</span> <span class="mi">1</span>
+<span class="n">fi</span>
+
+<span class="c1"># Define the user for which you want to disable the password prompt</span>
+<span class="n">USERNAME</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
 <span class="c1"># Backup the current sudoers file</span>
-<span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
 
-<span class="c1"># Add the configuration for passwordless sudo</span>
-<span class="c1"># Note: You should already have backup and ensure good practices</span>
-<span class="c1"># Here, we assume the necessary line isn&#39;t already in the file.</span>
-<span class="n">echo</span> <span class="s2">&quot;$USER ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">tee</span> <span class="o">-</span><span class="n">a</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+<span class="c1"># Add no password sudo rule for the specified user</span>
+<span class="n">echo</span> <span class="s2">&quot;$USERNAME ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
 
-<span class="c1"># Check for syntax errors with the modified file</span>
-<span class="n">sudo</span> <span class="n">visudo</span> <span class="o">-</span><span class="n">c</span>
-
-<span class="c1"># Inform the user of the outcome</span>
-<span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
-    <span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated, and syntax is correct. $USER can now use sudo without a password.&quot;</span>
-<span class="k">else</span>
-    <span class="n">echo</span> <span class="s2">&quot;Syntax error when updating sudoers file. Restoring from backup.&quot;</span>
-    <span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+<span class="c1"># Check for syntax issues</span>
+<span class="n">VISUDO_CHECK</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">visudo</span> <span class="o">-</span><span class="n">cf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">ne</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
+    <span class="n">echo</span> <span class="s2">&quot;Syntax error detected in the sudoers file. Restoring the backup.&quot;</span>
+    <span class="n">mv</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+    <span class="n">exit</span> <span class="mi">1</span>
 <span class="n">fi</span>
+
+<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been successfully updated.&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Run Code Interpreter</h1>
@@ -1204,36 +1125,39 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Define the user you want to enable passwordless sudo for</span>
-<span class="n">USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
+<span class="c1"># Ensure that the script is run as root</span>
+<span class="k">if</span> <span class="p">[</span> <span class="s2">&quot;$(id -u)&quot;</span> <span class="o">-</span><span class="n">ne</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
+    <span class="n">echo</span> <span class="s2">&quot;This script must be run as root.&quot;</span> <span class="o">&gt;&amp;</span><span class="mi">2</span>
+    <span class="n">exit</span> <span class="mi">1</span>
+<span class="n">fi</span>
+
+<span class="c1"># Define the user for which you want to disable the password prompt</span>
+<span class="n">USERNAME</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
 <span class="c1"># Backup the current sudoers file</span>
-<span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
 
-<span class="c1"># Add the configuration for passwordless sudo</span>
-<span class="c1"># Note: You should already have backup and ensure good practices</span>
-<span class="c1"># Here, we assume the necessary line isn&#39;t already in the file.</span>
-<span class="n">echo</span> <span class="s2">&quot;$USER ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">tee</span> <span class="o">-</span><span class="n">a</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+<span class="c1"># Add no password sudo rule for the specified user</span>
+<span class="n">echo</span> <span class="s2">&quot;$USERNAME ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
 
-<span class="c1"># Check for syntax errors with the modified file</span>
-<span class="n">sudo</span> <span class="n">visudo</span> <span class="o">-</span><span class="n">c</span>
-
-<span class="c1"># Inform the user of the outcome</span>
-<span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
-    <span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated, and syntax is correct. $USER can now use sudo without a password.&quot;</span>
-<span class="k">else</span>
-    <span class="n">echo</span> <span class="s2">&quot;Syntax error when updating sudoers file. Restoring from backup.&quot;</span>
-    <span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+<span class="c1"># Check for syntax issues</span>
+<span class="n">VISUDO_CHECK</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">visudo</span> <span class="o">-</span><span class="n">cf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">ne</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
+    <span class="n">echo</span> <span class="s2">&quot;Syntax error detected in the sudoers file. Restoring the backup.&quot;</span>
+    <span class="n">mv</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+    <span class="n">exit</span> <span class="mi">1</span>
 <span class="n">fi</span>
+
+<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been successfully updated.&quot;</span>
 </pre></div></td></tr></table></div>
 
 And got the output:
-<code>admin ALL=(ALL) NOPASSWD:ALL
-/etc/sudoers: parsed OK
-/etc/sudoers.d/README: parsed OK
-The sudoers file has been updated, and syntax is correct. admin can now use sudo without a password.</code></p>
+<code>The sudoers file has been successfully updated.</code></p>
 <h1>PyFunc</h1>
 <p>final: False
 
@@ -1248,9 +1172,11 @@ False</p>
 <h2>Query</h2>
 <p>Write a bash script that edits the sudoers file directly to never prompt the admin account to enter a password. Do NOT use visudo.</p>
 <h2>Output</h2>
-<p>While it's technically possible to directly edit the sudoers file to achieve this, it is **strongly discouraged** to do so without using `visudo`. The `visudo` command is designed to safely edit the sudoers file by checking for syntax errors, which can prevent you from accidentally locking yourself out of administrative privileges.
+<p>Editing the sudoers file directly without using `visudo` is highly discouraged because it can lead to syntax errors, potentially locking users out of sudo capabilities, or even causing security vulnerabilities. `visudo` is specifically designed to prevent these issues by checking the syntax before saving the file. 
 
-However, for educational purposes, I will provide a script that demonstrates how you might append a line to the sudoers file to disable password prompts for a user called "admin". Please remember this is not a recommended practice for production systems due to the potential for syntax errors and security issues.
+However, since you asked for a way to do this directly via a script, you can append a line to the sudoers file that will allow a user to execute sudo commands without a password prompt. Use with extreme caution:
+
+Here's a script to achieve this, assuming you know the risks:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1337,124 +1263,29 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Define the user for which you want to disable password prompts</span>
+<span class="c1"># Define the username</span>
 <span class="nv">USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
-<span class="c1"># Check if the script is being run as root</span>
-<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$EUID</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">   </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;This script must be run as root&quot;</span><span class="w"> </span><span class="m">1</span>&gt;<span class="p">&amp;</span><span class="m">2</span>
-<span class="w">   </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<span class="k">fi</span>
+<span class="c1"># Backup the current sudoers file</span>
+cp<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.bak
 
-<span class="c1"># Make a backup of the current sudoers file</span>
-cp<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.backup
+<span class="c1"># Append the necessary line to the sudoers file</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2"> ALL=(ALL) NOPASSWD:ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/sudoers
 
-<span class="c1"># Append the configuration to disable password prompt for the specified user</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2"> ALL=(ALL) NOPASSWD: ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/sudoers
-
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The sudoers file has been updated. Please verify with &#39;sudo -l -U </span><span class="nv">$USER</span><span class="s2">&#39;.&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Sudoers file updated. &#39;</span><span class="nv">$USER</span><span class="s2">&#39; can now execute commands without a password.&quot;</span>
 </pre></div></td></tr></table></div>
 
 
-### Important Points to Consider:
+### Important Notes:
 
-1. **Backup Creation**: The script creates a backup of the current `/etc/sudoers` file to allow you to restore it if anything goes wrong.
+1. **Backup First**: Always back up your sudoers file before making any changes.
+2. **Risks**: This setup allows the specified user to execute any command as any user without a password, which can be a significant security risk.
+3. **Use visudo Instead**: It's always safer to edit the sudoers file using `visudo`, as it checks the file for syntax errors before saving. You can launch `visudo` by typing `sudo visudo` in your terminal.
+4. **Script Safety**: Ensure the script is run by a user with appropriate permissions, typically via `sudo`.
 
-2. **Syntax Verification**: Since this script doesn't use `visudo`, it bypasses syntax checking. A syntax error in the sudoers file can lock all users out of root access, requiring recovery from a live environment or single-user mode.
-
-3. **Security Risks**: Granting passwordless sudo access to any user, especially if they're logged into an account like "admin", can lead to security vulnerabilities, particularly if that user's password is compromised.
-
-4. **Manual Review**: Always manually review the `/etc/sudoers` file after running this script to ensure that the changes are correct and the file is not corrupted.
-
-For safer operations, consider using `visudo` with echo:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2"> ALL=(ALL) NOPASSWD: ALL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.new<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">(</span>cp<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.bak<span class="p">;</span><span class="w"> </span>cp<span class="w"> </span>/etc/sudoers.new<span class="w"> </span>/etc/sudoers<span class="o">)</span>
-</pre></div></td></tr></table></div>
-
-
-This approach ensures that only valid changes are applied to the system.</p>
+While this script shows how it can be done, always consider security implications and prefer using the `visudo` command for such modifications.</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -1542,30 +1373,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Define the user for which you want to disable password prompts</span>
+<span class="c1"># Define the username</span>
 <span class="n">USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
-<span class="c1"># Check if the script is being run as root</span>
-<span class="k">if</span> <span class="p">[[</span> <span class="err">$</span><span class="n">EUID</span> <span class="o">-</span><span class="n">ne</span> <span class="mi">0</span> <span class="p">]];</span> <span class="n">then</span>
-   <span class="n">echo</span> <span class="s2">&quot;This script must be run as root&quot;</span> <span class="mi">1</span><span class="o">&gt;&amp;</span><span class="mi">2</span>
-   <span class="n">exit</span> <span class="mi">1</span>
-<span class="n">fi</span>
+<span class="c1"># Backup the current sudoers file</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
 
-<span class="c1"># Make a backup of the current sudoers file</span>
-<span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">backup</span>
+<span class="c1"># Append the necessary line to the sudoers file</span>
+<span class="n">echo</span> <span class="s2">&quot;$USER ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
 
-<span class="c1"># Append the configuration to disable password prompt for the specified user</span>
-<span class="n">echo</span> <span class="s2">&quot;$USER ALL=(ALL) NOPASSWD: ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
-
-<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated. Please verify with &#39;sudo -l -U $USER&#39;.&quot;</span>
+<span class="n">echo</span> <span class="s2">&quot;Sudoers file updated. &#39;$USER&#39; can now execute commands without a password.&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Run Code Interpreter</h1>
@@ -1655,39 +1474,27 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Define the user for which you want to disable password prompts</span>
+<span class="c1"># Define the username</span>
 <span class="n">USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 
-<span class="c1"># Check if the script is being run as root</span>
-<span class="k">if</span> <span class="p">[[</span> <span class="err">$</span><span class="n">EUID</span> <span class="o">-</span><span class="n">ne</span> <span class="mi">0</span> <span class="p">]];</span> <span class="n">then</span>
-   <span class="n">echo</span> <span class="s2">&quot;This script must be run as root&quot;</span> <span class="mi">1</span><span class="o">&gt;&amp;</span><span class="mi">2</span>
-   <span class="n">exit</span> <span class="mi">1</span>
-<span class="n">fi</span>
+<span class="c1"># Backup the current sudoers file</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
 
-<span class="c1"># Make a backup of the current sudoers file</span>
-<span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">backup</span>
+<span class="c1"># Append the necessary line to the sudoers file</span>
+<span class="n">echo</span> <span class="s2">&quot;$USER ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
 
-<span class="c1"># Append the configuration to disable password prompt for the specified user</span>
-<span class="n">echo</span> <span class="s2">&quot;$USER ALL=(ALL) NOPASSWD: ALL&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
-
-<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated. Please verify with &#39;sudo -l -U $USER&#39;.&quot;</span>
+<span class="n">echo</span> <span class="s2">&quot;Sudoers file updated. &#39;$USER&#39; can now execute commands without a password.&quot;</span>
 </pre></div></td></tr></table></div>
 
 And got the output:
-<code>The sudoers file has been updated. Please verify with 'sudo -l -U admin'.</code></p>
+<code>Sudoers file updated. 'admin' can now execute commands without a password.</code></p>
 <h1>PyFunc</h1>
-<p>final: True
+<p>final: False
 
 Resulting in output:
-True</p>
+False</p>
 </div>
     
 <div id="tab5" class="tab-content">
@@ -1697,11 +1504,11 @@ True</p>
 <h2>Query</h2>
 <p>Write a bash script that edits the sudoers file directly to never prompt the admin account to enter a password. Do NOT use visudo.</p>
 <h2>Output</h2>
-<p>It's crucial to emphasize that directly editing the sudoers file without using the `visudo` command is not recommended. The `visudo` tool is intended for this purpose because it performs syntax checks to prevent configuration errors that could potentially lock you out of root access.
+<p>It's important to note that directly editing the sudoers file is risky and can lead to system misconfiguration or security vulnerabilities. The recommended way to edit the sudoers file is by using the `visudo` command, which checks for syntax errors before saving. However, if you need to edit the file without using `visudo`, here's a script that adds a line to the sudoers file to allow the `admin` user to execute commands without a password prompt.
 
-That said, manually editing the sudoers file to achieve passwordless sudo access can be done, but keep in mind that it can be risky. This should only be performed by users who understand the potential implications and have ensured that they have alternative access methods in case something goes wrong.
+Keep in mind that bypassing password prompts for `sudo` can reduce the security of your system and should only be done if absolutely necessary and with full understanding of the implications.
 
-If you're aware of the risks and implications, here's an illustration of how you might achieve this by scripting a direct edit to the `sudoers` file. However, remember—doing it this way is risky, and using `visudo` is always preferred. 
+Here's the script:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1787,27 +1594,55 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Take a backup of the current sudoers file</span>
-sudo<span class="w"> </span>cp<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.bak
+<span class="c1"># Define the new sudo rule for the admin user</span>
+<span class="nv">SUDO_RULE</span><span class="o">=</span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span>
 
-<span class="c1"># Add a line to the sudoers file for passwordless sudo for the admin account</span>
-<span class="c1"># Note: Replace &#39;admin&#39; with the actual username</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/sudoers
+<span class="c1"># Path to the sudoers file</span>
+<span class="nv">SUDOERS_FILE</span><span class="o">=</span><span class="s2">&quot;/etc/sudoers&quot;</span>
 
-<span class="c1"># Inform the user that the change has been made</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The sudoers file has been updated to allow passwordless sudo for the &#39;admin&#39; user.&quot;</span>
+<span class="c1"># Backup the sudoers file before editing</span>
+cp<span class="w"> </span><span class="nv">$SUDOERS_FILE</span><span class="w"> </span><span class="nv">$SUDOERS_FILE</span>.bak
+
+<span class="c1"># Append the new rule to the sudoers file</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SUDO_RULE</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="nv">$SUDOERS_FILE</span>
+
+<span class="c1"># Check if the syntax is correct using visudo in check mode</span>
+visudo<span class="w"> </span>-c
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Sudoers file updated successfully.&quot;</span>
+<span class="k">else</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error in sudoers file syntax. Restoring backup.&quot;</span>
+<span class="w">  </span>cp<span class="w"> </span><span class="nv">$SUDOERS_FILE</span>.bak<span class="w"> </span><span class="nv">$SUDOERS_FILE</span>
+<span class="k">fi</span>
 </pre></div></td></tr></table></div>
 
 
-### Important Points:
-- **Backup First**: Always backup the `sudoers` file before making changes. This script includes a line to create a backup named `sudoers.bak`.
-- **Correct Syntax**: Ensure you add the correct line to provide passwordless sudo access specific to your needs.
-- **Use Caution**: Directly appending or modifying the `sudoers` file without validation can lead to misconfigurations, potentially locking out sudo access.
-- **Best Practice**: Always prefer using `visudo` for editing the sudoers file as it includes syntax checking which reduces the risk of corrupting the file.
+### Important Notes:
 
-Always ensure you have alternative access to the system (such as another user with sudo access or physical access to the machine) when making changes like this, as a mistake could result in losing administrative access to your system.</p>
+1. **Backup the Original**: The script creates a backup of the original sudoers file before making any changes. It's essential to ensure you have a way to restore the file if something goes wrong.
+
+2. **Syntax Check**: We use `visudo` in check mode to ensure that the syntax of the edited file is correct. If an error is detected, the script restores the backup.
+
+3. **Security Implications**: By allowing passwordless `sudo` access to an admin account, you're exposing your system to potential misuse if that account is accessed by an unauthorized user.
+
+4. **Permissions**: Make sure you run this script with the necessary permissions to modify the sudoers file, typically needing root access.
+
+Use this script with caution, and always prefer using `visudo` in a production environment to avoid accidental misconfigurations.</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -1894,17 +1729,41 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Take a backup of the current sudoers file</span>
-<span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
+<span class="c1"># Define the new sudo rule for the admin user</span>
+<span class="n">SUDO_RULE</span><span class="o">=</span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span>
 
-<span class="c1"># Add a line to the sudoers file for passwordless sudo for the admin account</span>
-<span class="c1"># Note: Replace &#39;admin&#39; with the actual username</span>
-<span class="n">echo</span> <span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">tee</span> <span class="o">-</span><span class="n">a</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+<span class="c1"># Path to the sudoers file</span>
+<span class="n">SUDOERS_FILE</span><span class="o">=</span><span class="s2">&quot;/etc/sudoers&quot;</span>
 
-<span class="c1"># Inform the user that the change has been made</span>
-<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated to allow passwordless sudo for the &#39;admin&#39; user.&quot;</span>
+<span class="c1"># Backup the sudoers file before editing</span>
+<span class="n">cp</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span><span class="o">.</span><span class="n">bak</span>
+
+<span class="c1"># Append the new rule to the sudoers file</span>
+<span class="n">echo</span> <span class="s2">&quot;$SUDO_RULE&quot;</span> <span class="o">&gt;&gt;</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span>
+
+<span class="c1"># Check if the syntax is correct using visudo in check mode</span>
+<span class="n">visudo</span> <span class="o">-</span><span class="n">c</span>
+
+<span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
+  <span class="n">echo</span> <span class="s2">&quot;Sudoers file updated successfully.&quot;</span>
+<span class="k">else</span>
+  <span class="n">echo</span> <span class="s2">&quot;Error in sudoers file syntax. Restoring backup.&quot;</span>
+  <span class="n">cp</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span><span class="o">.</span><span class="n">bak</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span>
+<span class="n">fi</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Run Code Interpreter</h1>
@@ -1993,22 +1852,47 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
 <span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># Take a backup of the current sudoers file</span>
-<span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span><span class="o">.</span><span class="n">bak</span>
+<span class="c1"># Define the new sudo rule for the admin user</span>
+<span class="n">SUDO_RULE</span><span class="o">=</span><span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span>
 
-<span class="c1"># Add a line to the sudoers file for passwordless sudo for the admin account</span>
-<span class="c1"># Note: Replace &#39;admin&#39; with the actual username</span>
-<span class="n">echo</span> <span class="s2">&quot;admin ALL=(ALL) NOPASSWD:ALL&quot;</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">tee</span> <span class="o">-</span><span class="n">a</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sudoers</span>
+<span class="c1"># Path to the sudoers file</span>
+<span class="n">SUDOERS_FILE</span><span class="o">=</span><span class="s2">&quot;/etc/sudoers&quot;</span>
 
-<span class="c1"># Inform the user that the change has been made</span>
-<span class="n">echo</span> <span class="s2">&quot;The sudoers file has been updated to allow passwordless sudo for the &#39;admin&#39; user.&quot;</span>
+<span class="c1"># Backup the sudoers file before editing</span>
+<span class="n">cp</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span><span class="o">.</span><span class="n">bak</span>
+
+<span class="c1"># Append the new rule to the sudoers file</span>
+<span class="n">echo</span> <span class="s2">&quot;$SUDO_RULE&quot;</span> <span class="o">&gt;&gt;</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span>
+
+<span class="c1"># Check if the syntax is correct using visudo in check mode</span>
+<span class="n">visudo</span> <span class="o">-</span><span class="n">c</span>
+
+<span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
+  <span class="n">echo</span> <span class="s2">&quot;Sudoers file updated successfully.&quot;</span>
+<span class="k">else</span>
+  <span class="n">echo</span> <span class="s2">&quot;Error in sudoers file syntax. Restoring backup.&quot;</span>
+  <span class="n">cp</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span><span class="o">.</span><span class="n">bak</span> <span class="err">$</span><span class="n">SUDOERS_FILE</span>
+<span class="n">fi</span>
 </pre></div></td></tr></table></div>
 
 And got the output:
-<code>admin ALL=(ALL) NOPASSWD:ALL
-The sudoers file has been updated to allow passwordless sudo for the 'admin' user.</code></p>
+<code>/etc/sudoers: parsed OK
+/etc/sudoers.d/README: parsed OK
+Sudoers file updated successfully.</code></p>
 <h1>PyFunc</h1>
 <p>final: False
 

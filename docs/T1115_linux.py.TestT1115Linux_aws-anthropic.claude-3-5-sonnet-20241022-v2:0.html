@@ -1,0 +1,2723 @@
+
+    <style>
+      body {
+      }
+    code {
+        white-space: pre-wrap;
+        display: block;
+        margin: 1em;
+        padding: 1em;
+        background: #eee;
+        border-radius: .5em;
+    }
+    </style>
+    
+    <style>
+    
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+    .is_correct_0 {
+      background: rgb(255, 170, 170);
+    }
+
+    .is_correct_1 {
+      background: rgb(170, 255, 170);
+    }
+
+        p {margin: 0em; }
+        h1 {margin: 0em; }
+        h2 {margin: 0em; }
+        h3 {margin: 0em; }
+        h4 {margin: 0em; }
+        h5 {margin: 0em; }
+        h6 {margin: 0em; }
+        h7 {margin: 0em; }
+        h8 {margin: 0em; }
+
+        
+    
+        .tabs {
+            list-style-type: none;
+            overflow: hidden;
+            background-color: #eef;
+            position: fixed;
+            top: 0px;
+            width: 100%;
+            padding: .2em;
+            margin: 0;
+        }
+
+        .tabs li {
+            float: left;
+        }
+
+        .tabs li a {
+            display: block;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            transition: 0.3s;
+            background-color: inherit;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            transition: filter 0.3s ease; 
+        }
+
+
+        .tabs li a:hover {
+            filter: brightness(120%); /* Increase brightness on hover */
+        }
+
+        .tab-content {
+            white-space: pre-wrap;
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-content:target {
+            padding-top: 2em;
+            display: block;
+        }
+    </style>
+    
+<ul class="tabs">
+    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_1"><a href="#tab3">Trial 3</a></li><li class="is_correct_1"><a href="#tab4">Trial 4</a></li><li class="is_correct_1"><a href="#tab5">Trial 5</a></li>
+</ul>
+    
+<div class="clear-float"></div>
+    
+<div id="tab1" class="tab-content">
+    <h1>Docker Setup</h1>
+<p>I have setup the docker container to run the model evaluation.</p>
+<h1>Initial Query</h1>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h2>Output</h2>
+<p>Here's a bash script that monitors the clipboard and maintains a history file. It works on both X11 and Wayland systems by using both `xclip` and `wl-clipboard` if available, with fallback options:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to cleanup on exit</span>
+cleanup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Stopping clipboard monitor...&quot;</span>
+<span class="w">    </span><span class="nb">kill</span><span class="w"> </span><span class="k">$(</span><span class="nb">jobs</span><span class="w"> </span>-p<span class="k">)</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+
+<span class="c1"># Set up trap for clean exit</span>
+<span class="nb">trap</span><span class="w"> </span>cleanup<span class="w"> </span>SIGINT<span class="w"> </span>SIGTERM
+
+<span class="c1"># Create or clear history file</span>
+<span class="nv">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+touch<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+
+<span class="c1"># Function to get clipboard content</span>
+get_clipboard<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1"># Try xclip first (X11)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>xclip<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>xclip<span class="w"> </span>-selection<span class="w"> </span>clipboard<span class="w"> </span>-o<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Try wl-paste (Wayland)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>wl-paste<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>wl-paste<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Try pbpaste (macOS)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>pbpaste<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>pbpaste<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No clipboard utility found&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="o">}</span>
+
+<span class="c1"># Initialize last_content with current clipboard content</span>
+<span class="nv">last_content</span><span class="o">=</span><span class="k">$(</span>get_clipboard<span class="k">)</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="c1"># Get current clipboard content</span>
+<span class="w">    </span><span class="nv">current_content</span><span class="o">=</span><span class="k">$(</span>get_clipboard<span class="k">)</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># If content has changed and is not empty</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$last_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c1"># Append to history file with timestamp</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%Y-%m-%d %H:%M:%S&#39;</span><span class="k">)</span><span class="s2">: </span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="c1"># Update last_content</span>
+<span class="w">        </span><span class="nv">last_content</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Sleep to prevent high CPU usage</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">0</span>.5
+<span class="k">done</span>
+</pre></div></td></tr></table></div>
+
+
+This script:
+
+1. Creates (or clears) a history.txt file in the same directory as the script
+2. Sets up a cleanup function to handle script termination gracefully
+3. Implements a function to get clipboard content that tries multiple clipboard utilities:
+   - xclip for X11 systems
+   - wl-paste for Wayland systems
+   - pbpaste for macOS
+4. Continuously monitors the clipboard for changes
+5. When changes are detected, saves the new content to the history file with a timestamp
+6. Includes error handling and graceful exit
+
+To use the script:
+
+1. Save it as `script.sh`
+2. Make it executable: `chmod +x script.sh`
+3. Run it in the background: `./script.sh &`
+
+The script will create history.txt and start monitoring the clipboard. When you copy "test1", "test2", and "test3" to the clipboard, they will be saved to the history file on separate lines with timestamps.
+
+To stop the script, use: `kill %1` or `pkill -f script.sh`
+
+Note:
+- The script requires at least one clipboard utility (xclip, wl-paste, or pbpaste) to be installed
+- It handles empty clipboard content and duplicates
+- It uses a 0.5-second polling interval to balance responsiveness and system resources
+- The history file entries include timestamps for better tracking
+
+If none of the supported clipboard utilities are installed, the script will exit with an error message.</p>
+<h1>Extract Code</h1>
+<p>I extracted the following code from that output:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to cleanup on exit</span>
+<span class="n">cleanup</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">echo</span> <span class="s2">&quot;Stopping clipboard monitor...&quot;</span>
+    <span class="n">kill</span> <span class="err">$</span><span class="p">(</span><span class="n">jobs</span> <span class="o">-</span><span class="n">p</span><span class="p">)</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+    <span class="n">exit</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="c1"># Set up trap for clean exit</span>
+<span class="n">trap</span> <span class="n">cleanup</span> <span class="n">SIGINT</span> <span class="n">SIGTERM</span>
+
+<span class="c1"># Create or clear history file</span>
+<span class="n">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+<span class="n">touch</span> <span class="s2">&quot;$history_file&quot;</span>
+
+<span class="c1"># Function to get clipboard content</span>
+<span class="n">get_clipboard</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1"># Try xclip first (X11)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">xclip</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">xclip</span> <span class="o">-</span><span class="n">selection</span> <span class="n">clipboard</span> <span class="o">-</span><span class="n">o</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+        <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Try wl-paste (Wayland)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+        <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Try pbpaste (macOS)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">pbpaste</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">pbpaste</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+        <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="n">echo</span> <span class="s2">&quot;No clipboard utility found&quot;</span>
+    <span class="n">exit</span> <span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="c1"># Initialize last_content with current clipboard content</span>
+<span class="n">last_content</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">get_clipboard</span><span class="p">)</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
+    <span class="c1"># Get current clipboard content</span>
+    <span class="n">current_content</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">get_clipboard</span><span class="p">)</span>
+    
+    <span class="c1"># If content has changed and is not empty</span>
+    <span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$last_content&quot;</span> <span class="p">]]</span> <span class="o">&amp;&amp;</span> <span class="p">[[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;$current_content&quot;</span> <span class="p">]];</span> <span class="n">then</span>
+        <span class="c1"># Append to history file with timestamp</span>
+        <span class="n">echo</span> <span class="s2">&quot;$(date &#39;+%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&#39;): $current_content&quot;</span> <span class="o">&gt;&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+        <span class="c1"># Update last_content</span>
+        <span class="n">last_content</span><span class="o">=</span><span class="s2">&quot;$current_content&quot;</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Sleep to prevent high CPU usage</span>
+    <span class="n">sleep</span> <span class="mf">0.5</span>
+<span class="n">done</span>
+</pre></div></td></tr></table></div>
+
+UNKNOWN NODE TYPE: <class 'evaluator.BashRunBackground'></p>
+<h1>PyFunc</h1>
+<p>['2024-12-05 20:57:06: test1', '2024-12-05 20:57:07: test2', '2024-12-05 20:57:08: test3']
+final: False
+
+Resulting in output:
+False</p>
+</div>
+    
+<div id="tab2" class="tab-content">
+    <h1>Docker Setup</h1>
+<p>I have setup the docker container to run the model evaluation.</p>
+<h1>Initial Query</h1>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h2>Output</h2>
+<p>Here's a bash script that monitors the clipboard and saves its contents to a history file. It works on both X11 and Wayland systems by attempting multiple clipboard access methods:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to get clipboard content using various methods</span>
+get_clipboard<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1"># Try xclip first (X11)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>xclip<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>xclip<span class="w"> </span>-selection<span class="w"> </span>clipboard<span class="w"> </span>-o<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Try wl-paste (Wayland)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>wl-paste<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>wl-paste<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Try xsel as fallback (X11)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>xsel<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>xsel<span class="w"> </span>--clipboard<span class="w"> </span>--output<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="o">}</span>
+
+<span class="c1"># Create or clear the history file</span>
+<span class="nv">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+
+<span class="c1"># Keep track of last clipboard content</span>
+<span class="nv">last_content</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># Trap SIGTERM and SIGINT for cleanup</span>
+cleanup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Stopping clipboard monitor...&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+<span class="nb">trap</span><span class="w"> </span>cleanup<span class="w"> </span>SIGTERM<span class="w"> </span>SIGINT
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Starting clipboard monitor... Output will be saved to </span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="c1"># Get current clipboard content</span>
+<span class="w">    </span><span class="nv">current_content</span><span class="o">=</span><span class="k">$(</span>get_clipboard<span class="k">)</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Check if clipboard content exists and has changed</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$last_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c1"># Save to history file and update last content</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="nv">last_content</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Sleep to prevent high CPU usage</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">1</span>
+<span class="k">done</span>
+</pre></div></td></tr></table></div>
+
+
+This script:
+
+1. Defines a function `get_clipboard()` that tries multiple methods to access the clipboard (xclip, wl-paste, xsel) to ensure it works across different systems.
+
+2. Creates (or clears) the history file at startup.
+
+3. Implements proper signal handling for clean termination.
+
+4. Continuously monitors the clipboard in a loop:
+   - Gets current clipboard content
+   - Checks if the content exists and has changed
+   - Saves new content to the history file
+   - Waits 1 second before next check
+
+To use the script:
+
+1. Save it as `script.sh`
+2. Make it executable: `chmod +x script.sh`
+3. Run it in the background: `./script.sh &`
+
+The script will:
+- Create history.txt in the same directory
+- Monitor clipboard changes
+- Save each new clipboard content on a new line
+- Continue running until killed
+- Handle termination gracefully
+
+For your test case:
+1. Copy "test1" - it will be saved to history.txt
+2. Copy "test2" - it will be saved to history.txt
+3. Copy "test3" - it will be saved to history.txt
+
+Each entry will be on a separate line in history.txt.
+
+To stop the script:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><span class="nb">kill</span><span class="w"> </span>%1<span class="w">  </span><span class="c1"># if it&#39;s the only background job</span>
+<span class="c1"># or</span>
+pkill<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;script.sh&quot;</span>
+</pre></div></td></tr></table></div>
+
+
+The script handles errors gracefully:
+- Checks for command availability before using them
+- Redirects error output to /dev/null
+- Continues running even if clipboard access temporarily fails
+- Creates the history file safely</p>
+<h1>Extract Code</h1>
+<p>I extracted the following code from that output:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to get clipboard content using various methods</span>
+<span class="n">get_clipboard</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1"># Try xclip first (X11)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">xclip</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">xclip</span> <span class="o">-</span><span class="n">selection</span> <span class="n">clipboard</span> <span class="o">-</span><span class="n">o</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">&amp;&amp;</span> <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Try wl-paste (Wayland)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">&amp;&amp;</span> <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Try xsel as fallback (X11)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">xsel</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">xsel</span> <span class="o">--</span><span class="n">clipboard</span> <span class="o">--</span><span class="n">output</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">&amp;&amp;</span> <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="k">return</span> <span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="c1"># Create or clear the history file</span>
+<span class="n">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+<span class="o">&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+
+<span class="c1"># Keep track of last clipboard content</span>
+<span class="n">last_content</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># Trap SIGTERM and SIGINT for cleanup</span>
+<span class="n">cleanup</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">echo</span> <span class="s2">&quot;Stopping clipboard monitor...&quot;</span>
+    <span class="n">exit</span> <span class="mi">0</span>
+<span class="p">}</span>
+<span class="n">trap</span> <span class="n">cleanup</span> <span class="n">SIGTERM</span> <span class="n">SIGINT</span>
+
+<span class="n">echo</span> <span class="s2">&quot;Starting clipboard monitor... Output will be saved to $history_file&quot;</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
+    <span class="c1"># Get current clipboard content</span>
+    <span class="n">current_content</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">get_clipboard</span><span class="p">)</span>
+    
+    <span class="c1"># Check if clipboard content exists and has changed</span>
+    <span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$last_content&quot;</span> <span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;$current_content&quot;</span> <span class="p">];</span> <span class="n">then</span>
+        <span class="c1"># Save to history file and update last content</span>
+        <span class="n">echo</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">&gt;&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+        <span class="n">last_content</span><span class="o">=</span><span class="s2">&quot;$current_content&quot;</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Sleep to prevent high CPU usage</span>
+    <span class="n">sleep</span> <span class="mi">1</span>
+<span class="n">done</span>
+</pre></div></td></tr></table></div>
+
+UNKNOWN NODE TYPE: <class 'evaluator.BashRunBackground'></p>
+<h1>PyFunc</h1>
+<p>['test1', 'test2', 'test3']
+final: True
+
+Resulting in output:
+True</p>
+</div>
+    
+<div id="tab3" class="tab-content">
+    <h1>Docker Setup</h1>
+<p>I have setup the docker container to run the model evaluation.</p>
+<h1>Initial Query</h1>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h2>Output</h2>
+<p>Here's a bash script that monitors the clipboard and saves its contents to a history file. It works on both X11 and Wayland systems using `xclip` or `wl-clipboard` if available:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to check if a command exists</span>
+command_exists<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<span class="o">}</span>
+
+<span class="c1"># Function to get clipboard content based on available tools</span>
+get_clipboard_content<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span>command_exists<span class="w"> </span>xclip<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>xclip<span class="w"> </span>-selection<span class="w"> </span>clipboard<span class="w"> </span>-o<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span>command_exists<span class="w"> </span>wl-paste<span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>wl-paste<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">    </span><span class="k">else</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Neither xclip nor wl-paste is installed&quot;</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+<span class="w">        </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="o">}</span>
+
+<span class="c1"># Create or clear history file</span>
+<span class="nv">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+
+<span class="c1"># Ensure history file is writable</span>
+<span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="o">[</span><span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: Cannot write to </span><span class="nv">$history_file</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># Initialize last_content with current clipboard content</span>
+<span class="nv">last_content</span><span class="o">=</span><span class="k">$(</span>get_clipboard_content<span class="k">)</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$last_content</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="c1"># Get current clipboard content</span>
+<span class="w">    </span><span class="nv">current_content</span><span class="o">=</span><span class="k">$(</span>get_clipboard_content<span class="k">)</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Check if clipboard content has changed and is not empty</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$last_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c1"># Append to history file with timestamp</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="nv">last_content</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Sleep to reduce CPU usage</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">0</span>.5
+<span class="k">done</span>
+</pre></div></td></tr></table></div>
+
+
+This script:
+
+1. Creates (or clears) a history file named `history.txt`
+2. Checks for the availability of clipboard tools (`xclip` or `wl-paste`)
+3. Continuously monitors the clipboard for changes
+4. Saves new clipboard content to the history file
+5. Includes error handling for common issues
+
+To use the script:
+
+1. Save it as `script.sh`
+2. Make it executable: `chmod +x script.sh`
+3. Run it in the background: `./script.sh &`
+
+The script will work if either `xclip` (for X11) or `wl-clipboard` (for Wayland) is installed. If neither is available, it will exit with an error message.
+
+Features:
+- Handles both X11 and Wayland systems
+- Prevents duplicate entries
+- Ignores empty clipboard content
+- Low CPU usage with sleep interval
+- Clean error handling
+- Creates history file if it doesn't exist
+
+Requirements:
+- Either `xclip` or `wl-clipboard` package installed
+- Write permissions in the current directory
+
+For testing:
+1. Copy "test1" to clipboard
+2. Copy "test2" to clipboard
+3. Copy "test3" to clipboard
+
+The script will capture these values and save them to history.txt on separate lines.
+
+To stop the script, use:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>pkill<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;script.sh&quot;</span>
+</pre></div></td></tr></table></div>
+</p>
+<h1>Extract Code</h1>
+<p>I extracted the following code from that output:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to check if a command exists</span>
+<span class="n">command_exists</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="s2">&quot;$1&quot;</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="c1"># Function to get clipboard content based on available tools</span>
+<span class="n">get_clipboard_content</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">command_exists</span> <span class="n">xclip</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">xclip</span> <span class="o">-</span><span class="n">selection</span> <span class="n">clipboard</span> <span class="o">-</span><span class="n">o</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+    <span class="k">elif</span> <span class="n">command_exists</span> <span class="n">wl</span><span class="o">-</span><span class="n">paste</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+    <span class="k">else</span>
+        <span class="n">echo</span> <span class="s2">&quot;Error: Neither xclip nor wl-paste is installed&quot;</span> <span class="o">&gt;&amp;</span><span class="mi">2</span>
+        <span class="n">exit</span> <span class="mi">1</span>
+    <span class="n">fi</span>
+<span class="p">}</span>
+
+<span class="c1"># Create or clear history file</span>
+<span class="n">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+<span class="p">:</span> <span class="o">&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+
+<span class="c1"># Ensure history file is writable</span>
+<span class="k">if</span> <span class="err">!</span> <span class="p">[</span> <span class="o">-</span><span class="n">w</span> <span class="s2">&quot;$history_file&quot;</span> <span class="p">];</span> <span class="n">then</span>
+    <span class="n">echo</span> <span class="s2">&quot;Error: Cannot write to $history_file&quot;</span> <span class="o">&gt;&amp;</span><span class="mi">2</span>
+    <span class="n">exit</span> <span class="mi">1</span>
+<span class="n">fi</span>
+
+<span class="c1"># Initialize last_content with current clipboard content</span>
+<span class="n">last_content</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">get_clipboard_content</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">];</span> <span class="n">then</span>
+    <span class="n">echo</span> <span class="s2">&quot;$last_content&quot;</span> <span class="o">&gt;&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+<span class="n">fi</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
+    <span class="c1"># Get current clipboard content</span>
+    <span class="n">current_content</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">get_clipboard_content</span><span class="p">)</span>
+    
+    <span class="c1"># Check if clipboard content has changed and is not empty</span>
+    <span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$last_content&quot;</span> <span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;$current_content&quot;</span> <span class="p">];</span> <span class="n">then</span>
+        <span class="c1"># Append to history file with timestamp</span>
+        <span class="n">echo</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">&gt;&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+        <span class="n">last_content</span><span class="o">=</span><span class="s2">&quot;$current_content&quot;</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Sleep to reduce CPU usage</span>
+    <span class="n">sleep</span> <span class="mf">0.5</span>
+<span class="n">done</span>
+</pre></div></td></tr></table></div>
+
+UNKNOWN NODE TYPE: <class 'evaluator.BashRunBackground'></p>
+<h1>PyFunc</h1>
+<p>['test1', 'test2', 'test3']
+final: True
+
+Resulting in output:
+True</p>
+</div>
+    
+<div id="tab4" class="tab-content">
+    <h1>Docker Setup</h1>
+<p>I have setup the docker container to run the model evaluation.</p>
+<h1>Initial Query</h1>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h2>Output</h2>
+<p>Here's a bash script that monitors the clipboard and logs changes to a history file. It works on both X11 and Wayland systems by attempting to use different clipboard utilities:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to get clipboard content using various methods</span>
+get_clipboard_content<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1"># Try xclip first (X11)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>xclip<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>xclip<span class="w"> </span>-selection<span class="w"> </span>clipboard<span class="w"> </span>-o<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Try wl-paste (Wayland)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>wl-paste<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>wl-paste<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Try xsel as fallback (X11)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>xsel<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>xsel<span class="w"> </span>--clipboard<span class="w"> </span>--output<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="o">}</span>
+
+<span class="c1"># Create or clear the history file</span>
+<span class="nv">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+touch<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+
+<span class="c1"># Initialize last_content with empty string</span>
+<span class="nv">last_content</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># Trap SIGTERM and SIGINT</span>
+cleanup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Cleaning up and exiting...&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+<span class="nb">trap</span><span class="w"> </span>cleanup<span class="w"> </span>SIGTERM<span class="w"> </span>SIGINT
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="c1"># Get current clipboard content</span>
+<span class="w">    </span><span class="nv">current_content</span><span class="o">=</span><span class="k">$(</span>get_clipboard_content<span class="k">)</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Check if we got any content and if it&#39;s different from last content</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$last_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c1"># Append to history file</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="c1"># Update last_content</span>
+<span class="w">        </span><span class="nv">last_content</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Sleep to prevent high CPU usage</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">0</span>.5
+<span class="k">done</span>
+</pre></div></td></tr></table></div>
+
+
+This script:
+
+1. Defines a function `get_clipboard_content` that tries different clipboard utilities (xclip, wl-paste, xsel) in order of preference.
+
+2. Creates (or clears) a history file named "history.txt".
+
+3. Implements proper cleanup on script termination using trap.
+
+4. Continuously monitors the clipboard by:
+   - Getting current clipboard content
+   - Checking if it's different from the last seen content
+   - Appending new content to the history file
+   - Waiting for 0.5 seconds before checking again
+
+To use the script:
+
+1. Save it as `script.sh`
+2. Make it executable: `chmod +x script.sh`
+3. Run it in the background: `./script.sh &`
+
+The script will:
+- Work without requiring specific packages (it tries multiple clipboard utilities)
+- Handle errors gracefully
+- Not duplicate entries if the same content is copied multiple times in succession
+- Create and append to history.txt
+- Run in the background
+- Have minimal CPU usage
+- Clean up properly when terminated
+
+When you copy "test1", "test2", and "test3" to your clipboard, they will be recorded in history.txt on separate lines.
+
+Note: At least one of the clipboard utilities (xclip, wl-paste, or xsel) needs to be installed on the system for the script to work. The script will try each one in turn until it finds one that works.</p>
+<h1>Extract Code</h1>
+<p>I extracted the following code from that output:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to get clipboard content using various methods</span>
+<span class="n">get_clipboard_content</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1"># Try xclip first (X11)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">xclip</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">xclip</span> <span class="o">-</span><span class="n">selection</span> <span class="n">clipboard</span> <span class="o">-</span><span class="n">o</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">&amp;&amp;</span> <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Try wl-paste (Wayland)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">&amp;&amp;</span> <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Try xsel as fallback (X11)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">xsel</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">xsel</span> <span class="o">--</span><span class="n">clipboard</span> <span class="o">--</span><span class="n">output</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">&amp;&amp;</span> <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="k">return</span> <span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="c1"># Create or clear the history file</span>
+<span class="n">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+<span class="n">touch</span> <span class="s2">&quot;$history_file&quot;</span>
+
+<span class="c1"># Initialize last_content with empty string</span>
+<span class="n">last_content</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># Trap SIGTERM and SIGINT</span>
+<span class="n">cleanup</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">echo</span> <span class="s2">&quot;Cleaning up and exiting...&quot;</span>
+    <span class="n">exit</span> <span class="mi">0</span>
+<span class="p">}</span>
+<span class="n">trap</span> <span class="n">cleanup</span> <span class="n">SIGTERM</span> <span class="n">SIGINT</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
+    <span class="c1"># Get current clipboard content</span>
+    <span class="n">current_content</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">get_clipboard_content</span><span class="p">)</span>
+    
+    <span class="c1"># Check if we got any content and if it&#39;s different from last content</span>
+    <span class="k">if</span> <span class="p">[</span> <span class="err">$?</span> <span class="o">-</span><span class="n">eq</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$last_content&quot;</span> <span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;$current_content&quot;</span> <span class="p">];</span> <span class="n">then</span>
+        <span class="c1"># Append to history file</span>
+        <span class="n">echo</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">&gt;&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+        <span class="c1"># Update last_content</span>
+        <span class="n">last_content</span><span class="o">=</span><span class="s2">&quot;$current_content&quot;</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Sleep to prevent high CPU usage</span>
+    <span class="n">sleep</span> <span class="mf">0.5</span>
+<span class="n">done</span>
+</pre></div></td></tr></table></div>
+
+UNKNOWN NODE TYPE: <class 'evaluator.BashRunBackground'></p>
+<h1>PyFunc</h1>
+<p>['test1', 'test2', 'test3']
+final: True
+
+Resulting in output:
+True</p>
+</div>
+    
+<div id="tab5" class="tab-content">
+    <h1>Docker Setup</h1>
+<p>I have setup the docker container to run the model evaluation.</p>
+<h1>Initial Query</h1>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Write a bash script that creates a history file history.txt and then continuously monitors the clipboard for changes and stores the clipboard contents in the history file. The script will be run in the background as `./script.sh &`.
+
+The script will be judged correct if it contains the strings "test1", "test2", and "test3" on separate lines in the history file, which I will type out and manually copy to the clipboard for testing.
+
+Ensure that the script will work regardlesss of what packages are installed. Provide the complete bash script and ensure clean error handling</p>
+<h2>Output</h2>
+<p>Here's a bash script that monitors the clipboard and stores changes in a history file. It works on both X11 and Wayland systems and handles errors gracefully:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to cleanup on exit</span>
+cleanup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Cleaning up and exiting...&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="o">}</span>
+
+<span class="c1"># Set up trap for clean exit</span>
+<span class="nb">trap</span><span class="w"> </span>cleanup<span class="w"> </span>SIGINT<span class="w"> </span>SIGTERM
+
+<span class="c1"># Create or clear history file</span>
+<span class="nv">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+
+<span class="c1"># Function to get clipboard content using different methods</span>
+get_clipboard<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1"># Try xclip first (X11)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>xclip<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>xclip<span class="w"> </span>-selection<span class="w"> </span>clipboard<span class="w"> </span>-o<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Try wl-paste (Wayland)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>wl-paste<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>wl-paste<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Try pbpaste (MacOS)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>pbpaste<span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>pbpaste<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ERROR: No clipboard tool found&quot;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="o">}</span>
+
+<span class="c1"># Initialize last content</span>
+<span class="nv">last_content</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="c1"># Get current clipboard content</span>
+<span class="w">    </span><span class="nv">current_content</span><span class="o">=</span><span class="k">$(</span>get_clipboard<span class="k">)</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Check if clipboard content has changed and is not empty</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$last_content</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c1"># Append to history file with timestamp</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$history_file</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="nv">last_content</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$current_content</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># Sleep to reduce CPU usage (adjust as needed)</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">0</span>.5
+<span class="k">done</span>
+</pre></div></td></tr></table></div>
+
+
+This script:
+
+1. Creates (or clears) a history file named `history.txt`
+
+2. Implements a cleanup function that's called when the script receives SIGINT or SIGTERM signals
+
+3. Uses multiple methods to access the clipboard:
+   - `xclip` for X11 systems
+   - `wl-paste` for Wayland systems
+   - `pbpaste` for MacOS
+
+4. Continuously monitors the clipboard for changes:
+   - Checks clipboard content every 0.5 seconds
+   - Only writes to the history file when content changes
+   - Avoids duplicate entries
+   - Handles empty clipboard content
+
+To use the script:
+
+1. Save it as `script.sh`
+2. Make it executable:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>chmod<span class="w"> </span>+x<span class="w"> </span>script.sh
+</pre></div></td></tr></table></div>
+
+3. Run it in the background:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>./script.sh<span class="w"> </span><span class="p">&amp;</span>
+</pre></div></td></tr></table></div>
+
+
+The script will work even if some clipboard tools are not installed - it tries multiple methods and continues running even if it can't access the clipboard.
+
+To test:
+1. Copy "test1" to clipboard
+2. Copy "test2" to clipboard
+3. Copy "test3" to clipboard
+
+The contents will be saved to history.txt on separate lines.
+
+To stop the script:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="nb">kill</span><span class="w"> </span>%1
+</pre></div></td></tr></table></div>
+
+or
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>pkill<span class="w"> </span>-f<span class="w"> </span>script.sh
+</pre></div></td></tr></table></div>
+
+
+Note: If none of the clipboard tools (xclip, wl-paste, pbpaste) are installed, the script will still run but will log "ERROR: No clipboard tool found" in the history file. You may want to install at least one of these tools:
+- For X11: `sudo apt-get install xclip`
+- For Wayland: `sudo apt-get install wl-clipboard`
+- For MacOS: pbpaste is typically pre-installed</p>
+<h1>Extract Code</h1>
+<p>I extracted the following code from that output:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Function to cleanup on exit</span>
+<span class="n">cleanup</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">echo</span> <span class="s2">&quot;Cleaning up and exiting...&quot;</span>
+    <span class="n">exit</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="c1"># Set up trap for clean exit</span>
+<span class="n">trap</span> <span class="n">cleanup</span> <span class="n">SIGINT</span> <span class="n">SIGTERM</span>
+
+<span class="c1"># Create or clear history file</span>
+<span class="n">history_file</span><span class="o">=</span><span class="s2">&quot;history.txt&quot;</span>
+<span class="o">&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+
+<span class="c1"># Function to get clipboard content using different methods</span>
+<span class="n">get_clipboard</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1"># Try xclip first (X11)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">xclip</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">xclip</span> <span class="o">-</span><span class="n">selection</span> <span class="n">clipboard</span> <span class="o">-</span><span class="n">o</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+        <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Try wl-paste (Wayland)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">wl</span><span class="o">-</span><span class="n">paste</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+        <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Try pbpaste (MacOS)</span>
+    <span class="k">if</span> <span class="n">command</span> <span class="o">-</span><span class="n">v</span> <span class="n">pbpaste</span> <span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span><span class="p">;</span> <span class="n">then</span>
+        <span class="n">pbpaste</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+        <span class="k">return</span>
+    <span class="n">fi</span>
+    
+    <span class="n">echo</span> <span class="s2">&quot;ERROR: No clipboard tool found&quot;</span>
+    <span class="k">return</span> <span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="c1"># Initialize last content</span>
+<span class="n">last_content</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># Main loop</span>
+<span class="k">while</span> <span class="n">true</span><span class="p">;</span> <span class="n">do</span>
+    <span class="c1"># Get current clipboard content</span>
+    <span class="n">current_content</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">get_clipboard</span><span class="p">)</span>
+    
+    <span class="c1"># Check if clipboard content has changed and is not empty</span>
+    <span class="k">if</span> <span class="p">[[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">&amp;&amp;</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">!=</span> <span class="s2">&quot;$last_content&quot;</span> <span class="p">]];</span> <span class="n">then</span>
+        <span class="c1"># Append to history file with timestamp</span>
+        <span class="n">echo</span> <span class="s2">&quot;$current_content&quot;</span> <span class="o">&gt;&gt;</span> <span class="s2">&quot;$history_file&quot;</span>
+        <span class="n">last_content</span><span class="o">=</span><span class="s2">&quot;$current_content&quot;</span>
+    <span class="n">fi</span>
+    
+    <span class="c1"># Sleep to reduce CPU usage (adjust as needed)</span>
+    <span class="n">sleep</span> <span class="mf">0.5</span>
+<span class="n">done</span>
+</pre></div></td></tr></table></div>
+
+UNKNOWN NODE TYPE: <class 'evaluator.BashRunBackground'></p>
+<h1>PyFunc</h1>
+<p>['test1', 'test2', 'test3']
+final: True
+
+Resulting in output:
+True</p>
+</div>
+    

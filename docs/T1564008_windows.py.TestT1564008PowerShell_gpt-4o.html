@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
     <li><a href="index.html">Full Grid</a></li> <li class="is_correct_1"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_1"><a href="#tab3">Trial 3</a></li><li class="is_correct_1"><a href="#tab4">Trial 4</a></li><li class="is_correct_1"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,9 +96,9 @@
 <h2>Query</h2>
 <p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
 <h2>Output</h2>
-<p>To create and enable email inbox rules that automatically route emails to the trash based on certain keywords in the subject, you can use PowerShell in combination with Exchange Online PowerShell or the Exchange Management Shell (for on-premises Exchange). Below is a script tailored for Exchange Online, which uses the Exchange Online PowerShell module. 
+<p>To create and enable email inbox rules that automatically move emails to the trash based on specific keywords in the subject line, you'll need to use PowerShell in conjunction with Microsoft Exchange or Office 365. The script below assumes you have the necessary permissions and are using Exchange Online PowerShell or Exchange Management Shell for on-premises Exchange.
 
-Before running this script, ensure you have the necessary permissions and the Exchange Online PowerShell module installed. Connect to Exchange Online PowerShell using your credentials.
+This script connects to Exchange Online, specifies the set of keywords to filter, and creates a new inbox rule for the specified mailbox. Note that this script requires you to have the ExchangeOnlineManagement module installed and configured.
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -200,130 +200,59 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Define variables for your environment</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Install the Exchange Online Management module if not already installed</span>
+<span class="c1"># Install-Module -Name ExchangeOnlineManagement</span>
+
+<span class="c1"># Import the module</span>
+<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ExchangeOnlineManagement</span>
+
+<span class="c1"># Specify your credentials</span>
 <span class="err">$</span><span class="n">UserCredential</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">Credential</span>
-<span class="err">$</span><span class="n">Keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;keyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword3&quot;</span><span class="p">)</span> <span class="c1"># Add the keywords you want to filter</span>
-<span class="err">$</span><span class="n">Mailboxes</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;user1@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;user2@example.com&quot;</span><span class="p">)</span> <span class="c1"># Specify the mailboxes</span>
 
 <span class="c1"># Connect to Exchange Online</span>
 <span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">Credential</span> <span class="err">$</span><span class="n">UserCredential</span>
 
-<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">Mailbox</span> <span class="ow">in</span> <span class="err">$</span><span class="n">Mailboxes</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">Keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">Keywords</span><span class="p">)</span> <span class="p">{</span>
-        <span class="err">$</span><span class="n">RuleName</span> <span class="o">=</span> <span class="s2">&quot;Move to Trash if Subject contains $Keyword&quot;</span>
-        
-        <span class="k">try</span> <span class="p">{</span>
-            <span class="c1"># Create the Inbox rule</span>
-            <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">Mailbox</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">RuleName</span> <span class="err">`</span>
-                <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">Keyword</span> <span class="err">`</span>
-                <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Inbox\Deleted Items&quot;</span> <span class="err">`</span>
-                <span class="o">-</span><span class="n">StopProcessingRules</span> <span class="err">$</span><span class="n">false</span>
+<span class="c1"># Specify the mailbox and keywords</span>
+<span class="err">$</span><span class="n">mailbox</span> <span class="o">=</span> <span class="s2">&quot;user@domain.com&quot;</span>
+<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;Keyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;Keyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;Keyword3&quot;</span><span class="p">)</span>
 
-            <span class="n">Write</span><span class="o">-</span><span class="n">Output</span> <span class="s2">&quot;Rule &#39;$RuleName&#39; created and enabled for $Mailbox.&quot;</span>
-        <span class="p">}</span>
-        <span class="n">catch</span> <span class="p">{</span>
-            <span class="n">Write</span><span class="o">-</span><span class="n">Output</span> <span class="s2">&quot;Error creating rule &#39;$RuleName&#39; for $Mailbox: $_&quot;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+<span class="c1"># Create or update the inbox rule to filter emails based on the subject</span>
+<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Move $keyword to Trash&quot;</span> <span class="err">`</span>
+                  <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">mailbox</span> <span class="err">`</span>
+                  <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keyword</span> <span class="err">`</span>
+                  <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Inbox\Deleted Items&quot;</span> <span class="err">`</span>
+                  <span class="o">-</span><span class="n">StopProcessingRules</span> <span class="err">$</span><span class="n">false</span>
 <span class="p">}</span>
 
-<span class="c1"># Disconnect the session</span>
+<span class="c1"># Disconnect Exchange Online session</span>
 <span class="n">Disconnect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">Confirm</span><span class="p">:</span><span class="err">$</span><span class="n">false</span>
 </pre></div></td></tr></table></div>
 
 
-### Instructions:
+### Instructions to Run the Script
 
-1. **Install the Exchange Online PowerShell module** if you haven't done so by running the following command in an elevated PowerShell session:
-   <style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="n">Install</span><span class="o">-</span><span class="n">Module</span> <span class="o">-</span><span class="n">Name</span> <span class="n">ExchangeOnlineManagement</span>
+1. **Install Exchange Management Module**: If not already installed, uncomment the line to install the ExchangeOnlineManagement module.
    
-</pre></div></td></tr></table></div>
+2. **Run PowerShell as Administrator**: Open PowerShell with administrative privileges.
 
+3. **Save the Script**: Copy the script into a `.ps1` file, which you'll run to execute the script.
 
-2. **Connect to Exchange Online**: Make sure you replace the placeholder email addresses and keywords with the actual ones you want to use.
+4. **Enter Credentials**: When prompted, provide valid credentials that have permission to create inbox rules on the specified mailbox.
 
-3. **Run the script**: Save this script as a `.ps1` file and run it in a PowerShell session. You'll be prompted to enter your credentials to connect to Exchange Online.
+5. **Customization**: 
+    - Replace `"user@domain.com"` with the email address for which you want to create rules.
+    - Add your desired keywords in the `$keywords` array.
 
-4. **Monitoring & Errors**: The script includes try-catch blocks to handle any errors encountered while creating rules. Any errors will be output to the console.
+6. **Execution**: Run the script in PowerShell. It will connect to Exchange, create the rules, and then disconnect.
 
-Make sure you have the proper permissions and that the mailboxes you specify exist. Additionally, ensure that users are aware of these auto-routing rules as they could potentially impact important email deliveries.</p>
+7. **Verification**: Verify that the rules are created by checking the mailbox settings or using the `Get-InboxRule` command.
+
+### Notes:
+
+- Ensure you have the necessary permissions to execute PowerShell scripts and manage inbox rules for users.
+- You might need to adjust the folder path if your environment uses a different name for the trash folder.
+- This script focuses on Exchange Online. If you're using an on-premises Exchange, you'll need to adjust the connection settings appropriately.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
@@ -355,9 +284,257 @@ Make sure you have the proper permissions and that the mailboxes you specify exi
 <h2>Query</h2>
 <p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
 <h2>Output</h2>
-<p>To create a PowerShell script that sets up email rules to route emails with specific keywords in the subject to the trash, you need to use Exchange Online PowerShell if you're working in an Office 365 environment. Here we will assume you have the necessary permissions and prerequisites set up, such as connecting to Exchange Online PowerShell.
+<p>To create a PowerShell script that sets up inbox rules to automatically move emails to the trash based on specific keywords in the subject, you can use the Exchange Online PowerShell module or the Outlook Object Model depending on whether you're managing this for Exchange Online or a locally installed Outlook client.
 
-Here's how you can create such a script:
+Here’s a script using the `New-InboxRule` cmdlet available in the Exchange Online Management module. Be sure to replace `YourUser@domain.com` with the actual email address, and specify the keywords you want to use for filtering.
+
+### Prerequisites:
+- Ensure you have the Exchange Online Management module installed. If not, install it using `Install-Module -Name ExchangeOnlineManagement`.
+- Authenticate to Exchange Online before running the script.
+
+### Script:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import the Exchange Online Management Module</span>
+<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ExchangeOnlineManagement</span>
+
+<span class="c1"># Connect to Exchange Online (You&#39;ll be prompted for credentials)</span>
+<span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">UserPrincipalName</span> <span class="n">YourAdmin</span><span class="nd">@domain</span><span class="o">.</span><span class="n">com</span> <span class="o">-</span><span class="n">ShowProgress</span> <span class="err">$</span><span class="n">true</span>
+
+<span class="c1"># Define the email address to set the rule for</span>
+<span class="err">$</span><span class="n">emailAddress</span> <span class="o">=</span> <span class="s2">&quot;YourUser@domain.com&quot;</span>
+
+<span class="c1"># Define keywords for the rules</span>
+<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;Keyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;Keyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;Keyword3&quot;</span><span class="p">)</span> <span class="c1"># Add the keywords you want to search for</span>
+
+<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1"># Create a new inbox rule</span>
+    <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">emailAddress</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;Move &#39;$keyword&#39; to Trash&quot;</span> <span class="err">`</span>
+        <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keyword</span> <span class="err">`</span>
+        <span class="o">-</span><span class="n">DeleteMessage</span> <span class="err">$</span><span class="n">true</span>
+<span class="p">}</span>
+
+<span class="c1"># Disconnect from Exchange Online</span>
+<span class="n">Disconnect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">Confirm</span><span class="p">:</span><span class="err">$</span><span class="n">false</span>
+</pre></div></td></tr></table></div>
+
+
+### Notes:
+- This script logs into Exchange Online and creates a separate rule for each keyword provided.
+- The `-DeleteMessage $true` parameter moves the message to the Deleted Items (trash).
+- Ensure you have the necessary permissions to create inbox rules for the specified mailbox.
+- Customize the `$emailAddress` and the `$keywords` array according to your needs.
+
+#### Using the Outlook Object Model (for a local Outlook client)
+If you want to automate this through the Outlook application installed locally on a computer, PowerShell can interact with the Outlook Object Model, but it requires Outlook to be installed and configured on the running system. The script would involve accessing the Outlook COM object to create rules, which is more complex and generally less secure due to the execution context. For organization-wide rules, the Exchange Online method is preferable.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>New-PSSession</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-DeleteMessage</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-SubjectOrBodyContainsWords</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>New-InboxRule</code>: True</p>
+<h2>Final Answer: True</h2>
+</div>
+    
+<div id="tab3" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
+<h2>Output</h2>
+<p>To create a PowerShell script that creates and enables email inbox rules to automatically route incoming emails to the trash if the subjects contain certain keywords, you'll need to use Exchange Online PowerShell or the Exchange Management Shell, depending on whether you're working with Microsoft 365 (Exchange Online) or an on-premises Exchange setup.
+
+Below is an example script for Exchange Online using the Exchange Online Management module. This script assumes you have the required permissions and that you are connected to Exchange Online PowerShell.
+
+Before you start, make sure you have the Exchange Online Management module installed. You can install it using:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Install</span><span class="o">-</span><span class="n">Module</span> <span class="o">-</span><span class="n">Name</span> <span class="n">ExchangeOnlineManagement</span>
+</pre></div></td></tr></table></div>
+
+
+Here's an example script:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -459,46 +636,353 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Connect to Exchange Online</span>
-<span class="c1"># Make sure you have the EXO V2 module installed and you&#39;re authenticated</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Connect to Exchange Online</span>
 <span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ExchangeOnlineManagement</span>
-<span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">UserPrincipalName</span> <span class="n">your_email</span><span class="nd">@domain</span><span class="o">.</span><span class="n">com</span> <span class="o">-</span><span class="n">ShowProgress</span> <span class="err">$</span><span class="n">true</span>
+<span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">UserPrincipalName</span> <span class="n">your</span><span class="o">-</span><span class="n">email</span><span class="nd">@domain</span><span class="o">.</span><span class="n">com</span> <span class="o">-</span><span class="n">ShowProgress</span> <span class="err">$</span><span class="n">true</span>
 
-<span class="c1"># Define your keywords</span>
-<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;keyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword3&quot;</span><span class="p">)</span>
+<span class="c1"># Define the keywords that should trigger the rule</span>
+<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;Spam&quot;</span><span class="p">,</span> <span class="s2">&quot;Junk&quot;</span><span class="p">,</span> <span class="s2">&quot;Unwanted&quot;</span><span class="p">)</span>
 
-<span class="c1"># Define the user&#39;s email to whom the rule will apply</span>
-<span class="err">$</span><span class="n">userEmail</span> <span class="o">=</span> <span class="s2">&quot;user@domain.com&quot;</span>
+<span class="c1"># Target user for whom you want to create the rule</span>
+<span class="err">$</span><span class="n">userEmail</span> <span class="o">=</span> <span class="s2">&quot;target-user@domain.com&quot;</span>
 
-<span class="c1"># Iterate through each keyword and create a rule</span>
+<span class="c1"># Create a rule for each keyword</span>
 <span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1"># Create a rule name dynamically for each keyword</span>
-    <span class="err">$</span><span class="n">ruleName</span> <span class="o">=</span> <span class="s2">&quot;Auto-Delete-$($keyword)-Subject&quot;</span>
+    <span class="err">$</span><span class="n">ruleName</span> <span class="o">=</span> <span class="s2">&quot;Move to Trash - Contains $keyword&quot;</span>
 
-    <span class="c1"># Check if the rule already exists</span>
-    <span class="err">$</span><span class="n">rule</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">userEmail</span> <span class="o">|</span> <span class="n">Where</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span><span class="err">$</span><span class="n">_</span><span class="o">.</span><span class="n">Name</span> <span class="o">-</span><span class="n">eq</span> <span class="err">$</span><span class="n">ruleName</span><span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="err">!$</span><span class="n">rule</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1"># Create the inbox rule to move emails with the specific keyword to Deleted Items</span>
-        <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">userEmail</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">ruleName</span> <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keyword</span> <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Deleted Items&quot;</span> <span class="o">-</span><span class="n">StopProcessingRules</span> <span class="err">$</span><span class="n">false</span>
-        
-        <span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Rule created: $ruleName&quot;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Rule already exists: $ruleName&quot;</span>
+    <span class="c1"># Check if a rule with the same name already exists, if so, delete it</span>
+    <span class="err">$</span><span class="n">existingRule</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">userEmail</span> <span class="o">|</span> <span class="n">Where</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span> <span class="err">$</span><span class="n">_</span><span class="o">.</span><span class="n">Name</span> <span class="o">-</span><span class="n">eq</span> <span class="err">$</span><span class="n">ruleName</span> <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="err">$</span><span class="n">existingRule</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Remove</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Identity</span> <span class="err">$</span><span class="n">existingRule</span><span class="o">.</span><span class="n">Identity</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">userEmail</span> <span class="o">-</span><span class="n">Confirm</span><span class="p">:</span><span class="err">$</span><span class="n">false</span>
     <span class="p">}</span>
+
+    <span class="c1"># Create a new inbox rule to move emails with the specified keyword in the subject to trash</span>
+    <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">userEmail</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">ruleName</span> <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keyword</span> <span class="err">`</span>
+        <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Inbox\Trash&quot;</span>
 <span class="p">}</span>
 
-<span class="c1"># Disconnect the session</span>
+<span class="c1"># Disconnect from Exchange Online</span>
 <span class="n">Disconnect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">Confirm</span><span class="p">:</span><span class="err">$</span><span class="n">false</span>
 </pre></div></td></tr></table></div>
 
 
-### Important Notes:
-1. **Permissions**: Ensure you have the necessary permissions to manage mailbox rules for the specified users. You might need administrator credentials depending on the mailbox you're managing.
+### Explanations:
+
+- **Installation of the Module**: Ensure that the `ExchangeOnlineManagement` module is installed to enable the connection to Exchange Online.
+  
+- **Connection**: Connects to Exchange Online using `Connect-ExchangeOnline`. Replace `your-email@domain.com` with your admin email.
+
+- **Keywords**: A list of keywords that the script will use to filter subjects.
+
+- **User Email**: Specify the mailbox to which you want to apply these rules.
+
+- **Rule Creation**: It checks for existing rules with the same name and removes them to ensure no duplicates. It then creates a new rule that moves emails containing each keyword to a folder named "Trash" under the Inbox. Adjust the folder path as needed. Make sure the "Trash" folder exists or replace it with the correct path (e.g., "Deleted Items" for many typical email setups).
+
+- **Disconnection**: Finally, the script disconnects from the Exchange Online session.
+
+### Warnings and Considerations:
+
+- **Permissions**: Ensure you have the appropriate permissions to create inbox rules for the mailbox in question.
+
+- **Testing**: Before rolling out scripts to your entire organization, test them on a single mailbox to ensure they work as expected.
+
+- **Security**: Handle credentials securely when connecting to Exchange Online. Avoid hardcoding sensitive information in scripts.
+
+This script is a basic example and might need adjustments based on your specific environment and requirements.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>New-PSSession</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: True</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-DeleteMessage</code>: False</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-SubjectOrBodyContainsWords</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>New-InboxRule</code>: True</p>
+<h2>Final Answer: True</h2>
+</div>
+    
+<div id="tab4" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
+<h2>Output</h2>
+<p>To create a PowerShell script that manages email inbox rules in an Exchange environment (on-premises or Office 365), you can use the `New-InboxRule` cmdlet. This cmdlet allows you to create rules that process emails based on specific criteria. Below is an example script that will create a rule to move emails with certain keywords in the subject line to the "Deleted Items" folder.
+
+Before using the script, ensure you have the necessary permissions, and your environment is configured to run these commands, especially in Office 365 where you might need to use Exchange Online PowerShell.
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Define the email address for which you want to create the rule</span>
+<span class="err">$</span><span class="n">emailAddress</span> <span class="o">=</span> <span class="s2">&quot;user@domain.com&quot;</span>
+
+<span class="c1"># Define keywords that will trigger emails to be moved to Deleted Items</span>
+<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;SpamKeyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;SpamKeyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;SpamKeyword3&quot;</span><span class="p">)</span>
+
+<span class="c1"># Import Exchange Online PowerShell Module if not already imported</span>
+<span class="c1"># If working locally with on-premises Exchanger Server, this might not be necessary</span>
+<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ExchangeOnlineManagement</span>
+
+<span class="c1"># Connect to Exchange Online - Prompt for credentials or use a predefined credential object</span>
+<span class="c1"># Connect-ExchangeOnline -UserPrincipalName $emailAddress -ShowProgress $true</span>
+
+<span class="c1"># Create inbox rule for each keyword</span>
+<span class="n">ForEach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
+    <span class="err">$</span><span class="n">ruleName</span> <span class="o">=</span> <span class="s2">&quot;Move to Deleted Items - $keyword&quot;</span>
+    
+    <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">emailAddress</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">ruleName</span> <span class="err">`</span>
+        <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keyword</span> <span class="err">`</span>
+        <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Deleted Items&quot;</span>
+
+    <span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Rule created for subjects containing &#39;$keyword&#39;.&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Disconnect if using Exchange Online</span>
+<span class="c1"># Disconnect-ExchangeOnline -Confirm:$false</span>
+</pre></div></td></tr></table></div>
+
+
+### Key Points:
+- **Permissions**: Ensure you have the permissions required to create inbox rules for the specified mailbox.
+- **Exchange Online**: If working in an Office 365 environment, you may need to connect using the `Connect-ExchangeOnline` cmdlet.
+- **Local Exchange**: If you are running this on an on-premises Exchange server, ensure the Exchange Management Shell is available and use `New-InboxRule` directly without the need of `ExchangeOnlineManagement` module.
+- **Credentials**: For a production environment, consider handling credentials securely, possibly by using a stored credential object or certificate permissions.
+
+### Note:
+- Modify the keyword list and email account as needed to fit your specific use cases.
+- Be cautious when handling email rules, as incorrect configurations might lead to misplaced emails. Always test in a safe environment first.
+
+This assumes you are working in a compatible Exchange environment where `New-InboxRule` is available and operational.</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>New-PSSession</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: True</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-DeleteMessage</code>: False</p>
+<h3>Final Answer: True</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-SubjectOrBodyContainsWords</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: True</p>
+<h3>Final Answer: True</h3>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>New-InboxRule</code>: True</p>
+<h2>Final Answer: True</h2>
+</div>
+    
+<div id="tab5" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
+<h2>Output</h2>
+<p>To create a PowerShell script that creates and enables email inbox rules to automatically route incoming emails to the trash if the subjects contain certain keywords, you can leverage the Exchange Online PowerShell module and Microsoft Graph API (for Office 365). Here’s a simplified version of how you might accomplish this. 
+
+First, ensure you have the required modules and permissions:
+
+1. **Setup your environment:**
+   - Install the Exchange Online Management module if it’s not already installed:
+     <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>     <span class="n">Install</span><span class="o">-</span><span class="n">Module</span> <span class="o">-</span><span class="n">Name</span> <span class="n">ExchangeOnlineManagement</span>
+     
+</pre></div></td></tr></table></div>
+
+
+2. **Connect to Exchange Online:**
+   - Use the `Connect-ExchangeOnline` cmdlet to connect to your Exchange Online account. You will need the appropriate credentials.
    
-2. **Modules and Setup**: Ensure that the EXO V2 module is installed on your machine. You can install it using:
    <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -574,529 +1058,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="n">Install</span><span class="o">-</span><span class="n">Module</span> <span class="o">-</span><span class="n">Name</span> <span class="n">ExchangeOnlineManagement</span> <span class="o">-</span><span class="n">Scope</span> <span class="n">CurrentUser</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span>   <span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">UserPrincipalName</span> <span class="n">yourEmail</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span>
    
 </pre></div></td></tr></table></div>
 
 
-3. **Connection**: The script uses your credentials to connect to the Exchange Online environment. Replace `your_email@domain.com` and `user@domain.com` with the appropriate email addresses.
+3. **Create the inbox rule:**
+   - Use the `New-InboxRule` cmdlet to create a rule that checks the subject of incoming emails and moves them to the 'Deleted Items' folder if they match certain keywords.
 
-4. **Testing**: Before running this script in a production environment, test it thoroughly in a test or sandbox environment.
-
-5. **Security**: Be careful with credentials and permissions. Using service accounts with least privilege necessary is preferable for automation scripts.
-
-This script automates the creation of rules that identify specific keywords in email subjects and directs such emails to the Deleted Items folder, effectively keeping the inbox cleaner based on your defined criteria.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>New-PSSession</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: True</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-DeleteMessage</code>: False</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-SubjectOrBodyContainsWords</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>New-InboxRule</code>: True</p>
-<h2>Final Answer: True</h2>
-</div>
-    
-<div id="tab3" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
-<h2>Output</h2>
-<p>To create a PowerShell script that automatically creates and enables inbox rules to move emails to the trash based on certain keywords in the subject, you can utilize the Exchange Online PowerShell module if you are working with Office 365 or Exchange Online. Below is a basic example that demonstrates how to achieve this:
-
-Note that you need the necessary permissions to access and modify mailbox settings, and you'll need to be a part of the organization's administrator group or have the appropriate roles assigned.
-
-First, you need to install the Exchange Online PowerShell module and connect to your Exchange Online environment. Here's a step-by-step guide:
-
-1. **Install the Exchange Online V2 module** if you haven't already.
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Install</span><span class="o">-</span><span class="n">Module</span> <span class="o">-</span><span class="n">Name</span> <span class="n">ExchangeOnlineManagement</span> <span class="o">-</span><span class="n">Scope</span> <span class="n">CurrentUser</span>
-</pre></div></td></tr></table></div>
-
-
-2. **Connect to Exchange Online**.
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Prompt for Office 365 credentials</span>
-<span class="err">$</span><span class="n">UserCredential</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">Credential</span>
-
-<span class="c1"># Connect to Exchange Online</span>
-<span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">Credential</span> <span class="err">$</span><span class="n">UserCredential</span>
-</pre></div></td></tr></table></div>
-
-
-3. **Create the inbox rule**. Use the `New-InboxRule` cmdlet to define a rule that moves emails with specific keywords in the subject to the Deleted Items folder (the equivalent of the trash).
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Define the keywords to look for in the email subjects</span>
-<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;keyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword3&quot;</span><span class="p">)</span> <span class="c1"># Add your specific keywords here</span>
-
-<span class="c1"># Mail user for whom the rule is being created</span>
-<span class="err">$</span><span class="n">mailUser</span> <span class="o">=</span> <span class="s2">&quot;user@example.com&quot;</span>
-
-<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1"># Create a rule for each keyword</span>
-    <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">mailUser</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;MoveToTrash_$($keyword)&quot;</span> <span class="err">`</span>
-        <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keyword</span> <span class="err">`</span>
-        <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Inbox:\Deleted Items&quot;</span>
-<span class="p">}</span>
-</pre></div></td></tr></table></div>
-
-
-4. **Disconnect when done**.
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Disconnect from Exchange Online</span>
-<span class="n">Disconnect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">Confirm</span><span class="p">:</span><span class="err">$</span><span class="n">false</span>
-</pre></div></td></tr></table></div>
-
-
-### Important Notes:
-- **Permissions**: You need to ensure that you have the right permissions to configure inbox rules for users.
-- **Test the script on a single mailbox** before deploying it widely to ensure that it works as expected and does not inadvertently cause any data loss.
-- **Backup existing rules** if necessary, to restore them in case of issues.
-- **Security**: Make sure to handle credentials securely and not hard-code them directly in scripts.
-- **Customization**: Modify the `$keywords` array and `$mailUser` variables to suit your requirements.
-
-This script assumes you're working in an Exchange Online environment. The approach will differ if you're using another email service provider or if your infrastructure is different (e.g., on-premises Exchange Server). If you are dealing with an on-premises Exchange Server, you might adjust this script to use different cmdlets available in the Exchange Management Shell.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>New-PSSession</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: True</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-DeleteMessage</code>: False</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-SubjectOrBodyContainsWords</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>New-InboxRule</code>: True</p>
-<h2>Final Answer: True</h2>
-</div>
-    
-<div id="tab4" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
-<h2>Output</h2>
-<p>Creating a PowerShell script to automatically manage email rules requires the use of Exchange Online, Outlook, or another email service that supports PowerShell scripting for mailbox management. I'll provide an example of how you can create such a script using Exchange Online PowerShell (for Office 365). This script will create an inbox rule that moves emails with specified keywords in their subjects directly to the "Deleted Items" folder.
-
-To get started, ensure you have installed the Exchange Online Management module. You can do this by running the following command in an elevated PowerShell prompt:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">Install</span><span class="o">-</span><span class="n">Module</span> <span class="o">-</span><span class="n">Name</span> <span class="n">ExchangeOnlineManagement</span> <span class="o">-</span><span class="n">Force</span> <span class="o">-</span><span class="n">AllowClobber</span>
-</pre></div></td></tr></table></div>
-
-
-Then, you can use the following script template to create and apply email rules:
+Here is an example script for creating such a rule:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1188,241 +1158,38 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">14</span>
 <span class="normal">15</span>
 <span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Import the Exchange Online module</span>
-<span class="n">Import</span><span class="o">-</span><span class="n">Module</span> <span class="n">ExchangeOnlineManagement</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Connect to Exchange Online</span>
+<span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">UserPrincipalName</span> <span class="n">yourEmail</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span>
 
-<span class="c1"># Connect to Exchange Online</span>
-<span class="c1"># You will be prompted to enter your credentials</span>
-<span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">UserPrincipalName</span> <span class="s2">&quot;your-email@domain.com&quot;</span> <span class="o">-</span><span class="n">ShowProgress</span> <span class="err">$</span><span class="n">true</span>
+<span class="c1"># Define keywords to look for in the subject</span>
+<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;SpamKeyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;SpamKeyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;SpamKeyword3&quot;</span><span class="p">)</span>
 
-<span class="c1"># Define the keywords to filter</span>
-<span class="err">$</span><span class="n">keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;keyword1&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword2&quot;</span><span class="p">,</span> <span class="s2">&quot;keyword3&quot;</span><span class="p">)</span>
+<span class="c1"># Build a script block for conditions</span>
+<span class="err">$</span><span class="n">conditions</span> <span class="o">=</span> <span class="err">$</span><span class="n">keywords</span> <span class="o">-</span><span class="n">join</span> <span class="s2">&quot;&#39; -or Subject -like &#39;&quot;</span>
 
-<span class="c1"># Define the email address for which you want to set the rule</span>
-<span class="err">$</span><span class="n">emailAddress</span> <span class="o">=</span> <span class="s2">&quot;your-email@domain.com&quot;</span>
-
-<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">keywords</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1"># Create the rule name using the keyword</span>
-    <span class="err">$</span><span class="n">ruleName</span> <span class="o">=</span> <span class="s2">&quot;Move to Trash: $keyword&quot;</span>
-    
-    <span class="c1"># Create a new inbox rule</span>
-    <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">ruleName</span> <span class="err">`</span>
-                  <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">emailAddress</span> <span class="err">`</span>
-                  <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keyword</span> <span class="err">`</span>
-                  <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Inbox/Deleted Items&quot;</span> <span class="err">`</span>
-                  <span class="o">-</span><span class="n">StopRuleProcessing</span> <span class="err">$</span><span class="n">false</span>
-<span class="p">}</span>
+<span class="c1"># Create a new inbox rule</span>
+<span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Name</span> <span class="s2">&quot;MoveSpamToTrash&quot;</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="s2">&quot;yourEmail@example.com&quot;</span> <span class="err">`</span>
+    <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keywords</span> <span class="err">`</span>
+    <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Inbox:\Deleted Items&quot;</span> <span class="err">`</span>
+    <span class="o">-</span><span class="n">Priority</span> <span class="mi">0</span>
 
 <span class="c1"># Disconnect from Exchange Online</span>
 <span class="n">Disconnect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">Confirm</span><span class="p">:</span><span class="err">$</span><span class="n">false</span>
 </pre></div></td></tr></table></div>
 
 
-### Explanation:
-- **Exchange Online Module**: This module is used to connect to Exchange Online where your mailbox resides.
-- **Connect-ExchangeOnline**: This cmdlet connects you to Exchange Online. You need to replace `your-email@domain.com` with your email address and authenticate.
-- **New-InboxRule**: This cmdlet creates a new inbox rule for the specified mailbox, checking if the subject contains any of the specified keywords and moving matching emails to the "Deleted Items" folder. The `-StopRuleProcessing $false` parameter ensures that other rules can still be processed after this rule.
-- **Disconnect-ExchangeOnline**: Always disconnect your session when done.
-
-### Important:
-- Replace the example email (`your-email@domain.com`) and keywords (`"keyword1", "keyword2", "keyword3"`) with your actual data.
-- Be cautious when automatically deleting or moving emails based on keyword criteria to avoid accidental data loss.
-- You might need administrative privileges or appropriate permissions to apply these rules if you are managing this for multiple accounts or organization-wide.
-
-### Note:
-If you are using a different email service (e.g., on-premises Exchange, other IMAP/SMTP services), the script and approach would differ. Make sure to adapt it to fit the API or management tools available for your specific email provider.</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>New-PSSession</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>Connect-ExchangeOnline</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-MoveToFolder</code>: True</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-DeleteMessage</code>: False</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-SubjectOrBodyContainsWords</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>-SubjectContainsWords</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>New-InboxRule</code>: True</p>
-<h2>Final Answer: True</h2>
-</div>
-    
-<div id="tab5" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Create a Powershell script that creates and enables email inbox rules that automatically route incoming emails to the trash if the subjects contain certain keywords</p>
-<h2>Output</h2>
-<p>Creating a PowerShell script to automatically route emails to the trash based on keywords in the subject can be done using Exchange Online PowerShell module if you are working with Office 365 or Exchange Server with the appropriate permissions. Below is a step-by-step script example to achieve this:
-
-### Prerequisites:
-1. Install the Exchange Online PowerShell module.
-2. Connect to your Exchange Online or Exchange Server.
-3. Ensure that you have the necessary administrative privileges to create inbox rules.
-
-### Example PowerShell Script:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Define variables for email filtering</span>
-<span class="err">$</span><span class="n">UserEmail</span> <span class="o">=</span> <span class="s2">&quot;user@example.com&quot;</span>  <span class="c1"># Change to the target user&#39;s email</span>
-<span class="err">$</span><span class="n">Keywords</span> <span class="o">=</span> <span class="o">@</span><span class="p">(</span><span class="s2">&quot;spam&quot;</span><span class="p">,</span> <span class="s2">&quot;promotion&quot;</span><span class="p">,</span> <span class="s2">&quot;newsletter&quot;</span><span class="p">)</span>  <span class="c1"># Add your keywords here</span>
-
-<span class="c1"># Connect to Exchange Online (run this once at the beginning)</span>
-<span class="c1"># Note: Run Connect-ExchangeOnline interactively to log in</span>
-<span class="k">try</span> <span class="p">{</span>
-    <span class="n">Connect</span><span class="o">-</span><span class="n">ExchangeOnline</span> <span class="o">-</span><span class="n">UserPrincipalName</span> <span class="n">admin</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span> <span class="c1"># Use your admin or authorized account</span>
-<span class="p">}</span> <span class="n">catch</span> <span class="p">{</span>
-    <span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Failed to connect to Exchange Online. Please check your credentials and permissions.`n&quot;</span> <span class="o">-</span><span class="n">ForegroundColor</span> <span class="n">Red</span>
-    <span class="n">exit</span>
-<span class="p">}</span>
-
-<span class="c1"># Let&#39;s create a new Inbox rule for each keyword</span>
-<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">keyword</span> <span class="ow">in</span> <span class="err">$</span><span class="n">Keywords</span><span class="p">)</span> <span class="p">{</span>
-    <span class="err">$</span><span class="n">ruleName</span> <span class="o">=</span> <span class="s2">&quot;Move to Trash: $keyword&quot;</span>
-    
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="n">New</span><span class="o">-</span><span class="n">InboxRule</span> <span class="o">-</span><span class="n">Mailbox</span> <span class="err">$</span><span class="n">UserEmail</span> <span class="o">-</span><span class="n">Name</span> <span class="err">$</span><span class="n">ruleName</span> <span class="err">`</span>
-            <span class="o">-</span><span class="n">SubjectContainsWords</span> <span class="err">$</span><span class="n">keyword</span> <span class="err">`</span>
-            <span class="o">-</span><span class="n">MoveToFolder</span> <span class="s2">&quot;Inbox/Trash&quot;</span>  <span class="c1"># Make sure &quot;Trash&quot; is the correct folder name as it can vary</span>
-        <span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Rule &#39;$ruleName&#39; created successfully for &#39;$keyword&#39;.&quot;</span> <span class="o">-</span><span class="n">ForegroundColor</span> <span class="n">Green</span>
-    <span class="p">}</span> <span class="n">catch</span> <span class="p">{</span>
-        <span class="n">Write</span><span class="o">-</span><span class="n">Host</span> <span class="s2">&quot;Failed to create rule for &#39;$keyword&#39;: $_&quot;</span> <span class="o">-</span><span class="n">ForegroundColor</span> <span class="n">Red</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1"># If needed, log out from the session if you are done</span>
-<span class="c1"># Disconnect-ExchangeOnline -Confirm:$false</span>
-</pre></div></td></tr></table></div>
-
-
 ### Important Notes:
-- **Mailbox Name**: Ensure the `MoveToFolder` path (e.g., `"Inbox/Trash"`) is correct. It might differ based on settings or if you've renamed those folders.
-- **Permissions**: You must have the proper permissions to manage mailbox rules for the user.
-- **Connections**: Make sure you're properly authenticated to use the `Connect-ExchangeOnline` command. This might require running the command interactively with correct credentials.
-- **Testing**: Always test the script with a few emails before rolling it out to ensure it works correctly and doesn’t inadvertently delete critical emails.
-- **Logging**: Implement additional logging if this will be run as part of a scheduled task or automation pipeline.
 
-This script assumes the user's “Trash” folder is directly under the "Inbox" folder hierarchy. Adjust the folder path as necessary for your environment.</p>
+- **Permissions**: Ensure you have the necessary permissions to create inbox rules.
+- **Admin Rights**: Exchange admin rights may be required to create rules for mailboxes other than your own.
+- **Testing**: Always test such scripts in a non-production environment if possible to avoid accidental email loss.
+- **Handling Multiple Users**: If you need to set this rule for multiple users, you’d loop through a list of email addresses.
+
+### Adjust with Graph API (Optional):
+
+For enterprise environments, using the Microsoft Graph API might be preferred for more complex rule settings and managing large numbers of users. You will need to register an application in Azure AD and use OAuth 2.0 for authentication to use Graph API.
+
+Consult official Microsoft documentation for customized implementations and recent changes in commands and APIs.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>

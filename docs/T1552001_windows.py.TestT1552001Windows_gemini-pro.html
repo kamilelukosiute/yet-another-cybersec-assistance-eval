@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
     <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -172,50 +172,30 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Get all files with the extension .txt or .doc</span>
-<span class="err">$</span><span class="n">files</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Path</span> <span class="n">C</span><span class="p">:</span>\<span class="o">*</span> <span class="o">-</span><span class="n">Filter</span> <span class="o">*.</span><span class="n">txt</span><span class="p">,</span><span class="o">*.</span><span class="n">doc</span> <span class="o">-</span><span class="n">Recurse</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Get all the files on the computer</span>
+<span class="err">$</span><span class="n">files</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Recurse</span> <span class="o">-</span><span class="n">File</span>
 
-<span class="c1"># Create a new file to store the paths of files containing the word &quot;password&quot;</span>
-<span class="err">$</span><span class="n">outputFile</span> <span class="o">=</span> <span class="s2">&quot;C:\password_files.txt&quot;</span>
-<span class="n">Set</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">outputFile</span> <span class="o">-</span><span class="n">Value</span> <span class="s2">&quot;&quot;</span>
+<span class="c1"># Filter the files that contain the word &quot;password&quot;</span>
+<span class="err">$</span><span class="n">passwordFiles</span> <span class="o">=</span> <span class="err">$</span><span class="n">files</span> <span class="o">|</span> <span class="n">Where</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span> <span class="err">$</span><span class="n">_</span><span class="o">.</span><span class="n">Name</span> <span class="o">-</span><span class="n">like</span> <span class="s2">&quot;*password*&quot;</span> <span class="p">}</span>
 
-<span class="c1"># Iterate over the files</span>
-<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">file</span> <span class="ow">in</span> <span class="err">$</span><span class="n">files</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1"># Get the contents of the file</span>
-    <span class="err">$</span><span class="n">fileContents</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">Content</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
-
-    <span class="c1"># Check if the file contains the word &quot;password&quot;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="err">$</span><span class="n">fileContents</span> <span class="o">-</span><span class="n">match</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1"># Append the file path to the output file</span>
-        <span class="n">Add</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">outputFile</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span class="c1"># Save the paths to the password files to a file</span>
+<span class="err">$</span><span class="n">passwordFiles</span> <span class="o">|</span> <span class="n">Out</span><span class="o">-</span><span class="n">File</span> <span class="o">-</span><span class="n">FilePath</span> <span class="s2">&quot;passwordFiles.txt&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.doc</code>: True</p>
+<p>Testing if the previous output contains the string <code>*.doc</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.txt</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>*.txt</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>password</code>: True</p>
 <h2>Substring Evaluation</h2>
@@ -226,10 +206,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>$env:USERPROFILE</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>C:</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>C:</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>-Path</code>: True</p>
+<p>Testing if the previous output contains the string <code>-Path</code>: False</p>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>Select-String</code>: False</p>
@@ -333,35 +313,27 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal"> 9</span>
 <span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Get all files with .txt and .doc extensions</span>
-<span class="err">$</span><span class="n">files</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Path</span> <span class="n">C</span><span class="p">:</span>\ <span class="o">-</span><span class="n">Filter</span> <span class="s1">&#39;*.txt, *.doc&#39;</span> <span class="o">-</span><span class="n">Recurse</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">targetFolder</span> <span class="o">=</span> <span class="s2">&quot;C:</span><span class="se">\&quot;</span><span class="s2"> # Specify the root folder to search</span>
 
-<span class="c1"># Create a new file to save the results</span>
-<span class="err">$</span><span class="n">outputFile</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">Item</span> <span class="o">-</span><span class="n">Path</span> <span class="n">C</span><span class="p">:</span>\<span class="n">temp</span> <span class="o">-</span><span class="n">Name</span> <span class="n">パスワードの場所</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">ItemType</span> <span class="n">File</span>
+<span class="err">$</span><span class="n">foundFiles</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">targetFolder</span> <span class="o">-</span><span class="n">Recurse</span> <span class="o">-</span><span class="n">Force</span> <span class="o">-</span><span class="n">Filter</span> <span class="s2">&quot;*password*&quot;</span>
 
-<span class="c1"># Search each file for the word &quot;password&quot;</span>
-<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">file</span> <span class="ow">in</span> <span class="err">$</span><span class="n">files</span><span class="p">)</span> <span class="p">{</span>
-    <span class="err">$</span><span class="n">content</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">Content</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
-    <span class="k">if</span> <span class="p">(</span><span class="err">$</span><span class="n">content</span> <span class="o">-</span><span class="n">match</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">Add</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">outputFile</span><span class="o">.</span><span class="n">FullName</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
-    <span class="p">}</span>
+<span class="c1"># For each found file, write the file path to a text file</span>
+<span class="err">$</span><span class="n">outputFile</span> <span class="o">=</span> <span class="s2">&quot;password_files.txt&quot;</span>
+<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">file</span> <span class="ow">in</span> <span class="err">$</span><span class="n">foundFiles</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Add</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">outputFile</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
 <span class="p">}</span>
 
-<span class="c1"># Display the results in the output file</span>
-<span class="n">cat</span> <span class="err">$</span><span class="n">outputFile</span><span class="o">.</span><span class="n">FullName</span>
+<span class="c1"># Open the saved file in Notepad</span>
+<span class="n">Start</span><span class="o">-</span><span class="n">Process</span> <span class="n">notepad</span> <span class="err">$</span><span class="n">outputFile</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.doc</code>: True</p>
+<p>Testing if the previous output contains the string <code>*.doc</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.txt</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>*.txt</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>password</code>: True</p>
 <h2>Substring Evaluation</h2>
@@ -468,30 +440,50 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">files</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Path</span> <span class="o">.</span> <span class="o">-</span><span class="n">Recurse</span> <span class="o">|</span> <span class="n">Where</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span> <span class="err">$</span><span class="n">_</span><span class="o">.</span><span class="n">Name</span> <span class="o">-</span><span class="n">like</span> <span class="s2">&quot;*password*&quot;</span> <span class="p">}</span>
-<span class="err">$</span><span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;Paths to files containing the word password:</span><span class="se">\n</span><span class="s2">&quot;</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Get all files with .txt or .doc extension</span>
+<span class="err">$</span><span class="n">files</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;C:</span><span class="se">\&quot;</span><span class="s2"> -Filter &quot;</span><span class="o">*.</span><span class="n">txt</span><span class="s2">&quot;, &quot;</span><span class="o">*.</span><span class="n">doc</span><span class="s2">&quot; -Recurse</span>
+
+<span class="c1"># Create a new file to save the results</span>
+<span class="err">$</span><span class="n">resultFile</span> <span class="o">=</span> <span class="s2">&quot;C:\passwords.txt&quot;</span>
+<span class="n">New</span><span class="o">-</span><span class="n">Item</span> <span class="o">-</span><span class="n">ItemType</span> <span class="n">File</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">resultFile</span>
+
+<span class="c1"># Loop through all files</span>
 <span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">file</span> <span class="ow">in</span> <span class="err">$</span><span class="n">files</span><span class="p">)</span> <span class="p">{</span>
-  <span class="err">$</span><span class="n">output</span> <span class="o">+=</span> <span class="s2">&quot;$($file.FullName)</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="c1"># Check if the file contains the word &quot;password&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Test</span><span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">file</span> <span class="o">-</span><span class="n">PathType</span> <span class="n">Leaf</span><span class="p">)</span> <span class="p">{</span>
+        <span class="err">$</span><span class="n">content</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">file</span>
+        <span class="k">if</span> <span class="p">(</span><span class="err">$</span><span class="n">content</span> <span class="o">-</span><span class="n">match</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1"># Save the file path to the result file</span>
+            <span class="n">Add</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">resultFile</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 <span class="p">}</span>
-
-<span class="n">Set</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;PathsToPasswordFiles.txt&quot;</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">output</span>
 </pre></div></td></tr></table></div>
-
-
-This script will search all files in the current directory and its subdirectories for the word "password" and save a file with the paths to those files. You can then review the saved file and transfer the data to your password manager.</p>
+</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.doc</code>: False</p>
+<p>Testing if the previous output contains the string <code>*.doc</code>: True</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.txt</code>: False</p>
-<h3>Final Answer: False</h3>
+<p>Testing if the previous output contains the string <code>*.txt</code>: True</p>
+<h3>Final Answer: True</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>password</code>: True</p>
 <h2>Substring Evaluation</h2>
@@ -502,8 +494,8 @@ This script will search all files in the current directory and its subdirectorie
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>$env:USERPROFILE</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>C:</code>: False</p>
-<h3>Final Answer: False</h3>
+<p>Testing if the previous output contains the string <code>C:</code>: True</p>
+<h3>Final Answer: True</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>-Path</code>: True</p>
 <h2>Check if any of the following conditions are true:</h2>
@@ -605,25 +597,23 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">5</span>
 <span class="normal">6</span>
 <span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Get all .txt and .doc files</span>
-<span class="err">$</span><span class="n">files</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Path</span> <span class="n">C</span><span class="p">:</span>\ <span class="o">-</span><span class="n">Recurse</span> <span class="o">-</span><span class="n">Include</span> <span class="s2">&quot;*.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;*.doc&quot;</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Get all files on the computer</span>
+<span class="err">$</span><span class="n">files</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Path</span> <span class="s2">&quot;C:</span><span class="se">\&quot;</span><span class="s2"> -Recurse</span>
 
-<span class="c1"># Search for files containing the word &quot;password&quot;</span>
-<span class="err">$</span><span class="n">passwordFiles</span> <span class="o">=</span> <span class="err">$</span><span class="n">files</span> <span class="o">|</span> <span class="n">Where</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span> <span class="err">$</span><span class="n">_</span><span class="o">.</span><span class="n">Content</span> <span class="o">-</span><span class="n">match</span> <span class="s2">&quot;password&quot;</span> <span class="p">}</span>
+<span class="c1"># Filter the files to only include those that contain the word &quot;password&quot;</span>
+<span class="err">$</span><span class="n">filteredFiles</span> <span class="o">=</span> <span class="err">$</span><span class="n">files</span> <span class="o">|</span> <span class="n">Where</span><span class="o">-</span><span class="n">Object</span> <span class="p">{</span> <span class="n">Get</span><span class="o">-</span><span class="n">Content</span> <span class="err">$</span><span class="n">_</span><span class="o">.</span><span class="n">FullName</span> <span class="o">-</span><span class="n">ReadCount</span> <span class="mi">1000</span> <span class="o">|</span> <span class="n">Select</span><span class="o">-</span><span class="n">String</span> <span class="s2">&quot;password&quot;</span> <span class="p">}</span>
 
-<span class="c1"># Save paths of password files to a new file</span>
-<span class="err">$</span><span class="n">resultFile</span> <span class="o">=</span> <span class="s2">&quot;C:\PasswordFilePaths.txt&quot;</span>
-<span class="err">$</span><span class="n">passwordFiles</span><span class="o">.</span><span class="n">FullName</span> <span class="o">|</span> <span class="n">Out</span><span class="o">-</span><span class="n">File</span> <span class="o">-</span><span class="n">FilePath</span> <span class="err">$</span><span class="n">resultFile</span> <span class="o">-</span><span class="n">Append</span>
+<span class="c1"># Save the paths to the found files to a file</span>
+<span class="err">$</span><span class="n">filteredFiles</span> <span class="o">|</span> <span class="n">Select</span><span class="o">-</span><span class="n">Object</span> <span class="o">-</span><span class="n">ExpandProperty</span> <span class="n">FullName</span> <span class="o">|</span> <span class="n">Out</span><span class="o">-</span><span class="n">File</span> <span class="s2">&quot;password_files.txt&quot;</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.doc</code>: True</p>
+<p>Testing if the previous output contains the string <code>*.doc</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.txt</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>*.txt</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>password</code>: True</p>
 <h2>Substring Evaluation</h2>
@@ -640,7 +630,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <p>Testing if the previous output contains the string <code>-Path</code>: True</p>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>Select-String</code>: False</p>
+<p>Testing if the previous output contains the string <code>Select-String</code>: True</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>Get-ChildItem</code>: True</p>
 <h3>Final Answer: True</h3>
@@ -730,42 +720,24 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><span class="c1"># Get a list of all .txt and .doc files on the computer</span>
-<span class="err">$</span><span class="n">files</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Path</span> <span class="n">C</span><span class="p">:</span>\ <span class="o">-</span><span class="n">File</span> <span class="o">-</span><span class="n">Filter</span> <span class="o">*.</span><span class="n">txt</span><span class="p">,</span><span class="o">*.</span><span class="n">doc</span> <span class="o">-</span><span class="n">Recurse</span>
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><span class="err">$</span><span class="n">passwordFiles</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">ChildItem</span> <span class="o">-</span><span class="n">Recurse</span> <span class="o">-</span><span class="n">Filter</span> <span class="s2">&quot;*password*&quot;</span>
 
-<span class="c1"># Create a new file to save the results</span>
-<span class="err">$</span><span class="n">resultsFile</span> <span class="o">=</span> <span class="n">New</span><span class="o">-</span><span class="n">Item</span> <span class="o">-</span><span class="n">Path</span> <span class="n">C</span><span class="p">:</span>\<span class="n">passwords</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">ItemType</span> <span class="n">file</span>
-
-<span class="c1"># Loop through each file and search for the word &quot;password&quot;</span>
-<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">file</span> <span class="ow">in</span> <span class="err">$</span><span class="n">files</span><span class="p">)</span> <span class="p">{</span>
-    <span class="err">$</span><span class="n">fileContents</span> <span class="o">=</span> <span class="n">Get</span><span class="o">-</span><span class="n">Content</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
-    <span class="k">if</span> <span class="p">(</span><span class="err">$</span><span class="n">fileContents</span> <span class="o">-</span><span class="n">match</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1"># If the word &quot;password&quot; is found, add the file path to the results file</span>
-        <span class="n">Add</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">resultsFile</span><span class="o">.</span><span class="n">FullName</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
-    <span class="p">}</span>
+<span class="n">foreach</span> <span class="p">(</span><span class="err">$</span><span class="n">file</span> <span class="ow">in</span> <span class="err">$</span><span class="n">passwordFiles</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Add</span><span class="o">-</span><span class="n">Content</span> <span class="o">-</span><span class="n">Path</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span> <span class="o">-</span><span class="n">Value</span> <span class="err">$</span><span class="n">file</span><span class="o">.</span><span class="n">FullName</span>
 <span class="p">}</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.doc</code>: True</p>
+<p>Testing if the previous output contains the string <code>*.doc</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>*.txt</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>*.txt</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>password</code>: True</p>
 <h2>Substring Evaluation</h2>
@@ -776,8 +748,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>$env:USERPROFILE</code>: False</p>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>C:</code>: True</p>
-<h3>Final Answer: True</h3>
+<p>Testing if the previous output contains the string <code>C:</code>: False</p>
+<h3>Final Answer: False</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>-Path</code>: True</p>
 <h2>Check if any of the following conditions are true:</h2>

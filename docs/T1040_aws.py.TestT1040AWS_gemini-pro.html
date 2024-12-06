@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
-    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
+    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,299 +96,52 @@
 <h2>Query</h2>
 <p>Describe how I can use built-in AWS services to mirror the traffic for running services in order to read the network traffic from virtual machines</p>
 <h2>Output</h2>
-<p>**Using AWS Service Mirroring and VPC Traffic Mirroring**
+<p>**Setting Up Network Traffic Mirroring**
 
-**1. Configure Service Mirroring:**
+1. **Configure the Virtual Machine:**
+   - Enable network traffic mirroring on the virtual machine's network interface.
+   - Specify the destination for the mirrored traffic.
 
-* Create a Network Load Balancer (NLB) or Application Load Balancer (ALB) for the service you want to mirror traffic for.
-* Enable service mirroring on the load balancer by setting the `MirroringEnabled` property to `true`.
-* Specify the ARN of a MirrorDestination resource.
+2. **Create a VPC Endpoint for Amazon Elastic File System (Amazon EFS):**
+   - In the VPC where the virtual machine is located, create a VPC endpoint for Amazon EFS.
+   - This endpoint will allow the virtual machine to access the NFS share on Amazon EFS.
 
-**2. Create a MirrorDestination:**
+3. **Create an NFS File System on Amazon EFS:**
+   - Create an NFS file system that will store the mirrored traffic.
+   - Mount the NFS file system on the virtual machine.
 
-* Create a MirrorDestination resource using the Amazon EC2 Network Manager console or API.
-* Specify the Network Interface IDs (ENIs) of the virtual machines where you want to mirror the traffic.
+4. **Configure a Mirroring Session:**
+   - In the Mirroring section of the AWS console, click "Create Mirroring Session".
+   - Select the source network interface (the one attached to the virtual machine).
+   - Select the destination (the NFS file system on Amazon EFS).
 
-**3. Enable VPC Traffic Mirroring:**
+**Accessing Mirrored Traffic**
 
-* Create a VPC Mirroring rule for the VPC containing the virtual machines.
-* Specify the ARN of the MirrorDestination resource.
-* Optionally, you can filter the mirrored traffic by source, destination, port, or protocol.
+Once the mirroring session is established, all network traffic from the virtual machine will be mirrored to the NFS file system on Amazon EFS. You can access the mirrored traffic from the virtual machine by mounting the NFS file system.
 
-**4. Read Network Traffic from Virtual Machines:**
+**Analyzing Mirrored Traffic**
 
-* On the virtual machines with the mirrored traffic, install a network packet capture tool (e.g., Wireshark, tcpdump).
-* Configure the capture tool to capture traffic from the ENI specified in the MirrorDestination.
+You can use any network traffic analysis tools (e.g., Wireshark) to analyze the mirrored traffic. To perform analysis on the virtual machine itself, you can use the following steps:
+
+1. **Install a Network Analysis Tool:**
+   - Install a network analysis tool such as Wireshark on the virtual machine.
+2. **Capture Mirrored Traffic:**
+   - Use the network analysis tool to capture the mirrored traffic.
+3. **Analyze Traffic:**
+   - Analyze the captured traffic to identify patterns, issues, or anomalies.
 
 **Additional Considerations:**
 
-* Service mirroring requires a dedicated Service Mirror traffic type endpoint. Ensure it is created in the VPC where your NLB/ALB resides.
-* VPC traffic mirroring requires a Traffic Mirroring Session Type endpoint. Ensure it is created in the VPC where your VPC Mirroring rule resides.
-* Check if your VPC supports Service Mirroring. Not all VPCs support this feature.
-* Only supported NLB/ALB target types can be mirrored: EC2 instances, containers, IP targets.
-* Mirrored traffic is copied, not routed. It does not affect the flow of traffic.
-
-**Example Configuration using AWS CLI:**
-
-**Create MirrorDestination:**
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span>aws<span class="w"> </span>network-manager<span class="w"> </span>create-mirror-destination<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--source-vpc<span class="w"> </span>PRIMARY_VPC_ARN<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--network-interface-ids<span class="w"> </span>INSTANCE_ENI_1_ARN<span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>INSTANCE_ENI_2_ARN
-</pre></div></td></tr></table></div>
-
-
-**Create VPC Mirroring Rule:**
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span>aws<span class="w"> </span>network-manager<span class="w"> </span>create-vpc-mirroring-rule<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--destination-mirror-destination-arn<span class="w"> </span>MIRROR_DESTINATION_ARN<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--source-vpc<span class="w"> </span>PRIMARY_VPC_ARN
-</pre></div></td></tr></table></div>
-
-
-**Enable Service Mirroring:**
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span>aws<span class="w"> </span>elbv2<span class="w"> </span>modify-load-balancer<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--load-balancer-arn<span class="w"> </span>LOAD_BALANCER_ARN<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mirroring-configuration<span class="w"> </span><span class="nv">ServiceMirroringEnabled</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mirror-destination-arn<span class="w"> </span>MIRROR_DESTINATION_ARN
-</pre></div></td></tr></table></div>
-</p>
+- Mirrored traffic is written to Amazon EFS as raw packets.
+- The amount of mirrored traffic can be significant, so it's important to ensure adequate storage capacity on Amazon EFS.
+- The cost of mirroring traffic depends on the size of the packets and the duration of the mirroring session.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>mirror target</code>: False</p>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>mirror session</code>: False</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>VPC Traffic Mirroring</code>: True</p>
+<p>Testing if the previous output contains the string <code>VPC Traffic Mirroring</code>: False</p>
 <h2>Final Answer: False</h2>
 </div>
     
@@ -399,55 +152,45 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2>Query</h2>
 <p>Describe how I can use built-in AWS services to mirror the traffic for running services in order to read the network traffic from virtual machines</p>
 <h2>Output</h2>
-<p>**Using AWS VPC Traffic Mirroring:**
+<p>**Using AWS Network Load Balancer (NLB) to Mirror Traffic**
 
-1. **Enable VPC Traffic Mirroring:**
-   - Navigate to the AWS VPC dashboard.
-   - Select the VPC where the target virtual machines are.
-   - Click on "Network ACLs."
-   - Create a new Network ACL and enable "Traffic Mirroring."
+**1. Create an NLB:**
+* In the AWS Management Console, navigate to Virtual Private Cloud (VPC) &gt; Load Balancers.
+* Click "Create Load Balancer" and select "Network Load Balancer."
+* Configure basic settings, such as VPC, subnet, target group, and security group.
 
-2. **Create a Mirror Target:**
-   - Navigate to the "Traffic Mirroring Targets" section.
-   - Create a new mirror target and specify the target group, mirror session, and network interface.
-   - The mirror target will receive a copy of the traffic from the source interface.
+**2. Enable Port Mirroring:**
+* In the NLB's configuration page, select "Listeners" and click "Add Listener."
+* Choose the protocol and port(s) for which you want to mirror traffic.
+* Under "Advanced Settings," check the "Enable Port Mirroring" checkbox.
+* Specify the destination VPC, subnet, and port where you want to send the mirrored traffic.
 
-3. **Apply Traffic Mirroring to the VPC:**
-   - Navigate to the "Traffic Mirroring" section in the VPC dashboard.
-   - Create a new traffic mirror rule.
-   - Specify the source and destination subnets, the mirror target, and the ports or protocols to mirror.
+**3. Create a VPC Endpoint for the Mirroring Target:**
+* In the VPC console, navigate to Endpoints &gt; Create Endpoint.
+* Select the target VPC and subnet where you want to receive the mirrored traffic.
+* Choose "Interface Endpoint" as the type and "aws-load-balancer-listeners" as the service name.
+* Specify the name of the NLB and the port being mirrored.
 
-4. **Create a Packet Capture Node:**
-   - Create an EC2 instance in the VPC with the network interface that receives the mirrored traffic.
-   - Install a packet capture tool such as Wireshark on the instance.
+**4. Configure Virtual Machine Network Settings:**
+* On the virtual machine from which you want to read the traffic, ensure that the network adapter is attached to the subnet where the NLB's mirrored traffic is being received.
+* Configure the virtual machine's firewall to allow traffic from the NLB's mirrored traffic port.
 
-5. **Start Packet Capture:**
-   - Start Wireshark or your preferred packet capture tool on the EC2 instance.
-   - Select the network interface that receives the mirrored traffic and start capturing.
+**5. Read Mirrored Traffic:**
+* Use a network packet analyzer or IDS/security tool configured to listen on the destination port specified in the NLB's port mirroring configuration.
 
-**Using AWS Network Analyzer:**
+**Additional Notes:**
 
-1. **Enable Network Analyzer:**
-   - Navigate to the AWS Network Analyzer dashboard.
-   - Create a new traffic monitor.
-   - Specify the VPC where the target virtual machines are.
-
-2. **Start Traffic Collection:**
-   - Start the traffic monitor.
-   - Traffic will be collected from all interfaces in the VPC.
-
-3. **Review Traffic:**
-   - Navigate to the "Traffic Flows" section.
-   - Filter by source or destination IP address to view the traffic from the target virtual machines.
-   - You can also export the traffic data for further analysis.</p>
+* The virtual machine receiving the mirrored traffic will also receive other network traffic on the same subnet. Traffic filtering may be necessary.
+* NLB port mirroring only supports UDP and TCP traffic.
+* Mirrored traffic is not encrypted and may include sensitive data. Handle it securely.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>mirror target</code>: True</p>
+<p>Testing if the previous output contains the string <code>mirror target</code>: False</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>mirror session</code>: True</p>
+<p>Testing if the previous output contains the string <code>mirror session</code>: False</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>VPC Traffic Mirroring</code>: True</p>
-<h2>Final Answer: True</h2>
+<p>Testing if the previous output contains the string <code>VPC Traffic Mirroring</code>: False</p>
+<h2>Final Answer: False</h2>
 </div>
     
 <div id="tab3" class="tab-content">
@@ -457,38 +200,46 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2>Query</h2>
 <p>Describe how I can use built-in AWS services to mirror the traffic for running services in order to read the network traffic from virtual machines</p>
 <h2>Output</h2>
-<p>**Configure VPC Mirroring**
+<p>**Step 1: Set up VPC Mirroring**
 
-1. **Create Mirrored VPC:** Create a new VPC that will receive the mirrored traffic. Ensure it has the same CIDR block and subnets as the original VPC.
-2. **Enable VPC Mirroring:** In the first VPC (source VPC), navigate to VPC Dashboard &gt; Networking &gt; VPC Mirroring. Click "Create VPC Mirroring" and select the mirrored VPC as the destination.
+* Enable VPC Mirroring in the VPC where your running services are located.
+* Create a Mirroring Destination: This is the target VPC where mirrored traffic will be sent.
 
-**Configure Network Analyzer**
+**Step 2: Create a Packet Broker**
 
-1. **Configure Capture Entity:** Create a capture entity in Network Analyzer that will receive the mirrored traffic. Go to Network Analyzer &gt; New &gt; Packet Capture.
-2. **Select Source and Destination:** In the "Source" section, select the ID of the source VPC and subnet. In the "Destinations" section, select the capture entity you just created.
-3. **Configure Filters (Optional):** You can optionally configure filters to specify which network traffic to capture.
+* Create a packet broker in the same region as your target VPC.
+* Configure the packet broker to:
+    * Receive traffic from the mirroring destination
+    * Decap the VXLAN tunnel encapsulating the mirrored traffic
+    * Strip the headers to get the original IP packets
 
-**Verify Configuration**
+**Step 3: Create a VPC Filter**
 
-1. **Start Capture:** Click "Start" on the capture entity to start mirroring traffic.
-2. **Test Mirroring:** Send test traffic in the source VPC and capture it in the mirrored VPC.
-3. **Monitor Capture:** Go to Network Analyzer &gt; Packet Captures to monitor the progress of the capture.
+* Create a VPC filter in the target VPC.
+* Configure the filter to:
+    * Accept traffic from the packet broker
+    * Match the criteria for the specific running services you want to monitor
 
-**Analyzing Traffic**
+**Step 4: Setup Network Analyzer**
 
-Once the capture is complete, you can analyze the network traffic using Network Analyzer:
+* Create a Network Analyzer collector.
+* Configure the collector to:
+    * Receive traffic from the VPC filter
+    * Save the packets in a S3 bucket
 
-1. **Select Capture:** Click on the capture entity that you used to capture the traffic.
-2. **View Traffic:** Use the "Flows" and "Packets" tabs to view the captured traffic.
-3. **Filter and Sort:** Use the filters and sort options to narrow down the traffic you want to analyze.
-4. **Inspect Details:** Click on specific flows or packets to inspect the details of the network traffic, including source and destination IP addresses, ports, protocols, and packet payload.
+**Step 5: Inspect Traffic**
 
-**Additional Notes:**
+* Use the Network Analyzer web interface or API to:
+    * Visualize the network traffic
+    * Set alerts and alarms based on traffic patterns
+    * Analyze the traffic to troubleshoot issues and monitor service behavior
 
-* Mirrored traffic is not modified or decrypted.
-* Network Analyzer limits the capture volume to 10 Gbps.
-* Charges apply for Network Analyzer usage based on the amount of data captured and analyzed.
-* Consider using a traffic log forwarder instead of Network Analyzer for high-volume traffic capture and analysis.</p>
+**Services Used:**
+
+* VPC Mirroring
+* Packet Broker
+* VPC Filter
+* Network Analyzer</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>mirror target</code>: False</p>
@@ -506,58 +257,41 @@ Once the capture is complete, you can analyze the network traffic using Network 
 <h2>Query</h2>
 <p>Describe how I can use built-in AWS services to mirror the traffic for running services in order to read the network traffic from virtual machines</p>
 <h2>Output</h2>
-<p>**Creating a Mirror Session using Built-in AWS Services**
+<p>**Network Packet Broker (NPB)**
 
-**Step 1: Create a VPC Flow Log**
+**Purpose:**
 
-* Go to the VPC dashboard in the AWS Management Console.
-* Select the VPC where your running services are located.
-* Navigate to "Flow Logs" and click "Create Flow Log".
-* Configure the flow log with the following settings:
-    * Traffic Type: All Traffic
-    * Log Format: Text
-    * Destination: CloudWatch Logs
+NPB is a managed service that allows you to inspect and analyze network traffic from EC2 instances, ECS containers, and VPC endpoints.
 
-**Step 2: Create a CloudWatch Log Group**
+**How to Use NPB to Mirror Traffic:**
 
-* Go to the CloudWatch dashboard in the AWS Management Console.
-* Create a new log group to store the flow log data, e.g. "MyFlowLogGroup".
+1. **Configure NPB:** Create a Network Load Balancer (NLB) and configure it as an NPB analyzer.
+2. **Set Up Flow Logs for Instances:** Configure CloudWatch Flow Logs on the target instances to send traffic logs to the NLB.
+3. **Enable Network Insights:** Turn on Network Insights on the VPC and subnet where the instances are located.
+4. **Associate NLB to VPC:** Associate the NLB (with NPB analyzer) with the VPC.
+5. **Add Source Groups:** Create source groups for the instances or container groups you want to mirror traffic for.
+6. **Create Mirror Sessions:** Create mirror sessions that associate the analyzer NLB with the source groups. This will automatically mirror traffic from the instances to the analyzer NLB.
 
-**Step 3: Update the Flow Log Destination**
+**Network Load Balancer (NLB)**
 
-* Edit the flow log you created in Step 1.
-* Under "Destination", select "CloudWatch Logs" and specify the log group you created in Step 2.
+**Purpose:**
 
-**Step 4: Create a Network Load Balancer (NLB)**
+NLB can also be used as a traffic mirror without NPB, but it requires manual configuration and maintenance.
 
-* Go to the EC2 dashboard in the AWS Management Console.
-* Create a new NLB.
-* Configure the NLB with the following settings:
-    * Listeners: Target group for your running services
-    * Targets: Backend servers for your running services
+**How to Use NLB to Mirror Traffic:**
 
-**Step 5: Enable Mirroring on the NLB**
+1. **Create NLB:** Create an NLB in the VPC where the instances reside.
+2. **Enable Flow Logs:** Enable flow logs for the NLB.
+3. **Configure Target Groups:** Create target groups for the original instances and for the mirror hosts.
+4. **Set Up Listeners:** Create listeners that route traffic to the original instance target group and to the mirror host target group simultaneously.
+5. **Adjust Instance Security Groups:** Allow traffic from the NLB's MAC address to the target instances and mirror hosts.
 
-* Edit the NLB you created in Step 4.
-* Under "Settings", scroll down to "Mirroring" and enable it.
-* Specify the following settings:
-    * Mirror Group Name: Choose a unique name for the mirror group
-    * Mirror Group ARN: Create a new mirror group (refer to the AWS documentation for details)
+**Additional Considerations:**
 
-**Step 6: Create a Network Analyzer**
-
-* Go to the Network Analyzer dashboard in the AWS Management Console.
-* Click "Create Analyzer".
-* Configure the analyzer with the following settings:
-    * Source: Select the VPC where your running services are located
-    * Mirror Group: Select the mirror group you created in Step 5
-    * Analyze: Select "Flow Logs"
-
-**Reading Network Traffic from Virtual Machines**
-
-* After you have set up the mirror session, you can analyze the flow logs data in CloudWatch Logs.
-* Use the "BytesSent" and "BytesReceived" fields to measure the amount of network traffic between the virtual machines in your running services.
-* You can also use filters and metrics in CloudWatch Logs to drill down into the specific traffic patterns you are interested in.</p>
+* Ensure that the instances and mirror hosts have enough CPU and memory resources to handle the mirrored traffic.
+* Use a dedicated VPC for the mirror hosts to prevent performance issues on other VPC workloads.
+* Monitor the traffic logs to ensure that mirroring is working correctly.
+* NPB provides additional features such as packet filtering, packet capture, and dashboards, which may be useful for advanced traffic analysis.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>mirror target</code>: False</p>
@@ -575,50 +309,129 @@ Once the capture is complete, you can analyze the network traffic using Network 
 <h2>Query</h2>
 <p>Describe how I can use built-in AWS services to mirror the traffic for running services in order to read the network traffic from virtual machines</p>
 <h2>Output</h2>
-<p>**Using AWS Network Load Balancer (NLB) for Traffic Mirroring**
+<p>**Using AWS Traffic Mirroring to Monitor Network Traffic**
 
-To mirror traffic for running services in AWS and read network traffic from virtual machines, follow these steps:
+**Step 1: Enable Network Interfaces for Traffic Mirroring**
 
-**1. Create a Network Load Balancer (NLB)**
+* Select the network interfaces (NICs) for the source and destination instances you want to mirror traffic between.
+* In the EC2 console, go to the "Network Interfaces" section.
+* Click "Actions" on the selected NICs and check "Enable Network Mirroring".
 
-* Create an NLB that will handle the incoming traffic for your services.
-* Choose the appropriate Target Group Type (e.g., Instance, IP).
-* Configure the listeners and security groups as required.
+**Step 2: Configure the Traffic Mirror Session**
 
-**2. Enable Traffic Mirroring**
+* Go to the "Network Mirroring" section in the EC2 console.
+* Click "Create Traffic Mirror Session".
+* Specify the following parameters:
+    * **Source Interface:** The NIC that will send the mirrored traffic.
+    * **Destination Interface:** The NIC that will receive the mirrored traffic.
+    * **Instance Ports:** Optional, only mirror traffic for specific source/destination ports.
+    * **ACL:** Optional, attach an Access Control List (ACL) to filter the mirrored traffic.
+    * **Tags:** Metadata to help organize and identify the traffic mirror session.
 
-* In the NLB's configuration, enable traffic mirroring.
-* Select the subnet and port number where you want to send the mirrored traffic.
+**Step 3: Create a Packet Forwarding Instance**
 
-**3. Create a Mirror Session**
+* Launch an EC2 instance that will act as the packet forwarding instance. This instance will receive the mirrored traffic and forward it to the destination.
+* Create a security group that allows traffic on the ports you configured the traffic mirror session to mirror.
 
-* Create a Mirror Session to capture the mirrored traffic.
-* Choose the source NLB, source port, and destination port (e.g., 8080).
-* Specify the VPC and subnet for the mirrored traffic to be sent to.
+**Step 4: Configure Packet Forwarding**
 
-**4. Create a Packet Capture VPC Endpoint**
+* On the packet forwarding instance, install a traffic mirroring tool, such as tcpdump or Wireshark.
+* Configure the tool to listen on the interface that receives the mirrored traffic.
+* Set the destination IP address for the forwarded traffic to the destination instance or service.
 
-* Create a VPC Endpoint for Amazon Virtual Private Cloud - Packet Capture (VPC-PC).
-* Use the IP address provided in the VPC-PC Endpoint as the destination IP address for the Mirror Session.
+**Example:**
 
-**5. Configure AWS Packet Capture**
+Using tcpdump:
 
-* Create a Packet Capture configuration in the VPC-PC service.
-* Select the VPC, subnet, and port number where you want to receive the mirrored traffic.
-* Configure the capture rules and filters as needed.
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><span class="n">tcpdump</span> <span class="o">-</span><span class="n">i</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">w</span> <span class="n">traffic</span><span class="o">.</span><span class="n">pcap</span>
+</pre></div></td></tr></table></div>
 
-**6. Monitor Traffic in VPC-PC**
 
-* The mirrored traffic will be sent to the VPC-PC Endpoint.
-* Use the VPC-PC console or API to monitor the incoming packets.
-* You can capture and analyze the network traffic for diagnostic or security purposes.
+**Step 5: Verify Traffic Mirroring**
 
-**Additional Notes:**
+* Send traffic to the source instance.
+* Check the traffic logs or use the traffic mirroring tool on the packet forwarding instance to verify that the traffic is being mirrored correctly.
 
-* Traffic mirroring only captures a subset of the traffic passing through the NLB.
-* The destination port for the Mirror Session should be different from the port used by the NLB.
-* You can create multiple Mirror Sessions to capture traffic from different sources or for different purposes.
-* VPC-PC charges for data captured and stored. Monitor usage and costs accordingly.</p>
+**Benefits of Using AWS Traffic Mirroring:**
+
+* Monitor network traffic without impacting production systems.
+* Troubleshoot connectivity issues and identify security vulnerabilities.
+* Analyze traffic patterns and identify performance bottlenecks.
+* Audit and detect unauthorized access attempts.</p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>mirror target</code>: False</p>

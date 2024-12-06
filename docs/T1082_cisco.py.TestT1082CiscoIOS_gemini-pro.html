@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
     <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -192,34 +192,88 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span>    <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span><span class="p">,</span> <span class="n">NetmikoTimeoutException</span><span class="p">,</span> <span class="n">NetmikoAuthenticationException</span>
 
-    <span class="c1"># Creating a Table object that behaves like a list</span>
-    <span class="n">table</span> <span class="o">=</span> <span class="n">tabulate</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">get_device_info</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Collects device information and configuration from a Cisco IOS or NXOS device.</span>
 
-    <span class="n">show_Cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;show version&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;show inventory&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;show running-config&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;show lldp neighbors&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;show cdp neighbors&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;show environment&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;show platform software version&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;show control-plane host&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;show controllers all active&quot;</span><span class="p">,</span>
-    <span class="p">]</span>
-    <span class="c1"># Executing the show commands on the NXOS switch</span>
-    <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">show_Cmds</span><span class="p">:</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">netcon</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
-        <span class="c1"># Append the received data inside the table object</span>
-        <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">cmd</span><span class="p">,</span> <span class="n">output</span><span class="p">])</span>
-    <span class="n">pprint</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
-  
+<span class="sd">    Args:</span>
+<span class="sd">        device_ip (str): IP address of the device.</span>
+<span class="sd">        username (str): Username for authentication.</span>
+<span class="sd">        password (str): Password for authentication.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Dictionary containing device information and configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">device_ip</span><span class="p">,</span>
+            <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+            <span class="n">device_type</span><span class="o">=</span><span class="s2">&quot;cisco_ios&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">NetmikoTimeoutException</span><span class="p">,</span> <span class="n">NetmikoAuthenticationException</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">device_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;current_privilege_level&quot;</span><span class="p">:</span> <span class="n">device</span><span class="o">.</span><span class="n">check_config_mode</span><span class="p">(),</span>
+        <span class="s2">&quot;running_configuration&quot;</span><span class="p">:</span> <span class="n">device</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;lldp_neighbors&quot;</span><span class="p">:</span> <span class="n">device</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;cdp_neighbors&quot;</span><span class="p">:</span> <span class="n">device</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="n">device</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">device_info</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">device_ip</span> <span class="o">=</span> <span class="s2">&quot;192.168.1.1&quot;</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;password&quot;</span>
+
+    <span class="n">device_info</span> <span class="o">=</span> <span class="n">get_device_info</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">device_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Device Information:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">device_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to collect device information.&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show version</code>: True</p>
+<p>Testing if the previous output contains the string <code>show version</code>: False</p>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: False</p>
@@ -240,6 +294,164 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
     
 <div id="tab2" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
+<h2>Output</h2>
+<p><style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">napalm</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="c1"># Create a NAPALM connection to the device</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">napalm</span><span class="o">.</span><span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;ios&quot;</span><span class="p">)(</span><span class="s2">&quot;10.10.10.1&quot;</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span>
+<span class="n">device</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+
+<span class="c1"># Collect device information</span>
+<span class="n">facts</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get_facts</span><span class="p">()</span>
+
+<span class="c1"># Collect running configuration</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+
+<span class="c1"># Collect LLDP neighbors</span>
+<span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get_lldp_neighbors</span><span class="p">()</span>
+
+<span class="c1"># Collect CDP neighbors</span>
+<span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get_cdp_neighbors</span><span class="p">()</span>
+
+<span class="c1"># Print the collected information</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">facts</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+<span class="c1"># Close the NAPALM connection</span>
+<span class="n">device</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div></td></tr></table></div>
+</p>
+<h1>Check if all of the following conditions are true:</h1>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show version</code>: False</p>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show lldp neighbors</code>: False</p>
+<h3>Final Answer: False</h3>
+<h2>Check if any of the following conditions are true:</h2>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show cdp neighbors detail</code>: False</p>
+<h3>Substring Evaluation</h3>
+<p>Testing if the previous output contains the string <code>show cdp neighbors</code>: False</p>
+<h3>Final Answer: False</h3>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show run</code>: False</p>
+<h2>Substring Evaluation</h2>
+<p>Testing if the previous output contains the string <code>show privilege</code>: False</p>
+<h2>Final Answer: False</h2>
+</div>
+    
+<div id="tab3" class="tab-content">
     <h1>Initial Query</h1>
 <p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
 <h1>LLM Generation</h1>
@@ -382,113 +594,77 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">getpass</span>
+<span class="kn">import</span> <span class="nn">telnetlib</span>
 
-<span class="k">def</span> <span class="nf">show_info</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Show various information about the device</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        device (dict): Device dictionary</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show version&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_device_info</span><span class="p">(</span><span class="n">ip_address</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Collects device information and configuration from a Cisco IOS or NXOS device.</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Device hostname: </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;Hostname&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;config-&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OS version: </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;Version&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current privilege level: </span><span class="si">{</span><span class="n">device</span><span class="o">.</span><span class="n">base_prompt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="sd">  Args:</span>
+<span class="sd">    ip_address (str): The IP address of the device.</span>
+<span class="sd">    username (str): The username to use for authentication.</span>
+<span class="sd">    password (str): The password to use for authentication.</span>
 
-    <span class="c1"># CDP and LLDP neighbors</span>
-    <span class="n">cdp_output</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show cdp neighbors&#39;</span><span class="p">)</span>
-    <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">cdp_output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-        <span class="k">if</span> <span class="s1">&#39;-----&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s1">&#39;Capability&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">cdp_neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+<span class="sd">  Returns:</span>
+<span class="sd">    dict: A dictionary containing the collected information.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
-    <span class="n">lldp_output</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show lldp neighbors detail&#39;</span><span class="p">)</span>
-    <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lldp_output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-        <span class="k">if</span> <span class="s1">&#39;-----&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s1">&#39;Device ID&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">lldp_neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="c1"># Connect to the device using Telnet.</span>
+  <span class="n">tn</span> <span class="o">=</span> <span class="n">telnetlib</span><span class="o">.</span><span class="n">Telnet</span><span class="p">(</span><span class="n">ip_address</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CDP neighbors: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cdp_neighbors</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LLDP neighbors: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">lldp_neighbors</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+  <span class="c1"># Log in to the device.</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;Username: &quot;</span><span class="p">)</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">username</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;Password: &quot;</span><span class="p">)</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Running configuration</span>
-    <span class="n">running_config</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s1">&#39;show running-config&#39;</span><span class="p">)</span>
+  <span class="c1"># Get the current privilege level.</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;show privilege</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">privilege_level</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;#&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_running_config.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">running_config</span><span class="p">)</span>
+  <span class="c1"># Get the running configuration.</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;show running-config</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">running_config</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;#&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running config has been saved to </span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_running_config.txt&quot;</span><span class="p">)</span>
+  <span class="c1"># Get the LLDP neighbors.</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;show lldp neighbors</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;#&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Main function to collect information from Cisco IOS/NXOS devices</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+  <span class="c1"># Get the CDP neighbors.</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;show cdp neighbors</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;#&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Get device credentials and hostnames</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;devices.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">devices</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]</span>
+  <span class="c1"># Close the connection to the device.</span>
+  <span class="n">tn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">devices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No devices specified. Please provide a text file with a list of device hostnames.&quot;</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="c1"># Return the collected information.</span>
+  <span class="k">return</span> <span class="p">{</span>
+      <span class="s2">&quot;privilege_level&quot;</span><span class="p">:</span> <span class="n">privilege_level</span><span class="p">,</span>
+      <span class="s2">&quot;running_config&quot;</span><span class="p">:</span> <span class="n">running_config</span><span class="p">,</span>
+      <span class="s2">&quot;lldp_neighbors&quot;</span><span class="p">:</span> <span class="n">lldp_neighbors</span><span class="p">,</span>
+      <span class="s2">&quot;cdp_neighbors&quot;</span><span class="p">:</span> <span class="n">cdp_neighbors</span><span class="p">,</span>
+  <span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">:</span>
-        <span class="n">host</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z0-9_.-]+$&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecting to </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">net_connect</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="n">device_type</span><span class="o">=</span><span class="s1">&#39;cisco_ios&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
-                <span class="n">net_connect</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
-                <span class="n">show_info</span><span class="p">(</span><span class="n">net_connect</span><span class="p">)</span>
-                <span class="n">net_connect</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to connect to </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">. Please check credentials and device availability.&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid hostname: </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">. Hostnames should only contain letters, numbers, underscores, dots, and dashes.&quot;</span><span class="p">)</span>
+<span class="c1"># Get the device information and configuration.</span>
+<span class="n">device_info</span> <span class="o">=</span> <span class="n">get_device_info</span><span class="p">(</span>
+    <span class="n">ip_address</span><span class="o">=</span><span class="s2">&quot;10.10.10.1&quot;</span><span class="p">,</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
+<span class="c1"># Print the device information.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">device_info</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show version</code>: True</p>
+<p>Testing if the previous output contains the string <code>show version</code>: False</p>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: True</p>
+<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: False</p>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>show lldp neighbors</code>: True</p>
 <h3>Final Answer: True</h3>
@@ -501,11 +677,11 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>show run</code>: True</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show privilege</code>: False</p>
+<p>Testing if the previous output contains the string <code>show privilege</code>: True</p>
 <h2>Final Answer: False</h2>
 </div>
     
-<div id="tab3" class="tab-content">
+<div id="tab4" class="tab-content">
     <h1>Initial Query</h1>
 <p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
 <h1>LLM Generation</h1>
@@ -692,113 +868,141 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
-<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">getpass</span>
-<span class="kn">import</span> <span class="nn">telnetlib</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="kn">from</span> <span class="nn">getpass</span> <span class="kn">import</span> <span class="n">getpass</span>
+<span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span><span class="p">,</span> <span class="n">NetmikoTimeoutException</span><span class="p">,</span> <span class="n">NetmikoAuthenticationException</span>
 
-<span class="k">def</span> <span class="nf">clear_screen</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x1b</span><span class="s2">[2J</span><span class="se">\x1b</span><span class="s2">[H&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collects device information and configuration.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        device (dict): Dictionary containing device information, including IP address, username, and password.</span>
 
-<span class="k">def</span> <span class="nf">banner</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">character</span><span class="p">):</span>
-    <span class="n">string_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="n">banner_string</span> <span class="o">=</span> <span class="n">character</span> <span class="o">*</span> <span class="p">(</span><span class="n">string_length</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">banner_string</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">character</span><span class="si">}</span><span class="s2">    </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">    </span><span class="si">{</span><span class="n">character</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">banner_string</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Dictionary containing device information and configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="k">def</span> <span class="nf">set_terminal</span><span class="p">(</span><span class="n">tn</span><span class="p">):</span>
-    <span class="c1"># Force terminal settings on login.</span>
-    <span class="c1">#tn.write(&quot;term len 0\n&quot;.encode(&quot;utf-8&quot;))</span>
-    <span class="n">tn_output</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="c1">#tn.write(&quot;term width 200\n&quot;.encode(&quot;utf-8&quot;))</span>
-    <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="c1"># Force paging off.</span>
-    <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;no page</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
-    <span class="n">tn_output</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="c1"># Set prompt.</span>
-    <span class="c1">#tn.write(&quot;term monitor\n&quot;.encode(&#39;utf-8&#39;))</span>
+    <span class="c1"># Connect to the device</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">net_connect</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">NetmikoTimeoutException</span><span class="p">,</span> <span class="n">NetmikoAuthenticationException</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to connect to </span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
 
-<span class="k">def</span> <span class="nf">device_info</span><span class="p">(</span><span class="n">tn</span><span class="p">,</span> <span class="n">hostname</span><span class="p">):</span>
-    <span class="c1"># Collect device information.</span>
+    <span class="c1"># Get the device information</span>
+    <span class="n">device_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">find_prompt</span><span class="p">(),</span>
+        <span class="s2">&quot;os_version&quot;</span><span class="p">:</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show version | include Version&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;current_privilege_level&quot;</span><span class="p">:</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">check_config_mode</span><span class="p">(),</span>
+        <span class="s2">&quot;running_config&quot;</span><span class="p">:</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;lldp_neighbors&quot;</span><span class="p">:</span> <span class="n">get_lldp_neighbors</span><span class="p">(</span><span class="n">net_connect</span><span class="p">),</span>
+        <span class="s2">&quot;cdp_neighbors&quot;</span><span class="p">:</span> <span class="n">get_cdp_neighbors</span><span class="p">(</span><span class="n">net_connect</span><span class="p">),</span>
+    <span class="p">}</span>
 
-    <span class="n">clear_screen</span><span class="p">()</span>
-    <span class="n">banner</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span>
+    <span class="c1"># Close the connection</span>
+    <span class="n">net_connect</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Timestamp: </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;show version</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
-    <span class="n">tn_output</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">#### Version Information ###</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">tn_output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
-    <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors detail</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
-    <span class="n">tn_output</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">#### CDP Neighbors ###</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">tn_output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
-    <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors detail</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
-    <span class="n">tn_output</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">#### LLDPNeighbors ###</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">tn_output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
-    <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;show running-config</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
-    <span class="n">tn_output</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">#### Running Configuration ###</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">tn_output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
-    <span class="n">priv_level</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-    <span class="n">table</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">[</span><span class="s2">&quot;Hostname&quot;</span><span class="p">,</span> <span class="n">hostname</span><span class="p">],</span>
-        <span class="p">[</span><span class="s2">&quot;Platform&quot;</span><span class="p">,</span> <span class="n">hardware</span><span class="p">],</span>
-        <span class="p">[</span><span class="s2">&quot;OS version&quot;</span><span class="p">,</span> <span class="n">os_image</span><span class="p">],</span>
-        <span class="p">[</span><span class="s2">&quot;Currentprivilege&quot;</span><span class="p">,</span> <span class="n">priv_level</span><span class="p">],</span>
-        <span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()],</span>
-    <span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;firstrow&quot;</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;fancy_grid&quot;</span><span class="p">))</span>
-
-    <span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S&quot;</span><span class="p">)</span>
-    <span class="n">device_data_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">current_time</span><span class="si">}</span><span class="s2">.txt&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Collected data has been saved to </span><span class="si">{</span><span class="n">device_data_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">device_data_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">tn_output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">clear_screen</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">device_info</span>
 
 
-<span class="k">def</span> <span class="nf">current_config</span><span class="p">(</span><span class="n">tn</span><span class="p">):</span>
-    <span class="c1"># Collect current configuration only.</span>
+<span class="k">def</span> <span class="nf">get_lldp_neighbors</span><span class="p">(</span><span class="n">net_connect</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets LLDP neighbors.</span>
 
-    <span class="n">banner</span><span class="p">(</span><span class="s2">&quot;Operational Configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">)</span>
-    <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;show running-config</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
-    <span class="n">tn_output</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&gt;|#&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">tn_output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+<span class="sd">    Args:</span>
+<span class="sd">        net_connect (netmiko.ConnectHandler): Netmiko connection object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: List of LLDP neighbors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors detail&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s2">&quot;Port Description:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">port_description</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;System Name:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">system_name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;Chassis Id:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">chassis_id</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;Port Id:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">port_id</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;TTL:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">ttl</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s+$&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+            <span class="n">lldp_neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;port_description&quot;</span><span class="p">:</span> <span class="n">port_description</span><span class="p">,</span>
+                <span class="s2">&quot;system_name&quot;</span><span class="p">:</span> <span class="n">system_name</span><span class="p">,</span>
+                <span class="s2">&quot;chassis_id&quot;</span><span class="p">:</span> <span class="n">chassis_id</span><span class="p">,</span>
+                <span class="s2">&quot;port_id&quot;</span><span class="p">:</span> <span class="n">port_id</span><span class="p">,</span>
+                <span class="s2">&quot;ttl&quot;</span><span class="p">:</span> <span class="n">ttl</span><span class="p">,</span>
+            <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">lldp_neighbors</span>
+
+
+<span class="k">def</span> <span class="nf">get_cdp_neighbors</span><span class="p">(</span><span class="n">net_connect</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets CDP neighbors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        net_connect (netmiko.ConnectHandler): Netmiko connection object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: List of CDP neighbors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors detail&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s2">&quot;Device ID:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">device_id</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;Platform:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">platform</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;Capabilities:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">capabilities</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;Interface:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">interface</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;Port ID:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">port_id</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s+$&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+            <span class="n">cdp_neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;device_id&quot;</span><span class="p">:</span> <span class="n">device_id</span><span class="p">,</span>
+                <span class="s2">&quot;platform&quot;</span><span class="p">:</span> <span class="n">platform</span><span class="p">,</span>
+                <span class="s2">&quot;capabilities&quot;</span><span class="p">:</span> <span class="n">capabilities</span><span class="p">,</span>
+                <span class="s2">&quot;interface&quot;</span><span class="p">:</span> <span class="n">interface</span><span class="p">,</span>
+                <span class="s2">&quot;port_id&quot;</span><span class="p">:</span> <span class="n">port_id</span><span class="p">,</span>
+            <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">cdp_neighbors</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">hostname</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Device hostname: &quot;</span><span class="p">)</span>
-    <span class="n">ip_address</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Device IP address: &quot;</span><span class="p">)</span>
-    <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Username: &quot;</span><span class="p">)</span>
-    <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;Password&quot;</span><span class="p">)</span>
+    <span class="c1"># Get device information from the user</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter device IP address: &quot;</span><span class="p">),</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter username: &quot;</span><span class="p">),</span>
+        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="n">getpass</span><span class="p">(</span><span class="s2">&quot;Enter password: &quot;</span><span class="p">),</span>
+    <span class="p">}</span>
 
-    <span class="n">tn</span> <span class="o">=</span> <span class="n">telnetlib</span><span class="o">.</span><span class="n">Telnet</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">ip_address</span><span class="p">)</span>
-    <span class="n">tn</span><span class="o">.</span><span class="n">set_debuglevel</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-    <span class="n">set_terminal</span><span class="p">(</span><span class="n">tn</span><span class="p">)</span>
-    <span class="n">clear_screen</span><span class="p">()</span>
+    <span class="c1"># Collect device information and configuration</span>
+    <span class="n">device_info</span> <span class="o">=</span> <span class="n">get_device_info</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
-    <span class="c1"># Determine if Ctrl-C is pressed. If so, exit the script.</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">tn</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Exiting...&quot;</span><span class="p">)</span>
-        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-    <span class="n">device_info</span><span class="p">(</span><span class="n">tn</span><span class="p">,</span> <span class="n">hostname</span><span class="p">)</span>
-
-    <span class="n">tn</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;exit</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="c1"># Print the device information and configuration</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">device_info</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
@@ -818,212 +1022,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Final Answer: True</h3>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>show run</code>: True</p>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show privilege</code>: False</p>
-<h2>Final Answer: False</h2>
-</div>
-    
-<div id="tab4" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Give me code that collects a Cisco IOS or NXOS device information and configuration, including things like current privilege level, running configuration, LLDP and CDP neighbors</p>
-<h2>Output</h2>
-<p><style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="kn">from</span> <span class="nn">nornir</span> <span class="kn">import</span> <span class="n">InitNornir</span>
-<span class="kn">from</span> <span class="nn">nornir_netmiko.tasks</span> <span class="kn">import</span> <span class="n">netmiko_send_config</span><span class="p">,</span> <span class="n">netmiko_send_command</span>
-<span class="kn">from</span> <span class="nn">nornir_utils.plugins.functions</span> <span class="kn">import</span> <span class="n">print_result</span>
-
-
-<span class="k">def</span> <span class="nf">device_info</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
-    
-    <span class="c1"># run show version, show cdp neighbors, and show lldp neighbors commands to capture basic info</span>
-
-    <span class="n">show_version_output</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="n">netmiko_send_command</span><span class="p">,</span> <span class="n">command_string</span><span class="o">=</span><span class="s2">&quot;show version&quot;</span><span class="p">)</span>
-    <span class="n">show_cdp_output</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="n">netmiko_send_command</span><span class="p">,</span> <span class="n">command_string</span><span class="o">=</span><span class="s2">&quot;show cdp neighbors&quot;</span><span class="p">)</span>
-    <span class="n">show_lldp_output</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="n">netmiko_send_command</span><span class="p">,</span> <span class="n">command_string</span><span class="o">=</span><span class="s2">&quot;show lldp neighbors&quot;</span><span class="p">)</span>
-
-    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="s2">&quot;platform&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Cisco (.*?) &quot;</span><span class="p">,</span> <span class="n">show_version_output</span><span class="o">.</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-        <span class="s2">&quot;os_version&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Cisco IOS Software, .+? Version (\S+),&quot;</span><span class="p">,</span> <span class="n">show_version_output</span><span class="o">.</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-        <span class="s2">&quot;privilege_level&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="n">show_version_output</span><span class="o">.</span><span class="n">result</span><span class="p">),</span>
-        <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="n">show_version_output</span><span class="o">.</span><span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">show_cdp_output</span><span class="o">.</span><span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">show_lldp_output</span><span class="o">.</span><span class="n">result</span><span class="p">,</span>
-        <span class="s2">&quot;lldp_neighbors&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;cdp_neighbors&quot;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="p">}</span>
-
-    <span class="k">for</span> <span class="n">lldp_neighbor</span> <span class="ow">in</span> <span class="n">show_lldp_output</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;lldp_neighbors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s2">&quot;interface&quot;</span><span class="p">:</span> <span class="n">lldp_neighbor</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">lldp_neighbor</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="n">lldp_neighbor</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
-        <span class="p">})</span>
-
-    <span class="k">for</span> <span class="n">cdp_neighbor</span> <span class="ow">in</span> <span class="n">show_cdp_output</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;cdp_neighbors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s2">&quot;local_interface&quot;</span><span class="p">:</span> <span class="n">cdp_neighbor</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">cdp_neighbor</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="s2">&quot;remote_interface&quot;</span><span class="p">:</span> <span class="n">cdp_neighbor</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">8</span><span class="p">],</span>
-        <span class="p">})</span>
-
-    <span class="k">return</span> <span class="n">result</span>
-
-
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">nr</span> <span class="o">=</span> <span class="n">InitNornir</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;config.yaml&quot;</span><span class="p">)</span>
-    <span class="n">agg_result</span> <span class="o">=</span> <span class="n">nr</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="n">device_info</span><span class="p">)</span>
-    <span class="n">print_result</span><span class="p">(</span><span class="n">agg_result</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">agg_result</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
-</pre></div></td></tr></table></div>
-</p>
-<h1>Check if all of the following conditions are true:</h1>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show version</code>: True</p>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show lldp neighbors</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Check if any of the following conditions are true:</h2>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show cdp neighbors detail</code>: False</p>
-<h3>Substring Evaluation</h3>
-<p>Testing if the previous output contains the string <code>show cdp neighbors</code>: True</p>
-<h3>Final Answer: True</h3>
-<h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show run</code>: False</p>
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>show privilege</code>: False</p>
 <h2>Final Answer: False</h2>
@@ -1142,108 +1140,44 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
-<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
-<span class="kn">from</span> <span class="nn">rich.layout</span> <span class="kn">import</span> <span class="n">Layout</span>
-<span class="kn">from</span> <span class="nn">rich.panel</span> <span class="kn">import</span> <span class="n">Panel</span>
-<span class="kn">from</span> <span class="nn">netmiko.ssh_autodetect</span> <span class="kn">import</span> <span class="n">SSHDetect</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">netmiko</span> <span class="kn">import</span> <span class="n">ConnectHandler</span>
 
+<span class="c1"># Define the device information</span>
+<span class="n">device</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;device_hostname_or_ip&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;username&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;device_type&quot;</span><span class="p">:</span> <span class="s2">&quot;cisco_ios&quot;</span>  <span class="c1"># or &#39;cisco_nxos&#39;</span>
+<span class="p">}</span>
 
-<span class="k">def</span> <span class="nf">gather_info</span><span class="p">(</span><span class="n">device_dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Collects device information and configuration using Netmiko.</span>
+<span class="c1"># Connect to the device</span>
+<span class="n">net_connect</span> <span class="o">=</span> <span class="n">ConnectHandler</span><span class="p">(</span><span class="o">**</span><span class="n">device</span><span class="p">)</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        device_dict (dict): A dictionary containing the device&#39;s IP address and credentials.</span>
+<span class="c1"># Enable privileged mode if necessary</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show privilege&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="s2">&quot;Current privilege level: 15&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+    <span class="n">net_connect</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        A dictionary containing the collected information and configuration.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="c1"># Collect the necessary information</span>
+<span class="n">current_privilege_level</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Current privilege level: (\d+)&quot;</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">running_config</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">)</span>
+<span class="n">lldp_neighbors</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors detail&quot;</span><span class="p">)</span>
+<span class="n">cdp_neighbors</span> <span class="o">=</span> <span class="n">net_connect</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors detail&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Establish an SSH connection to the device.</span>
-    <span class="n">ssh</span> <span class="o">=</span> <span class="n">SSHDetect</span><span class="p">(</span><span class="o">**</span><span class="n">device_dict</span><span class="p">)</span>
-    <span class="n">ssh</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+<span class="c1"># Disconnect from the device</span>
+<span class="n">net_connect</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
-    <span class="c1"># Collect device information and configuration.</span>
-    <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;hostname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">find_prompt</span><span class="p">()</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;os_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show version&quot;</span><span class="p">)</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;privilege_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">check_enable_mode</span><span class="p">()</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;running_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show running-config&quot;</span><span class="p">)</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;lldp_neighbors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show lldp neighbors detail&quot;</span><span class="p">)</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;cdp_neighbors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">&quot;show cdp neighbors detail&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Close the SSH connection.</span>
-    <span class="n">ssh</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">info</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># Get device information from user.</span>
-    <span class="n">device_ip</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter device IP address: &quot;</span><span class="p">)</span>
-    <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter username: &quot;</span><span class="p">)</span>
-    <span class="n">password</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter password: &quot;</span><span class="p">)</span>
-
-    <span class="c1"># Create a dictionary of the device information.</span>
-    <span class="n">device_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="n">device_ip</span><span class="p">,</span>
-        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
-        <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span>
-        <span class="s2">&quot;device_type&quot;</span><span class="p">:</span> <span class="s2">&quot;cisco_ios&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
-
-    <span class="c1"># Collect device information and configuration.</span>
-    <span class="n">info</span> <span class="o">=</span> <span class="n">gather_info</span><span class="p">(</span><span class="n">device_dict</span><span class="p">)</span>
-
-    <span class="c1"># Print the collected information and configuration.</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hostname: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OS Version: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;os_version&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Privilege Level: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;privilege_level&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running Configuration:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;running_config&quot;</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LLDP Neighbors:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;lldp_neighbors&quot;</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CDP Neighbors:&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;cdp_neighbors&quot;</span><span class="p">])</span>
+<span class="c1"># Print the collected information</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current privilege level: </span><span class="si">{</span><span class="n">current_privilege_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running configuration:</span><span class="se">\n</span><span class="si">{</span><span class="n">running_config</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LLDP neighbors:</span><span class="se">\n</span><span class="si">{</span><span class="n">lldp_neighbors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CDP neighbors:</span><span class="se">\n</span><span class="si">{</span><span class="n">cdp_neighbors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Check if all of the following conditions are true:</h1>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show version</code>: True</p>
+<p>Testing if the previous output contains the string <code>show version</code>: False</p>
 <h2>Check if any of the following conditions are true:</h2>
 <h3>Substring Evaluation</h3>
 <p>Testing if the previous output contains the string <code>show lldp neighbors detail</code>: True</p>
@@ -1259,7 +1193,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2>Substring Evaluation</h2>
 <p>Testing if the previous output contains the string <code>show run</code>: True</p>
 <h2>Substring Evaluation</h2>
-<p>Testing if the previous output contains the string <code>show privilege</code>: False</p>
+<p>Testing if the previous output contains the string <code>show privilege</code>: True</p>
 <h2>Final Answer: False</h2>
 </div>
     

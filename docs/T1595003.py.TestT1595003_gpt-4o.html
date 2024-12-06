@@ -13,7 +13,7 @@
     </style>
     
     <style>
-
+    
         body {
             font-family: Arial, sans-serif;
         }
@@ -36,8 +36,8 @@
         h7 {margin: 0em; }
         h8 {margin: 0em; }
 
-
-
+        
+    
         .tabs {
             list-style-type: none;
             overflow: hidden;
@@ -63,7 +63,7 @@
             background-color: inherit;
             border: 1px solid #ddd;
             border-bottom: none;
-            transition: filter 0.3s ease;
+            transition: filter 0.3s ease; 
         }
 
 
@@ -82,11 +82,11 @@
             display: block;
         }
     </style>
-
+    
 <ul class="tabs">
-    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_0"><a href="#tab1">Trial 1</a></li><li class="is_correct_0"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
+    <li><a href="index.html">Full Grid</a></li> <li class="is_correct_1"><a href="#tab1">Trial 1</a></li><li class="is_correct_1"><a href="#tab2">Trial 2</a></li><li class="is_correct_0"><a href="#tab3">Trial 3</a></li><li class="is_correct_0"><a href="#tab4">Trial 4</a></li><li class="is_correct_0"><a href="#tab5">Trial 5</a></li>
 </ul>
-
+    
 <div class="clear-float"></div>
     
 <div id="tab1" class="tab-content">
@@ -96,9 +96,7 @@
 <h2>Query</h2>
 <p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
 <h2>Output</h2>
-<p>To accomplish the task of resolving subdomains, you can utilize the `socket` library in Python. This library provides low-level networking interfaces and allows you to resolve hostnames.
-
-Here's how you could implement the `resolve_subdomains` function:
+<p>To accomplish the task of resolving subdomains, we can use the `socket` library in Python, which provides a way to perform DNS resolutions. Here's a function `resolve_subdomains(primary, potential_subdomains)` that takes a primary domain and a list of potential subdomains, and returns a set of subdomains that actually resolve:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -195,55 +193,38 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">resolvable_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to get the IP address, any resolution indicates the subdomain is valid.</span>
+            <span class="c1"># Try to resolve the full domain; if successful, add to the set</span>
             <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="n">resolvable_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, it will raise a socket.gaierror, which we can ignore.</span>
-            <span class="k">pass</span>
+            <span class="c1"># If resolution fails, skip this subdomain</span>
+            <span class="k">continue</span>
 
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+    <span class="k">return</span> <span class="n">resolvable_subdomains</span>
 
-<span class="c1"># Example usage</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">primary</span> <span class="o">=</span> <span class="s2">&quot;example.com&quot;</span>
-    <span class="n">potential_subdomains</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;nonexistent&quot;</span><span class="p">]</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">resolved_subdomains</span><span class="p">)</span>  <span class="c1"># This will only print the result during the example usage</span>
+<span class="c1"># Example usage:</span>
+<span class="c1"># primary = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;ftp&quot;, &quot;nonexistent&quot;]</span>
+<span class="c1"># resolved = resolve_subdomains(primary, potential_subdomains)</span>
+<span class="c1"># print(resolved)  # Note: Testing this will actually query DNS servers</span>
 </pre></div></td></tr></table></div>
 
 
-### Explanation:
+### Key Points:
+- The `gethostbyname` function is used to attempt to resolve the full domain name (composed of the subdomain and the primary domain).
+- If the resolution is successful, the subdomain is added to `resolvable_subdomains`.
+- If the resolution raises a `socket.gaierror`, it indicates that the subdomain does not resolve successfully, and it is skipped.
+- The function returns a set of subdomains that resolve successfully.
 
-1. **Imports:**
-   - The code imports the `socket` library, which provides a way to perform DNS resolutions in Python.
-
-2. **Function Definition:**
-   - `resolve_subdomains(primary, potential_subdomains)`: This function takes a primary domain and a list of potential subdomains.
-
-3. **Iteration over Subdomains:**
-   - The function iterates over each potential subdomain.
-
-4. **Domain Resolution:**
-   - For each subdomain, it constructs the full domain (e.g., `subdomain.example.com`) and attempts to resolve it using `socket.gethostbyname(full_domain)`.
-   - If the domain resolves successfully, it adds it to the `resolved_subdomains` set.
-
-5. **Error Handling:**
-   - If a subdomain cannot be resolved, a `socket.gaierror` will be raised. The function ignores this exception by using a `try-except` block, which allows the iteration to continue without adding the unresolved subdomain.
-
-6. **Returning Results:**
-   - The function returns a set of subdomains that successfully resolve under the primary domain.
-
-This function will efficiently check each subdomain and return only those that are valid and resolvable.</p>
+This solution will make real DNS queries to resolve the subdomains, so you'll need internet connectivity when running it. Also, be aware of potential network latency and DNS lookup limits.</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -341,30 +322,28 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">resolvable_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to get the IP address, any resolution indicates the subdomain is valid.</span>
+            <span class="c1"># Try to resolve the full domain; if successful, add to the set</span>
             <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="n">resolvable_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, it will raise a socket.gaierror, which we can ignore.</span>
-            <span class="k">pass</span>
+            <span class="c1"># If resolution fails, skip this subdomain</span>
+            <span class="k">continue</span>
 
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+    <span class="k">return</span> <span class="n">resolvable_subdomains</span>
 
-<span class="c1"># Example usage</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">primary</span> <span class="o">=</span> <span class="s2">&quot;example.com&quot;</span>
-    <span class="n">potential_subdomains</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;nonexistent&quot;</span><span class="p">]</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">resolved_subdomains</span><span class="p">)</span>  <span class="c1"># This will only print the result during the example usage</span>
+<span class="c1"># Example usage:</span>
+<span class="c1"># primary = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;ftp&quot;, &quot;nonexistent&quot;]</span>
+<span class="c1"># resolved = resolve_subdomains(primary, potential_subdomains)</span>
+<span class="c1"># print(resolved)  # Note: Testing this will actually query DNS servers</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Run Code Interpreter</h1>
@@ -469,30 +448,28 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">resolvable_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to get the IP address, any resolution indicates the subdomain is valid.</span>
+            <span class="c1"># Try to resolve the full domain; if successful, add to the set</span>
             <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="n">resolvable_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, it will raise a socket.gaierror, which we can ignore.</span>
-            <span class="k">pass</span>
+            <span class="c1"># If resolution fails, skip this subdomain</span>
+            <span class="k">continue</span>
 
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+    <span class="k">return</span> <span class="n">resolvable_subdomains</span>
 
-<span class="c1"># Example usage</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">primary</span> <span class="o">=</span> <span class="s2">&quot;example.com&quot;</span>
-    <span class="n">potential_subdomains</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;nonexistent&quot;</span><span class="p">]</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">resolved_subdomains</span><span class="p">)</span>  <span class="c1"># This will only print the result during the example usage</span>
+<span class="c1"># Example usage:</span>
+<span class="c1"># primary = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;ftp&quot;, &quot;nonexistent&quot;]</span>
+<span class="c1"># resolved = resolve_subdomains(primary, potential_subdomains)</span>
+<span class="c1"># print(resolved)  # Note: Testing this will actually query DNS servers</span>
 
 
 
@@ -501,12 +478,11 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </pre></div></td></tr></table></div>
 
 And got the output:
-<code>{'www.example.com'}
-{'blog.deadbits.ai', 'vigil.deadbits.ai', 'www.deadbits.ai', 'trs.deadbits.ai'}</code></p>
+<code>{'vigil', 'trs', 'www', 'blog'}</code></p>
 <h1>PyFunc</h1>
-<p>Error
+<p>
 Resulting in output:
-False</p>
+True</p>
 </div>
     
 <div id="tab2" class="tab-content">
@@ -516,9 +492,9 @@ False</p>
 <h2>Query</h2>
 <p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
 <h2>Output</h2>
-<p>To create a function that checks which potential subdomains actually resolve to a given primary domain, you can use the `socket` library in Python. This library can perform DNS lookups to determine if a subdomain resolves.
+<p>To create a Python function that resolves a list of potential subdomains against a primary domain, we can use the `socket` module to attempt DNS resolution. This function will attempt to resolve each subdomain by appending it to the primary domain and check if it responds correctly.
 
-Here's how you can implement the function `resolve_subdomains`:
+Here is how you can implement this function:
 
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -613,45 +589,35 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
     <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Attempt to resolve the domain</span>
             <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="c1"># If resolution is successful, add to the set</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If the domain doesn&#39;t resolve, socket.gethostbyname will raise a gaierror.</span>
+            <span class="c1"># If there is a resolution error, continue to the next subdomain</span>
             <span class="k">continue</span>
-    
     <span class="k">return</span> <span class="n">resolved_subdomains</span>
 
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &#39;example.com&#39;</span>
-<span class="c1"># potential_subdomains = [&#39;www&#39;, &#39;mail&#39;, &#39;ftp&#39;, &#39;nonexistent&#39;]</span>
-<span class="c1"># resolved = resolve_subdomains(primary_domain, potential_subdomains)</span>
-<span class="c1"># print(resolved)</span>
+<span class="c1"># Example usage (Uncomment for testing):</span>
+<span class="c1"># primary_domain = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;ftp&quot;, &quot;mail&quot;]</span>
+<span class="c1"># print(resolve_subdomains(primary_domain, potential_subdomains))</span>
 </pre></div></td></tr></table></div>
 
 
-### Explanation
+### Explanation:
+- **socket.gethostbyname()**: This function attempts to resolve a given hostname into an IP address. If the domain cannot be resolved, it will raise a `socket.gaierror`.
+- **Resolved Subdomains**: The function iterates through the list of potential subdomains, constructs the full domain by combining each subdomain with the primary domain, and attempts to resolve it. If successful, it adds this subdomain to the `resolved_subdomains` set.
+- **Exception Handling**: If the domain cannot be resolved, a `socket.gaierror` is caught, and the function simply continues to the next potential subdomain without adding it to the set.
 
-1. **Imports**: Import the `socket` library which is necessary for performing DNS lookups.
-2. **Function `resolve_subdomains`**:
-   - Takes two inputs: `primary` and `potential_subdomains`.
-   - Initializes an empty set `resolved_subdomains` to store successfully resolved subdomains.
-   - Iterates over each subdomain in `potential_subdomains`.
-   - Constructs the full domain name by concatenating the subdomain, a dot, and the primary domain.
-   - Tries to resolve the full domain using `socket.gethostbyname`.
-     - If successful (doesn't raise an `socket.gaierror`), it adds the domain to `resolved_subdomains`.
-     - If it raises an `socket.gaierror`, catches the exception and continues to the next subdomain.
-3. **Returns**: A set of subdomains that successfully resolve.
-
-This function should be used with the understanding that network conditions can affect DNS lookups, so results may vary depending on DNS caching, availability of the DNS server, and network configuration.</p>
+This function works effectively for subdomains of a primary domain, checking which ones are valid by resolving them using the DNS. Note that this function prints nothing and returns a set of successfully resolved subdomains.</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -747,28 +713,26 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
     <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Attempt to resolve the domain</span>
             <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="c1"># If resolution is successful, add to the set</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If the domain doesn&#39;t resolve, socket.gethostbyname will raise a gaierror.</span>
+            <span class="c1"># If there is a resolution error, continue to the next subdomain</span>
             <span class="k">continue</span>
-    
     <span class="k">return</span> <span class="n">resolved_subdomains</span>
 
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &#39;example.com&#39;</span>
-<span class="c1"># potential_subdomains = [&#39;www&#39;, &#39;mail&#39;, &#39;ftp&#39;, &#39;nonexistent&#39;]</span>
-<span class="c1"># resolved = resolve_subdomains(primary_domain, potential_subdomains)</span>
-<span class="c1"># print(resolved)</span>
+<span class="c1"># Example usage (Uncomment for testing):</span>
+<span class="c1"># primary_domain = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;ftp&quot;, &quot;mail&quot;]</span>
+<span class="c1"># print(resolve_subdomains(primary_domain, potential_subdomains))</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Run Code Interpreter</h1>
@@ -871,28 +835,26 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
     <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Attempt to resolve the domain</span>
             <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="c1"># If resolution is successful, add to the set</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If the domain doesn&#39;t resolve, socket.gethostbyname will raise a gaierror.</span>
+            <span class="c1"># If there is a resolution error, continue to the next subdomain</span>
             <span class="k">continue</span>
-    
     <span class="k">return</span> <span class="n">resolved_subdomains</span>
 
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &#39;example.com&#39;</span>
-<span class="c1"># potential_subdomains = [&#39;www&#39;, &#39;mail&#39;, &#39;ftp&#39;, &#39;nonexistent&#39;]</span>
-<span class="c1"># resolved = resolve_subdomains(primary_domain, potential_subdomains)</span>
-<span class="c1"># print(resolved)</span>
+<span class="c1"># Example usage (Uncomment for testing):</span>
+<span class="c1"># primary_domain = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;ftp&quot;, &quot;mail&quot;]</span>
+<span class="c1"># print(resolve_subdomains(primary_domain, potential_subdomains))</span>
 
 
 
@@ -901,11 +863,11 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </pre></div></td></tr></table></div>
 
 And got the output:
-<code>{'vigil.deadbits.ai', 'blog.deadbits.ai', 'www.deadbits.ai', 'trs.deadbits.ai'}</code></p>
+<code>{'vigil', 'trs', 'www', 'blog'}</code></p>
 <h1>PyFunc</h1>
 <p>
 Resulting in output:
-False</p>
+True</p>
 </div>
     
 <div id="tab3" class="tab-content">
@@ -915,789 +877,10 @@ False</p>
 <h2>Query</h2>
 <p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
 <h2>Output</h2>
-<p>To create a Python function that resolves a list of potential subdomains against a primary domain, you'll need to perform DNS lookups to verify whether each subdomain resolves to an IP address. The `socket` library can be used for this purpose. The function `resolve_subdomains(primary, potential_subdomains)` will iterate over each potential subdomain, attempt to resolve it, and return a set of successfully resolved subdomains.
+<p>To create a function that resolves potential subdomains against a primary domain, we need to make use of DNS resolution. One popular Python library for performing DNS queries is `dnspython`. Before using this script, ensure that you have installed the library by running `pip install dnspython`.
 
-Here's the implementation:
+Here is the implementation of `resolve_subdomains`:
 
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
-
-<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
-        <span class="c1"># Construct the full domain name to check</span>
-        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to resolve the subdomain</span>
-            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="c1"># If successful, add to the set</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, just pass</span>
-            <span class="k">pass</span>
-
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
-
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &quot;example.com&quot;</span>
-<span class="c1"># subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;dev&quot;, &quot;nonexistent&quot;]</span>
-<span class="c1"># print(resolve_subdomains(primary_domain, subdomains))</span>
-</pre></div></td></tr></table></div>
-
-
-### Explanation:
-- **Imports**: The `socket` library is used to perform DNS lookups.
-- **Function Definition**: `resolve_subdomains(primary, potential_subdomains)` takes a primary domain and a list of potential subdomains.
-- **Loop Through Subdomains**: For each subdomain:
-  - Construct the full domain name by combining the subdomain with the primary domain.
-  - Use `socket.gethostbyname()` to attempt to resolve the domain name to an IP address.
-  - If successful (indicating that the subdomain resolves), add the full domain name to the `resolved_subdomains` set.
-  - If unsuccessful (an exception is raised), do nothing (indicating that the subdomain does not resolve).
-- **Return**: The function returns a set of domain names that successfully resolved. 
-
-This approach will only include subdomains that are actually resolvable in DNS. The use of a set ensures that there are no duplicates in the returned list of resolved subdomains.</p>
-<h1>Extract Code</h1>
-<p>I extracted the following code from that output:
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
-
-<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
-        <span class="c1"># Construct the full domain name to check</span>
-        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to resolve the subdomain</span>
-            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="c1"># If successful, add to the set</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, just pass</span>
-            <span class="k">pass</span>
-
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
-
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &quot;example.com&quot;</span>
-<span class="c1"># subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;dev&quot;, &quot;nonexistent&quot;]</span>
-<span class="c1"># print(resolve_subdomains(primary_domain, subdomains))</span>
-</pre></div></td></tr></table></div>
-</p>
-<h1>Run Code Interpreter</h1>
-<p>Running the following program:
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
-
-<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
-        <span class="c1"># Construct the full domain name to check</span>
-        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to resolve the subdomain</span>
-            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="c1"># If successful, add to the set</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, just pass</span>
-            <span class="k">pass</span>
-
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
-
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &quot;example.com&quot;</span>
-<span class="c1"># subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;dev&quot;, &quot;nonexistent&quot;]</span>
-<span class="c1"># print(resolve_subdomains(primary_domain, subdomains))</span>
-
-
-
-<span class="n">subdomains</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="s2">&quot;deadbits.ai&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;blog&quot;</span><span class="p">,</span> <span class="s2">&quot;vigil&quot;</span><span class="p">,</span> <span class="s2">&quot;trs&quot;</span><span class="p">,</span> <span class="s2">&quot;vpn&quot;</span><span class="p">,</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;staging&quot;</span><span class="p">,</span> <span class="s2">&quot;shop&quot;</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;forum&quot;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">subdomains</span><span class="p">)</span>
-</pre></div></td></tr></table></div>
-
-And got the output:
-<code>{'vigil.deadbits.ai', 'trs.deadbits.ai', 'blog.deadbits.ai', 'www.deadbits.ai'}</code></p>
-<h1>PyFunc</h1>
-<p>
-Resulting in output:
-False</p>
-</div>
-    
-<div id="tab4" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
-<h2>Output</h2>
-<p>To create a function that resolves a list of potential subdomains against a primary domain, we'll need to use DNS resolution. In Python, you can use the `dns.resolver` module from the `dnspython` library to perform DNS queries.
-
-First, make sure you install the `dnspython` library if you haven't already:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>dnspython
-</pre></div></td></tr></table></div>
-
-
-Below is the implementation of the `resolve_subdomains` function. This function will attempt to resolve each subdomain by performing a DNS query. It will collect and return a set of subdomains that successfully resolve to an IP address.
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">dns.resolver</span>
-
-<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    
-    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
-        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Resolve the full domain to see if it exists</span>
-            <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">full_domain</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoAnswer</span><span class="p">:</span>
-            <span class="c1"># No DNS records found for the subdomain</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NXDOMAIN</span><span class="p">:</span>
-            <span class="c1"># Non-existent domain</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
-            <span class="c1"># Timeout during resolution</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">DNSException</span><span class="p">:</span>
-            <span class="c1"># Catch-all for other DNS exceptions</span>
-            <span class="k">continue</span>
-    
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
-
-<span class="c1"># Example usage:</span>
-<span class="n">primary_domain</span> <span class="o">=</span> <span class="s1">&#39;example.com&#39;</span>
-<span class="n">potential_subdomains</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;www&#39;</span><span class="p">,</span> <span class="s1">&#39;mail&#39;</span><span class="p">,</span> <span class="s1">&#39;ftp&#39;</span><span class="p">]</span>
-<span class="n">resolved</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="n">primary_domain</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">)</span>
-</pre></div></td></tr></table></div>
-
-
-### Explanation:
-- **Function Definition**: `resolve_subdomains(primary, potential_subdomains)`
-  - **Parameters**:
-    - `primary`: A string representing the primary domain.
-    - `potential_subdomains`: A list of strings, each representing a potential subdomain to be resolved.
-  
-- **DNS Resolution**:
-  - For each subdomain in `potential_subdomains`, the function appends it to the primary domain to form the full domain.
-  - It then uses `dns.resolver.resolve` to attempt to resolve an 'A' (Address) record for that full domain.
-  - If successful, the full domain is added to the `resolved_subdomains` set.
-
-- **Handling Exceptions**:
-  - The function gracefully handles several possible DNS exceptions, such as `NoAnswer`, `NXDOMAIN`, and timeouts, by continuing the loop without adding the subdomain to the resolved set.
-
-- **Return Value**:
-  - A set of subdomains that successfully resolve.
-
-This script does not print anything; it only returns the set of resolved subdomains, allowing you to handle the output as needed in your application.</p>
-<h1>Extract Code</h1>
-<p>I extracted the following code from that output:
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">dns.resolver</span>
-
-<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    
-    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
-        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Resolve the full domain to see if it exists</span>
-            <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">full_domain</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoAnswer</span><span class="p">:</span>
-            <span class="c1"># No DNS records found for the subdomain</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NXDOMAIN</span><span class="p">:</span>
-            <span class="c1"># Non-existent domain</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
-            <span class="c1"># Timeout during resolution</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">DNSException</span><span class="p">:</span>
-            <span class="c1"># Catch-all for other DNS exceptions</span>
-            <span class="k">continue</span>
-    
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
-</pre></div></td></tr></table></div>
-</p>
-<h1>Run Code Interpreter</h1>
-<p>Running the following program:
 <style>pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1804,191 +987,44 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">dns.resolver</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolves potential subdomains against a primary domain.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        primary (str): The primary domain against which subdomains are resolved.</span>
+<span class="sd">        potential_subdomains (list): A list of potential subdomain strings.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        set: A set of subdomains that successfully resolve.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># A set to store valid subdomains</span>
     <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="c1"># Construct the full domain name to test</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Resolve the full domain to see if it exists</span>
-            <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">full_domain</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoAnswer</span><span class="p">:</span>
-            <span class="c1"># No DNS records found for the subdomain</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NXDOMAIN</span><span class="p">:</span>
-            <span class="c1"># Non-existent domain</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
-            <span class="c1"># Timeout during resolution</span>
-            <span class="k">continue</span>
-        <span class="k">except</span> <span class="n">dns</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">DNSException</span><span class="p">:</span>
-            <span class="c1"># Catch-all for other DNS exceptions</span>
-            <span class="k">continue</span>
-    
-    <span class="k">return</span> <span class="n">resolved_subdomains</span>
-
-
-
-<span class="n">subdomains</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="s2">&quot;deadbits.ai&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;blog&quot;</span><span class="p">,</span> <span class="s2">&quot;vigil&quot;</span><span class="p">,</span> <span class="s2">&quot;trs&quot;</span><span class="p">,</span> <span class="s2">&quot;vpn&quot;</span><span class="p">,</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;staging&quot;</span><span class="p">,</span> <span class="s2">&quot;shop&quot;</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;forum&quot;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">subdomains</span><span class="p">)</span>
-</pre></div></td></tr></table></div>
-
-And got the output:
-<code>Traceback (most recent call last):
-  File "/usr/src/app/main.py", line 2, in &lt;module&gt;
-    import dns.resolver
-ModuleNotFoundError: No module named 'dns'</code></p>
-<h1>PyFunc</h1>
-<p>Error
-Resulting in output:
-False</p>
-</div>
-    
-<div id="tab5" class="tab-content">
-    <h1>Initial Query</h1>
-<p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
-<h1>LLM Generation</h1>
-<h2>Query</h2>
-<p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
-<h2>Output</h2>
-<p>To accomplish the task of determining which subdomains actually resolve, you can make use of the `socket` library in Python. This library allows you to attempt to obtain the IP address of a fully qualified domain name. If the resolution is successful, we can infer that the subdomain is valid.
-
-Here's how you can implement `resolve_subdomains`:
-
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #ffffcc }
-.highlight { background: #f8f8f8; }
-.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #9C6500 } /* Comment.Preproc */
-.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.highlight .gr { color: #E40000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #008400 } /* Generic.Inserted */
-.highlight .go { color: #717171 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #687822 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
-<span class="normal"> 2</span>
-<span class="normal"> 3</span>
-<span class="normal"> 4</span>
-<span class="normal"> 5</span>
-<span class="normal"> 6</span>
-<span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
-
-<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
-    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
-        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to resolve the domain name to an IP address</span>
-            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="c1"># If successful, add it to the set</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, we skip adding</span>
-            <span class="k">pass</span>
         
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Attempt to resolve the full domain name</span>
+            <span class="n">answers</span> <span class="o">=</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">full_domain</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span>
+            <span class="c1"># If successful, add the subdomain to the set</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoAnswer</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NXDOMAIN</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoNameservers</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">Timeout</span><span class="p">):</span>
+            <span class="c1"># If resolution fails, we continue to the next subdomain</span>
+            <span class="k">pass</span>
+    
     <span class="k">return</span> <span class="n">resolved_subdomains</span>
-
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &quot;example.com&quot;</span>
-<span class="c1"># potential = [&quot;www&quot;, &quot;api&quot;, &quot;mail&quot;, &quot;nonexistent&quot;]</span>
-<span class="c1"># resolvable = resolve_subdomains(primary_domain, potential)</span>
-<span class="c1"># This might return something like: {&#39;www.example.com&#39;, &#39;api.example.com&#39;}</span>
 </pre></div></td></tr></table></div>
 
 
-### Explanation:
-- **`socket.gethostbyname(full_domain)`**: This attempts to resolve the domain name to an IP address. If the domain cannot be resolved, a `socket.gaierror` is thrown.
+### How it works
+1. **Import dnspython**: We import the necessary module, `dns.resolver`.
+2. **Initialize a Set**: We initialize an empty set `resolved_subdomains` to store subdomains that resolve successfully.
+3. **Iterate and Resolve**: For each subdomain in `potential_subdomains`, we construct the full domain name by appending the primary domain. We then use `dns.resolver.resolve()` to check if the domain resolves.
+4. **Error Handling**: We handle various exceptions that might be raised if DNS resolution fails, such as `dns.resolver.NoAnswer`, `dns.resolver.NXDOMAIN`, `dns.resolver.NoNameservers`, and `dns.exception.Timeout`.
+5. **Store Resolved Subdomains**: If a subdomain resolves without exceptions, it is added to the `resolved_subdomains` set.
 
-- **Error Handling**: We catch `socket.gaierror`, which is the exception thrown if the DNS resolution fails, indicating that the subdomain does not resolve.
-
-- **Efficiency**: The function only adds successfully resolved subdomains to the set `resolved_subdomains`. A set is used to automatically handle duplicates.
-
-- **Return**: The function returns a set of full domain names that resolved successfully.
-
-This function enables you to assess and filter a list of potential subdomains to identify which ones are configured and reachable under the primary domain. Ensure your network and the DNS server settings allow the script to perform these DNS queries.</p>
+This function does not print anything, as requested, and returns the set of subdomains that actually resolve.</p>
 <h1>Extract Code</h1>
 <p>I extracted the following code from that output:
 <style>pre { line-height: 125%; }
@@ -2088,30 +1124,42 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">dns.resolver</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolves potential subdomains against a primary domain.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        primary (str): The primary domain against which subdomains are resolved.</span>
+<span class="sd">        potential_subdomains (list): A list of potential subdomain strings.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        set: A set of subdomains that successfully resolve.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># A set to store valid subdomains</span>
     <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
+    
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="c1"># Construct the full domain name to test</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to resolve the domain name to an IP address</span>
-            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="c1"># If successful, add it to the set</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, we skip adding</span>
-            <span class="k">pass</span>
         
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Attempt to resolve the full domain name</span>
+            <span class="n">answers</span> <span class="o">=</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">full_domain</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span>
+            <span class="c1"># If successful, add the subdomain to the set</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoAnswer</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NXDOMAIN</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoNameservers</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">Timeout</span><span class="p">):</span>
+            <span class="c1"># If resolution fails, we continue to the next subdomain</span>
+            <span class="k">pass</span>
+    
     <span class="k">return</span> <span class="n">resolved_subdomains</span>
-
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &quot;example.com&quot;</span>
-<span class="c1"># potential = [&quot;www&quot;, &quot;api&quot;, &quot;mail&quot;, &quot;nonexistent&quot;]</span>
-<span class="c1"># resolvable = resolve_subdomains(primary_domain, potential)</span>
-<span class="c1"># This might return something like: {&#39;www.example.com&#39;, &#39;api.example.com&#39;}</span>
 </pre></div></td></tr></table></div>
 </p>
 <h1>Run Code Interpreter</h1>
@@ -2218,30 +1266,42 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="normal">26</span>
 <span class="normal">27</span>
 <span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">dns.resolver</span>
 
 <span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolves potential subdomains against a primary domain.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        primary (str): The primary domain against which subdomains are resolved.</span>
+<span class="sd">        potential_subdomains (list): A list of potential subdomain strings.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        set: A set of subdomains that successfully resolve.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># A set to store valid subdomains</span>
     <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
+    
     <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="c1"># Construct the full domain name to test</span>
         <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Try to resolve the domain name to an IP address</span>
-            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-            <span class="c1"># If successful, add it to the set</span>
-            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
-            <span class="c1"># If resolution fails, we skip adding</span>
-            <span class="k">pass</span>
         
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Attempt to resolve the full domain name</span>
+            <span class="n">answers</span> <span class="o">=</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">full_domain</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span>
+            <span class="c1"># If successful, add the subdomain to the set</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoAnswer</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NXDOMAIN</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">NoNameservers</span><span class="p">,</span> <span class="n">dns</span><span class="o">.</span><span class="n">exception</span><span class="o">.</span><span class="n">Timeout</span><span class="p">):</span>
+            <span class="c1"># If resolution fails, we continue to the next subdomain</span>
+            <span class="k">pass</span>
+    
     <span class="k">return</span> <span class="n">resolved_subdomains</span>
-
-<span class="c1"># Example usage:</span>
-<span class="c1"># primary_domain = &quot;example.com&quot;</span>
-<span class="c1"># potential = [&quot;www&quot;, &quot;api&quot;, &quot;mail&quot;, &quot;nonexistent&quot;]</span>
-<span class="c1"># resolvable = resolve_subdomains(primary_domain, potential)</span>
-<span class="c1"># This might return something like: {&#39;www.example.com&#39;, &#39;api.example.com&#39;}</span>
 
 
 
@@ -2250,9 +1310,828 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </pre></div></td></tr></table></div>
 
 And got the output:
-<code>{'trs.deadbits.ai', 'vigil.deadbits.ai', 'blog.deadbits.ai', 'www.deadbits.ai'}</code></p>
+<code>Traceback (most recent call last):
+  File "/usr/src/app/main.py", line 2, in &lt;module&gt;
+    import dns.resolver
+ModuleNotFoundError: No module named 'dns'</code></p>
+<h1>PyFunc</h1>
+<p>Error
+Resulting in output:
+False</p>
+</div>
+    
+<div id="tab4" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
+<h2>Output</h2>
+<p>To accomplish the task of resolving a list of potential subdomains against a primary domain, we can use Python's `socket` library to perform DNS lookups. The function will attempt to resolve each potential subdomain concatenated with the primary domain and collect those that succeed.
+
+Here's the implementation:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Try to resolve the full domain name.</span>
+            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="c1"># If it resolves, add it to the set.</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
+            <span class="c1"># If it doesn&#39;t resolve, ignore and move to the next.</span>
+            <span class="k">continue</span>
+    
+    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+
+<span class="c1"># Example usage:</span>
+<span class="c1"># primary = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;nonexistent&quot;]</span>
+<span class="c1"># resolved = resolve_subdomains(primary, potential_subdomains)</span>
+</pre></div></td></tr></table></div>
+
+
+### Explanation
+
+- **Importing Libraries**: We import Python's built-in `socket` library. This library provides low-level networking interface utilities, including the ability to perform domain name resolution through the `gethostbyname` function.
+
+- **Function `resolve_subdomains`**: 
+  - **Parameters**:
+    - `primary`: The primary domain against which we'll resolve potential subdomains.
+    - `potential_subdomains`: A list of subdomains provided for validation.
+  
+  - **Return**: A set of fully qualified subdomain strings that successfully resolve with the primary domain.
+
+- **Domain Resolution**:
+  - For each subdomain in `potential_subdomains`, concatenate it with the `primary` domain.
+  - Use `socket.gethostbyname()` to attempt to resolve the fully qualified domain name.
+  - If successful, add the fully qualified subdomain to the `resolved_subdomains` set.
+  - If unsuccessful (i.e., a `socket.gaierror` is raised), catch the exception and continue to the next subdomain.
+
+- **Result**: The function returns a set of subdomains that are resolvable under the specified primary domain.
+
+Please be aware that network-related functions like `socket.gethostbyname()` depend on the machine's network configuration, available DNS servers, and potentially firewalls or other security policies.</p>
+<h1>Extract Code</h1>
+<p>I extracted the following code from that output:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Try to resolve the full domain name.</span>
+            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="c1"># If it resolves, add it to the set.</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
+            <span class="c1"># If it doesn&#39;t resolve, ignore and move to the next.</span>
+            <span class="k">continue</span>
+    
+    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+
+<span class="c1"># Example usage:</span>
+<span class="c1"># primary = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;nonexistent&quot;]</span>
+<span class="c1"># resolved = resolve_subdomains(primary, potential_subdomains)</span>
+</pre></div></td></tr></table></div>
+</p>
+<h1>Run Code Interpreter</h1>
+<p>Running the following program:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Try to resolve the full domain name.</span>
+            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="c1"># If it resolves, add it to the set.</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
+            <span class="c1"># If it doesn&#39;t resolve, ignore and move to the next.</span>
+            <span class="k">continue</span>
+    
+    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+
+<span class="c1"># Example usage:</span>
+<span class="c1"># primary = &quot;example.com&quot;</span>
+<span class="c1"># potential_subdomains = [&quot;www&quot;, &quot;mail&quot;, &quot;nonexistent&quot;]</span>
+<span class="c1"># resolved = resolve_subdomains(primary, potential_subdomains)</span>
+
+
+
+<span class="n">subdomains</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="s2">&quot;deadbits.ai&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;blog&quot;</span><span class="p">,</span> <span class="s2">&quot;vigil&quot;</span><span class="p">,</span> <span class="s2">&quot;trs&quot;</span><span class="p">,</span> <span class="s2">&quot;vpn&quot;</span><span class="p">,</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;staging&quot;</span><span class="p">,</span> <span class="s2">&quot;shop&quot;</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;forum&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">subdomains</span><span class="p">)</span>
+</pre></div></td></tr></table></div>
+
+And got the output:
+<code>{'vigil.deadbits.ai', 'blog.deadbits.ai', 'www.deadbits.ai', 'trs.deadbits.ai'}</code></p>
 <h1>PyFunc</h1>
 <p>
+Resulting in output:
+False</p>
+</div>
+    
+<div id="tab5" class="tab-content">
+    <h1>Initial Query</h1>
+<p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
+<h1>LLM Generation</h1>
+<h2>Query</h2>
+<p>Write a python function that that takes a list of potential subdomains and resolves them against a primary domain. Call your function resolve_subdomains(primary, potential_subdomains). It should return a set of subdomains that actually resolve. Print nothing.</p>
+<h2>Output</h2>
+<p>To accomplish this task, you will want to check if the potential subdomains resolve to an IP address when combined with the primary domain. This can be done using Python's `socket` module, which provides an easy way to perform DNS lookups. Here's how you can implement the `resolve_subdomains` function:
+
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Check if the domain resolves by attempting to get the IP address</span>
+            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
+            <span class="c1"># If there&#39;s an error, the domain didn&#39;t resolve</span>
+            <span class="k">pass</span>
+            
+    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+
+<span class="c1"># Example usage:</span>
+<span class="n">primary_domain</span> <span class="o">=</span> <span class="s2">&quot;example.com&quot;</span>
+<span class="n">potential_subdomains</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;nonexistent&quot;</span><span class="p">]</span>
+<span class="n">resolved</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="n">primary_domain</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">)</span>
+</pre></div></td></tr></table></div>
+
+
+### Explanation:
+
+1. **Importing socket**: The `socket` module is imported to perform the DNS resolution. The function `socket.gethostbyname()` will convert a domain name into its associated IP address.
+
+2. **Iterate Through Subdomains**: For each subdomain in `potential_subdomains`, concatenate it with the `primary` domain to form a complete domain name (e.g., `www.example.com`).
+
+3. **Attempt to Resolve Each Subdomain**:
+   - Use `socket.gethostbyname()` to attempt to resolve the full domain name to an IP address.
+   - If successful, it indicates the domain resolves properly, and the subdomain is added to the `resolved_subdomains` set.
+
+4. **Handling Exceptions**: The `socket.gaierror` exception is caught to handle cases where a domain does not resolve. In this case, the domain is simply ignored.
+
+5. **Return the Set**: Finally, the set of resolved subdomains is returned.
+
+This function is synchronous and might be slow if there are many subdomains to check or network latency is high. For improved performance in such cases, consider making asynchronous DNS requests using libraries like `aiohttp` or `asyncio`.</p>
+<h1>Extract Code</h1>
+<p>I extracted the following code from that output:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Check if the domain resolves by attempting to get the IP address</span>
+            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
+            <span class="c1"># If there&#39;s an error, the domain didn&#39;t resolve</span>
+            <span class="k">pass</span>
+            
+    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+
+<span class="c1"># Example usage:</span>
+<span class="n">primary_domain</span> <span class="o">=</span> <span class="s2">&quot;example.com&quot;</span>
+<span class="n">potential_subdomains</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;nonexistent&quot;</span><span class="p">]</span>
+<span class="n">resolved</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="n">primary_domain</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">)</span>
+</pre></div></td></tr></table></div>
+</p>
+<h1>Run Code Interpreter</h1>
+<p>Running the following program:
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="k">def</span> <span class="nf">resolve_subdomains</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">):</span>
+    <span class="n">resolved_subdomains</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">subdomain</span> <span class="ow">in</span> <span class="n">potential_subdomains</span><span class="p">:</span>
+        <span class="n">full_domain</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdomain</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Check if the domain resolves by attempting to get the IP address</span>
+            <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">full_domain</span><span class="p">)</span>
+            <span class="n">resolved_subdomains</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subdomain</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">gaierror</span><span class="p">:</span>
+            <span class="c1"># If there&#39;s an error, the domain didn&#39;t resolve</span>
+            <span class="k">pass</span>
+            
+    <span class="k">return</span> <span class="n">resolved_subdomains</span>
+
+<span class="c1"># Example usage:</span>
+<span class="n">primary_domain</span> <span class="o">=</span> <span class="s2">&quot;example.com&quot;</span>
+<span class="n">potential_subdomains</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;nonexistent&quot;</span><span class="p">]</span>
+<span class="n">resolved</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="n">primary_domain</span><span class="p">,</span> <span class="n">potential_subdomains</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="p">)</span>
+
+
+
+<span class="n">subdomains</span> <span class="o">=</span> <span class="n">resolve_subdomains</span><span class="p">(</span><span class="s2">&quot;deadbits.ai&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;www&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;blog&quot;</span><span class="p">,</span> <span class="s2">&quot;vigil&quot;</span><span class="p">,</span> <span class="s2">&quot;trs&quot;</span><span class="p">,</span> <span class="s2">&quot;vpn&quot;</span><span class="p">,</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;staging&quot;</span><span class="p">,</span> <span class="s2">&quot;shop&quot;</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;forum&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">subdomains</span><span class="p">)</span>
+</pre></div></td></tr></table></div>
+
+And got the output:
+<code>{'www'}
+{'vigil', 'trs', 'blog', 'www'}</code></p>
+<h1>PyFunc</h1>
+<p>Error
 Resulting in output:
 False</p>
 </div>
