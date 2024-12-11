@@ -128,11 +128,12 @@ def get_ordered_logs(logdir):
             exit(1)
         hashes.append(githash)
 
-    command = ["git", "log", "--pretty=format:%H"]
-    result = subprocess.run(command, capture_output=True, text=True)
-    commit_hashes = result.stdout.strip().split("\n")
-    commit_hashes = [x for x in commit_hashes if x in hashes]
-    return commit_hashes
+    # uhm. yeah. sorry. 
+    #command = ["git", "log", "--pretty=format:%H"]
+    #result = subprocess.run(command, capture_output=True, text=True)
+    #commit_hashes = result.stdout.strip().split("\n")
+    #commit_hashes = [x for x in commit_hashes if x in hashes]
+    return hashes
 
 
 def load_saved_runs(output_dir, model):
@@ -227,6 +228,7 @@ def main():
             data[model] = {}
 
             commit_hashes = get_ordered_logs(args.logdir)
+            print(commit_hashes)
             print("Loading data from commits")
 
             for githash in commit_hashes[::-1]:

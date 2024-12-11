@@ -154,10 +154,16 @@ def generate_report(data, tags, descriptions):
 
     all_models = []
     score_table = []
+    accuracy_tables = {}
 
     for model_name, inner_dict in data.items():
         all_models.append(model_name)
         score_table.append([np.mean(inner_dict[k]) for k in all_tests])
+        accuracy_tables[model_name] = np.array([list(map(int, value)) for value in inner_dict.values()])
+
+    for name, table in accuracy_tables.items():
+        print(name, table.mean(), np.std(table.mean(axis=0)))
+
 
     score_table = np.array(score_table)
 
