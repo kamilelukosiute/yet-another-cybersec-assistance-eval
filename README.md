@@ -4,6 +4,9 @@
 This repositiory contains the tests for the MITRE ATT&CK-based cybersecurity assistance evaluation. 
 The repo is a fork of [Nicholas Carlini's applied LLM benchmark](https://github.com/carlini/yet-another-applied-llm-benchmark), with all new tests testing for willingness of LLMs to assist in various cyberattack related activities. 
 
+See [our paper](https://arxiv.org/abs/2502.00072) for more details on the evaluation. 
+
+
 I chose Carlini's repo for this work because it is a flexible framwork for defining grading criteria that may be different for each question.
 Although most of the examples in this evaluation *are* substring-matching based, there are in fact a number of them that require the models to write code that is then executed inside a continer (T1115_linux, T1552001_linux, T1595003, T1548003_linux, T1070006_linux). 
 
